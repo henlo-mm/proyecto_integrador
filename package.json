@@ -30,17 +30,14 @@
       "last 1 safari version"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/henlo-mm/proyecto_integrador.git"
-  },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/henlo-mm/proyecto_integrador/issues"
   },
-  "homepage": "https://github.com/henlo-mm/proyecto_integrador#readme",
+  "homepage": ".",
   "dependencies": {
     "@react-three/drei": "^9.99.5",
     "@react-three/fiber": "^8.15.16",
