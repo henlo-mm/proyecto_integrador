@@ -1,15 +1,18 @@
-import { Cylinder } from '@react-three/drei';
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import {Cylinder} from '@react-three/drei';
+import {useRef} from "react";
+import {useFrame} from "@react-three/fiber";
 
-const CylinderShape = () => {
+const CylinderShape = ({x, y, z}) => {
     const ref = useRef();
 
-    useFrame(({ clock }) => {
+    useFrame(({clock}) => {
         /* ref.current.position.z = clock.getElapsedTime(); */
         /* ref.current.position.z = Math.sin(clock.getElapsedTime()) */
-        
-        ref.current.position.z = Math.cos(clock.getElapsedTime() * 0.7) * 3;
+        const frecuenciaZ = z * 10;
+        const frecuenciaX = x * 10;
+
+        ref.current.position.z = z+Math.cos(clock.getElapsedTime() * frecuenciaZ) * 4.5;
+        ref.current.position.x = Math.cos(clock.getElapsedTime() * frecuenciaX) * 4.5;
     });
 
     const toon = {
@@ -17,9 +20,8 @@ const CylinderShape = () => {
     };
 
     return (
-        <Cylinder ref={ref} args={[0.5, 0.5, 2, 32]} position={[4, 0.5, 0]}>
+        <Cylinder ref={ref} args={[0.5, 0.5, 2, 32]} position={[x, y, z]}>
             <meshToonMaterial attach="material" {...toon} />
-
         </Cylinder>
     );
 };
