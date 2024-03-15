@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Floor from "./components/Floor";
+import Experience from "./components/Experience";
 import reportWebVitals from './reportWebVitals';
 import {Canvas} from "@react-three/fiber";
 
@@ -16,7 +16,7 @@ root.render(
         }
     >
         <color attach="background" args={["lightblue"]}/>
-        <Floor/>
+        <Experience/>
     </Canvas>
 );
 

@@ -1,4 +1,4 @@
-import {Sphere} from '@react-three/drei';
+import { Sphere, useTexture } from '@react-three/drei';
 import {useRef} from "react";
 import {useFrame} from "@react-three/fiber";
 
@@ -18,9 +18,17 @@ const SphereShape = () => {
         ref.current.position.z = -30;
     });
 
+    const PATH = "/assets/textures/shapes/sphere/";
+    const propsTexture = useTexture({
+        map: PATH + "grass_medium_01_dry_diff_1k.png",
+        normalMap: PATH + "grass_medium_01_nor_gl_1k.jpg",
+        roughnessMap: PATH + "grass_medium_01_rough_1k.jpg",
+        alphaMap: PATH + "grass_medium_01_alpha_1k.png",
+    });
+
     return (
         <Sphere ref={ref} args={[1, 32, 32]} position={[-4, 0, 0]}>
-            <meshPhongMaterial attach="material" color="#EE82EE" shininess={10}/>
+            <meshStandardMaterial  {...propsTexture} />
         </Sphere>
     );
 };

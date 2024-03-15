@@ -1,11 +1,11 @@
-import {Plane, OrbitControls, Sphere, Torus, useGLTF, useTexture} from '@react-three/drei';
-import TorusShape from './shapes/Torus';
-import SphereShape from './shapes/Sphere';
-import BoxShape from './shapes/Box';
-import CylinderShape from './shapes/Cylinder';
+import {Plane, Sphere, Torus, useGLTF, useTexture} from '@react-three/drei';
+import TorusShape from '../shapes/Torus';
+import SphereShape from '../shapes/Sphere';
+import BoxShape from '../shapes/Box';
+import CylinderShape from '../shapes/Cylinder';
 import {RepeatWrapping} from "three";
 
-const Floor = (props) => {
+const World = (props) => {
 
     const {nodes, materials} = useGLTF("/assets/models/floor/floor.glb");
 
@@ -32,9 +32,7 @@ const Floor = (props) => {
     return (
 
         <>
-            <ambientLight intensity={0.5}/>
-            <directionalLight position={[10, 10, 5]}/>
-            <spotLight position={[10, 20, 10]} angle={0.3} intensity={1}/>
+           
 
             <group {...props} dispose={null}>
                 <group>
@@ -43,16 +41,10 @@ const Floor = (props) => {
                     </mesh>
                 </group>
             </group>
-            {/*<Plane args={[10, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>*/}
+            {/* <Plane args={[10, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
 
-            {/* Material para la superficie del piso */}
-            {/* <meshLambertMaterial attach="material" color="grey" /> */}
-            {/* <meshNormalMaterial attach="material" color="grey" /> */}
-            {/*<meshPhongMaterial attach="material" color="silver" shininess={10}/>*/}
-            {/* <meshToonMaterial attach="material" color="red" /> */}
-            {/* <meshPhysicalMaterial attach="material" color="gray" /> */}
 
-            {/*</Plane>*/}e
+            </Plane> */}
 
             {/* Objetos sin animación  */}
             <mesh>
@@ -102,12 +94,11 @@ const Floor = (props) => {
             <mesh>
                 <CylinderShape x={3} y={1} z={3}/>
             </mesh>
-            <OrbitControls makeDefault target={[0, 1, 45]}/>
         </>
 
     )
 }
 
-export default Floor;
+export default World;
 
 useGLTF.preload("/assets/models/floor/floor.glb");
