@@ -16,7 +16,6 @@ root.render(
         }
     >
         <color attach="background" args={["lightblue"]}/>
-
         <Floor/>
     </Canvas>
 );
