@@ -8,11 +8,11 @@ const CylinderShape = ({x, y, z}) => {
     useFrame(({clock}) => {
         /* ref.current.position.z = clock.getElapsedTime(); */
         /* ref.current.position.z = Math.sin(clock.getElapsedTime()) */
-        const frecuenciaZ = z * 10;
+       /*  const frecuenciaZ = z * 10;
         const frecuenciaX = x * 10;
 
         ref.current.position.z = z+Math.cos(clock.getElapsedTime() * frecuenciaZ) * 1;
-        ref.current.position.x = Math.cos(clock.getElapsedTime() * frecuenciaX) * 1;
+        ref.current.position.x = Math.cos(clock.getElapsedTime() * frecuenciaX) * 1; */
     });
 
     const PATH = "/assets/textures/shapes/cylinder/";
