@@ -10,7 +10,7 @@ root.render(
     <Canvas
         camera={
             {
-                position: [0, 5, 60],
+                position: [55, 5, -10],
                 fov: 75
             }
         }

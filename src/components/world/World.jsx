@@ -30,69 +30,45 @@ const World = (props) => {
     propsTexture.displacementMap.wrapS = propsTexture.displacementMap.wrapT = RepeatWrapping;
 
     return (
-
         <>
-           
-
-            <group {...props} dispose={null}>
+            <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
                 <group>
-                    <mesh geometry={nodes.Floor.geometry} material={materials.Material}>
+                    <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material}>
                         <meshStandardMaterial {...propsTexture} />
                     </mesh>
+                    <group position={[0,1,0]}>
+                        <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']}/>
+                        <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']}/>
+                    </group>
+                    <group position={[0,0.65,0]}>
+                        <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']}/>
+                        <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain}/>
+                        <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02}/>
+                        <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01}/>
+                        <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze}/>
+                        <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']}/>
+                        <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04}/>
+                    </group>
+                    <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]}/>
+                    <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]}/>
                 </group>
             </group>
-            {/* <Plane args={[10, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
 
-
-            </Plane> */}
-
-            {/* Objetos sin animación  */}
             <mesh>
-                <Sphere position={[-5, 1, 30]}>
-                    <meshNormalMaterial flatShading={true}/>
+                <Sphere position={[49, 0, -13]}>
                 </Sphere>
             </mesh>
             <mesh>
-                <Torus position={[0, 1, 45]} args={[20, 5, 30, 200]} rotation={[0, Math.PI / 2, 0]} scale={0.04}>
-                    <meshNormalMaterial flatShading={true}/>
-                </Torus>
+                <Sphere position={[50, 0, -4]}>
+                </Sphere>
             </mesh>
             <mesh>
-                <Torus position={[5, 0.5, 25]} args={[0.5, 0.2, 16, 100]}>
-                    <meshMatcapMaterial attach="material"/>
-                </Torus>
-            </mesh>
-
-            {/* Animación de posición en seno o coseno de objetos primitivos  */}
-            <mesh>
-                <TorusShape/>
+                <Sphere position={[-50, 0, 4]}>
+                </Sphere>
             </mesh>
             <mesh>
-                <SphereShape/>
-            </mesh>
-            <mesh>
-                <BoxShape x={15} y={1} z={-10}/>
-            </mesh>
-            <mesh>
-                <BoxShape x={20} y={1} z={-13}/>
-            </mesh>
-            <mesh>
-                <BoxShape x={25} y={1} z={-16}/>
-            </mesh>
-            <mesh>
-                <BoxShape x={30} y={1} z={-19}/>
-            </mesh>
-            <mesh>
-                <BoxShape x={35} y={1} z={-22}/>
-            </mesh>
-            <mesh>
-                <CylinderShape x={0.1} y={1} z={20}/>
-            </mesh>
-            <mesh>
-                <CylinderShape x={-3} y={1} z={15}/>
-            </mesh>
-            <mesh>
-                <CylinderShape x={3} y={1} z={3}/>
+                <Sphere position={[-49, 0, 13]}>
+                </Sphere>
             </mesh>
         </>
 
@@ -100,5 +76,4 @@ const World = (props) => {
 }
 
 export default World;
-
 useGLTF.preload("/assets/models/floor/floor.glb");

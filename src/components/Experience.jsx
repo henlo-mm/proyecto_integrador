@@ -13,7 +13,7 @@ const Experience = () => {
          
             <Perf position="top-left" />
             <BakeShadows />
-            <OrbitControls makeDefault /* target={[0, 1, 45]} */ />
+            <OrbitControls makeDefault /*target={[48, 2, -8]}*//>
 
             <Suspense fallback={null}>
                 <Lights />
