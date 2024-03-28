@@ -7,14 +7,14 @@ const Lights = () => {
     const spotLightRef = useRef(null);
 /*     useHelper(spotLightRef, SpotLightHelper)
  */
-    const optionsSpotLight = useMemo(()=>{
+/*     const optionsSpotLight = useMemo(()=>{
         return {
             intensitySL: {value: 10, min: 0, max: 100, step: 1},
             colorSL: {value: "#FFF700"}
         }
     }, [])
 
-    const {intensitySL, colorSL} = useControls("Spot Light", optionsSpotLight)
+    const {intensitySL, colorSL} = useControls("Spot Light", optionsSpotLight) */
 
     return <>
         <ambientLight

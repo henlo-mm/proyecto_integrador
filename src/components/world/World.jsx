@@ -1,8 +1,4 @@
-import {Plane, Sphere, Torus, useGLTF, useTexture} from '@react-three/drei';
-import TorusShape from '../shapes/Torus';
-import SphereShape from '../shapes/Sphere';
-import BoxShape from '../shapes/Box';
-import CylinderShape from '../shapes/Cylinder';
+import { Sphere, useGLTF, useTexture} from '@react-three/drei';
 import {RepeatWrapping} from "three";
 
 const World = (props) => {

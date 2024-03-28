@@ -1,0 +1,55 @@
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  padding: 1rem 0;
+}
+
+.score__title {
+  color: #fe2079;
+  font-size: 2rem; 
+  font-weight: 700;
+  text-transform: uppercase; 
+  text-shadow: 0 0 5px rgba(238, 17, 17, 0.7); 
+  margin: 0 0.5rem; 
+  font-family: 'Press Start 2P', cursive; 
+  animation: pulse 1s infinite ease-in-out; 
+}
+
+
+@keyframes pulse {
+  0% {
+    color: #eee;
+    opacity: 1;
+  }
+  50% {
+    color: #eb0f0f;
+    opacity: 0.7;
+  }
+  100% {
+    color: #eee;
+    opacity: 1;
+  }
+}
+  
+  @keyframes wiggle {
+    0% {
+      transform: translateY(0%);
+    }
+  
+    50% {
+      transform: translateY(10%);
+    }
+  
+    100% {
+      transform: translateY(0%);
+    }
+  }
+  
+  
+
+
+  
