@@ -14,6 +14,7 @@ root.render(
                 fov: 75
             }
         }
+        shadows={true}
     >
         <color attach="background" args={["lightblue"]}/>
         <Experience/>

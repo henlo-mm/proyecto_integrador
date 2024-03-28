@@ -29,28 +29,51 @@ const World = (props) => {
     propsTexture.displacementMap.repeat.set(4, 64);
     propsTexture.displacementMap.wrapS = propsTexture.displacementMap.wrapT = RepeatWrapping;
 
+
+    const PATH_ESTANTE = "/assets/textures/estantes/";
+    const propsTextureEstante = useTexture({
+        map: PATH_ESTANTE + "rusty_metal_02_diff_1k.jpg",
+        normalMap: PATH_ESTANTE + "rusty_metal_02_nor_gl_1k.jpg",
+        roughnessMap: PATH_ESTANTE + "rusty_metal_02_rough_1k.jpg",
+       // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
+    });
+
+    const PATH_MESA = "/assets/textures/mesas/";
+    const propsTextureMesa = useTexture({
+        map: PATH_MESA + "fabric_pattern_07_col_1_1k.png",
+        normalMap: PATH_MESA + "fabric_pattern_07_nor_gl_1k.jpg",
+        roughnessMap: PATH_MESA + "fabric_pattern_07_rough_1k.jpg",
+       // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
+    });
+
+   
+
     return (
         <>
             <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
                 <group>
-                    <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material}>
-                        <meshStandardMaterial {...propsTexture} />
+                    <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
+                        <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} />
                     </mesh>
-                    <group position={[0,1,0]}>
-                        <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']}/>
-                        <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']}/>
+                    <group position={[0,1,0]} >
+                        <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} castShadow={true} />
+                        <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} castShadow={true}> 
+                            <meshStandardMaterial {...propsTextureMesa} />
+                        </mesh>
                     </group>
                     <group position={[0,0.65,0]}>
-                        <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']}/>
-                        <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain}/>
-                        <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02}/>
-                        <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01}/>
-                        <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze}/>
-                        <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']}/>
-                        <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04}/>
+                        <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']} castShadow={true}/>
+                        <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain} castShadow={true}/>
+                        <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02} castShadow={true}/>
+                        <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01} castShadow={true} />
+                        <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze} castShadow={true}/>
+                        <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']} castShadow={true}/>
+                        <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04} castShadow={true}/>
                     </group>
-                    <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]}/>
-                    <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]}/>
+                    <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
+                        <meshStandardMaterial {...propsTextureEstante} />
+                    </mesh>
+                    <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
                 </group>
             </group>
 
@@ -70,6 +93,14 @@ const World = (props) => {
                 <Sphere position={[-49, 0, 13]}>
                 </Sphere>
             </mesh>
+
+        {/*     <group {...props} dispose={null}>
+            <group>
+                <mesh geometry={nodes.Walls.geometry} material={materials.wallMaterial} />
+                <mesh receiveShadow={true} geometry={nodes.Floor.geometry} material={materials.floorMaterial} />
+                <mesh castShadow={true} geometry={nodes.WoodenFence.geometry} material={materials.woodMaterial} />
+            </group>
+        </group> */}
         </>
 
     )

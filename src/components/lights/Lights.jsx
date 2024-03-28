@@ -18,13 +18,13 @@ const Lights = () => {
 
     return <>
         <ambientLight
-            // color={new Color("#8F00FF")}
-            intensity={0.1}
+            color={new Color("#8b2323")}
+            intensity={1}
         />
         <directionalLight
             castShadow={true}
-            position={[2, 10, 0]}
-            color={new Color("#FFF700")}
+            position={[2, 80, 0]}
+            color={new Color("#8b2323")}
             intensity={2}
             shadow-mapSize = {[2048, 2048]}
             shadow-camera-far = {50}
@@ -33,25 +33,26 @@ const Lights = () => {
             shadow-camera-top = {10}
             shadow-camera-bottom = {-10}
         />
-        {/* <pointLight
-                position={[0, 2, 0]}
-                color={new Color("#8F00FF")}
-                intensity={10}
-            /> */}
-        <spotLight
+       {/*  <pointLight
+            position={[0, 2, 0]}
+            color={new Color("#8b2323")}
+            intensity={10}
+         /> */}
+        {/* <spotLight
             ref={spotLightRef}
             position={[0, 4, 0]}
-            angle={Math.PI/3}
+            angle={Math.PI/2}
             color={colorSL}
+            castShadow={true}
             intensity={intensitySL}
             distance={10}
         />
         <hemisphereLight
             position={[2, 40, -2]}
             skyColor={new Color(0xFFFFFF)}
-            groundColor={new Color(0x8F00FF)}
+            groundColor={new Color("#8b2323")}
             intensity={3}
-        />
+        /> */}
     </>
 }
 export default Lights;
