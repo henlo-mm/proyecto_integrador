@@ -1,9 +1,12 @@
 import { Sphere, useGLTF, useTexture} from '@react-three/drei';
 import {RepeatWrapping} from "three";
+import { CuboidCollider, RigidBody } from "@react-three/rapier"
+import { useRef } from 'react';
 
 const World = (props) => {
 
     const {nodes, materials} = useGLTF("/assets/models/floor/floor.glb");
+    const treeRef = useRef()
 
     const PATH = "/assets/textures/floor/";
     const propsTexture = useTexture({
@@ -46,57 +49,65 @@ const World = (props) => {
 
     return (
         <>
-            <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
-                <group>
-                    <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
-                        <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} />
-                    </mesh>
-                    <group position={[0,1,0]} >
-                        <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} castShadow={true} />
-                        <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} castShadow={true}> 
-                            <meshStandardMaterial {...propsTextureMesa} />
+                <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
+                    <group>
+                        <RigidBody type="fixed">
+                            <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
+                                <meshStandardMaterial {...propsTexture} /* transparent={true} opacity={0.0} */ />
+                            </mesh>
+                        </RigidBody>
+                        <group position={[0,1,0]} >
+                            <RigidBody  type="fixed" >
+
+                                <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} />
+                                <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} > 
+                                    <meshStandardMaterial {...propsTextureMesa}  castShadow={true}  />
+                                </mesh>
+                                <CuboidCollider args={[1, 0.5]} position={[0,1,0]} />
+                            </RigidBody>
+                        </group>
+                        <group position={[0,0.65,0]}>
+                            <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']} castShadow={true}/>
+                            <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain} castShadow={true}/>
+                            <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02} castShadow={true}/>
+                            <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01} castShadow={true} />
+                            <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze} castShadow={true}/>
+                            <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']} castShadow={true}/>
+                            <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04} castShadow={true}/>
+                        </group>
+                        <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
+                            <meshStandardMaterial {...propsTextureEstante} />
                         </mesh>
+                        <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
+                          
                     </group>
-                    <group position={[0,0.65,0]}>
-                        <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']} castShadow={true}/>
-                        <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain} castShadow={true}/>
-                        <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02} castShadow={true}/>
-                        <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01} castShadow={true} />
-                        <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze} castShadow={true}/>
-                        <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']} castShadow={true}/>
-                        <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04} castShadow={true}/>
-                    </group>
-                    <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
-                        <meshStandardMaterial {...propsTextureEstante} />
-                    </mesh>
-                    <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
                 </group>
-            </group>
 
-            <mesh>
-                <Sphere position={[49, 0, -13]}>
-                </Sphere>
-            </mesh>
-            <mesh>
-                <Sphere position={[50, 0, -4]}>
-                </Sphere>
-            </mesh>
-            <mesh>
-                <Sphere position={[-50, 0, 4]}>
-                </Sphere>
-            </mesh>
-            <mesh>
-                <Sphere position={[-49, 0, 13]}>
-                </Sphere>
-            </mesh>
+                <mesh>
+                    <Sphere position={[49, 0, -13]} castShadow={true}>
+                    </Sphere>
+                </mesh>
+                <mesh>
+                    <Sphere position={[50, 0, -4]}>
+                    </Sphere>
+                </mesh>
+                <mesh>
+                    <Sphere position={[-50, 0, 4]}>
+                    </Sphere>
+                </mesh>
+                <mesh>
+                    <Sphere position={[-49, 0, 13]}>
+                    </Sphere>
+                </mesh>
 
-        {/*     <group {...props} dispose={null}>
-            <group>
-                <mesh geometry={nodes.Walls.geometry} material={materials.wallMaterial} />
-                <mesh receiveShadow={true} geometry={nodes.Floor.geometry} material={materials.floorMaterial} />
-                <mesh castShadow={true} geometry={nodes.WoodenFence.geometry} material={materials.woodMaterial} />
-            </group>
-        </group> */}
+            {/*     <group {...props} dispose={null}>
+                <group>
+                    <mesh geometry={nodes.Walls.geometry} material={materials.wallMaterial} />
+                    <mesh receiveShadow={true} geometry={nodes.Floor.geometry} material={materials.floorMaterial} />
+                    <mesh castShadow={true} geometry={nodes.WoodenFence.geometry} material={materials.woodMaterial} />
+                </group>
+            </group> */}
+            
         </>
 
     )

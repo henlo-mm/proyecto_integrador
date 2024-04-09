@@ -18,13 +18,12 @@ const Lights = () => {
 
     return <>
         <ambientLight
-            color={new Color("#8b2323")}
             intensity={1}
         />
         <directionalLight
             castShadow={true}
-            position={[2, 80, 0]}
-            color={new Color("#8b2323")}
+            position={[2, 10, 0]}
+            color={new Color("#FFF700")}
             intensity={2}
             shadow-mapSize = {[2048, 2048]}
             shadow-camera-far = {50}
