@@ -57,13 +57,12 @@ const World = (props) => {
                             </mesh>
                         </RigidBody>
                         <group position={[0,1,0]} >
-                            <RigidBody  type="fixed" >
+                            <RigidBody  type="fixed" colliders="cuboid" >
 
                                 <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} />
                                 <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} > 
                                     <meshStandardMaterial {...propsTextureMesa}  castShadow={true}  />
                                 </mesh>
-                                <CuboidCollider args={[1, 0.5]} position={[0,1,0]} />
                             </RigidBody>
                         </group>
                         <group position={[0,0.65,0]}>
