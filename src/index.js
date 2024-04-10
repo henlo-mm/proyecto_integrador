@@ -21,7 +21,7 @@ root.render(
             <Experience />
         </Canvas>
 
-        <GameStats />
+      {/*   <GameStats /> */}
 
     </>
    

@@ -53,32 +53,53 @@ const World = (props) => {
                     <group>
                         <RigidBody type="fixed">
                             <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
-                                <meshStandardMaterial {...propsTexture} /* transparent={true} opacity={0.0} */ />
+                                <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} />
                             </mesh>
                         </RigidBody>
                         <group position={[0,1,0]} >
-                            <RigidBody  type="fixed" colliders="cuboid" >
+                            <RigidBody type="fixed" colliders={false}>
 
                                 <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} />
                                 <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} > 
                                     <meshStandardMaterial {...propsTextureMesa}  castShadow={true}  />
                                 </mesh>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[1.8, -0.5, 24.9]}/>
+                                <CuboidCollider args={[1, 0.5, 0.9]} position={[-0.8, -0.5, 22.2]}/>
+                                <CuboidCollider args={[1, 0.5, 0.9]} position={[-3.5, -0.5, 19.8]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3, -0.5, 15]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[0.5, -0.5, 15]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-3, -0.5, 10]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-0.5, -0.5, 10]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 3]}/>
+                                <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 0.2]}/>
+                                <CuboidCollider args={[5, 0.5, 1.1]} position={[0, -0.5, -11.3]}/>
+                               
                             </RigidBody>
                         </group>
-                        <group position={[0,0.65,0]}>
-                            <mesh geometry={nodes.Carretillas_1.geometry} material={materials['A bit dark wood']} castShadow={true}/>
-                            <mesh geometry={nodes.Carretillas_2.geometry} material={materials.Metal_Chain} castShadow={true}/>
-                            <mesh geometry={nodes.Carretillas_3.geometry} material={materials.wooden_cart02} castShadow={true}/>
-                            <mesh geometry={nodes.Carretillas_4.geometry} material={materials.wooden_cart01} castShadow={true} />
-                            <mesh geometry={nodes.Carretillas_5.geometry} material={materials.Bronze} castShadow={true}/>
-                            <mesh geometry={nodes.Carretillas_6.geometry} material={materials['Black metal']} castShadow={true}/>
-                            <mesh geometry={nodes.Carretillas_7.geometry} material={materials.wooden_cart04} castShadow={true}/>
-                        </group>
-                        <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
-                            <meshStandardMaterial {...propsTextureEstante} />
-                        </mesh>
-                        <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
-                          
+                      
+
+                         <RigidBody type="fixed" colliders={false}>
+
+                            <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
+                                <meshStandardMaterial {...propsTextureEstante} />
+                            </mesh>
+                            <CuboidCollider args={[0.3, 1.2, 1.5]} position={[2.2, 0.8, 35.8]}/>
+
+                         </RigidBody>
+                        <RigidBody type="fixed" colliders={false}>
+                            <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4, 0.4, 44]}/>
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4, 0.4, 42]}/>
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-4, 0.4, 39.5]}/>
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[3.9, 0.4, 30]}/>
+                            <CuboidCollider args={[0.6, 0.5, 0.7]} position={[1.3, 0.4, 22.7]}/>
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-1.8, 0.4, 20]}/>
+                            <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-1.8, 0.4, 8]}/>
+                            <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-2.5, 0.4, -9.3]}/>
+                            <CuboidCollider args={[0.5, 0.5, 0.7]} position={[2.5, 0.4, -9.6]}/>
+                            <CuboidCollider args={[0.5, 0.5, 0.7]} position={[4.2, 0.4, -15]}/>
+                            <CuboidCollider args={[0.5, 0.5, 0.7]} position={[4.2, 0.4, -17.5]}/>
+                        </RigidBody>
                     </group>
                 </group>
 

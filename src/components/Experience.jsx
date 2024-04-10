@@ -14,13 +14,13 @@ import { AnyCollider, BallCollider, Physics, RigidBody, vec3 } from "@react-thre
 
 const Experience = () => {
 
-    const cameraBodyCollider = useRef();
+    /* const cameraBodyCollider = useRef();
 
     useFrame(({camera}, delta)=>{
         const position = vec3(camera.position);
         cameraBodyCollider.current?.setTranslation(position, true);
         console.log(cameraBodyCollider?.current?.translation());
-    })
+    }) */
 
     const [isGameStatsVisible, setGameTextVisible] = useState(false);
     const [isWelcomeTextVisible, setWelcomeTextVisible] = useState(true);
@@ -35,7 +35,11 @@ const Experience = () => {
           
             <Perf position="top-right" />
             <BakeShadows />
-            <OrbitControls makeDefault /*target={[48, 2, -8]}*//>
+            <OrbitControls 
+                /*target={[48, 2, -8]}*/
+                enableZoom={true}
+                enablePan={true}
+            />
 
             <Suspense fallback={null}>
                 <Lights />
