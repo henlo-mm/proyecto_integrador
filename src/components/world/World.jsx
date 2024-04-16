@@ -52,16 +52,16 @@ const World = (props) => {
                 <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
                     <group>
                         <RigidBody type="fixed">
-                            <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
-                                <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} />
+                            <mesh receiveShadow={true} geometry={nodes.Floor.geometry} material={nodes.Floor.material}>
+                               {/*  <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} /> */}
                             </mesh>
                         </RigidBody>
                         <group position={[0,1,0]} >
                             <RigidBody type="fixed" colliders={false}>
 
-                                <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} />
-                                <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} > 
-                                    <meshStandardMaterial {...propsTextureMesa}  castShadow={true}  />
+                                <mesh geometry={nodes.Mesas_1.geometry} material={materials['Material.001']} receiveShadow={false} castShadow={true}/>
+                                <mesh geometry={nodes.Mesas_2.geometry} material={materials['Material.002']} receiveShadow={false} castShadow={true}> 
+                                    <meshStandardMaterial {...propsTextureMesa} />
                                 </mesh>
                                 <CuboidCollider args={[1.2, 0.5, 1.1]} position={[1.8, -0.5, 24.9]}/>
                                 <CuboidCollider args={[1, 0.5, 0.9]} position={[-0.8, -0.5, 22.2]}/>
@@ -80,14 +80,14 @@ const World = (props) => {
 
                          <RigidBody type="fixed" colliders={false}>
 
-                            <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} castShadow={true}>
+                            <mesh geometry={nodes.Estantes.geometry} material={materials.SHELVING} position={[0,0.75,0]} receiveShadow={false} castShadow={true}>
                                 <meshStandardMaterial {...propsTextureEstante} />
                             </mesh>
                             <CuboidCollider args={[0.3, 1.2, 1.5]} position={[2.2, 0.8, 35.8]}/>
 
                          </RigidBody>
                         <RigidBody type="fixed" colliders={false}>
-                            <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} castShadow={true} />
+                            <mesh geometry={nodes.CarroCompras.geometry} material={materials.ShoppingCart} position={[0,0.7,0]} receiveShadow={false} castShadow={true} />
                             <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4, 0.4, 44]}/>
                             <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4, 0.4, 42]}/>
                             <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-4, 0.4, 39.5]}/>
