@@ -5,7 +5,7 @@ import {useRef} from 'react';
 
 const World = (props) => {
 
-    const {nodes, materials} = useGLTF("/assets/models/floor/floor.glb");
+    const {nodes, materials} = useGLTF("/assets/models/floor/floormejorado.glb");
     const treeRef = useRef()
 
     const PATH = "/assets/textures/floor/";
@@ -48,11 +48,102 @@ const World = (props) => {
 
     return (
         <>
-            <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
+        <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
+            <group>
+                <RigidBody type="fixed">
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.Floor.geometry}
+                        material={nodes.Floor.material}
+                    >
+                    </mesh>
+                </RigidBody>
+                <RigidBody type="fixed" colliders={false}>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.Mesas.geometry}
+                        material={nodes.Mesas.material}
+                        position={[2.219, -0.238, 25.799]}
+                        rotation={[0, -0.442, 0]}
+                        scale={0.1}
+                    >
+                    </mesh>
+                    <CuboidCollider args={[1, 0.5, 1]} position={[1.8, -0.5, 24.8]} 
+                                    rotation={[0, -Math.PI / 7, 0]}/>
+                    <CuboidCollider args={[1, 0.5, 0.9]} position={[-0.8, -0.5, 22.2]}/>
+                    <CuboidCollider args={[1, 0.5, 0.9]} position={[-3.5, -0.5, 19.8]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3, -0.5, 15]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[0.5, -0.5, 15]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-3, -0.5, 10]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-0.5, -0.5, 10]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 3]}/>
+                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 0.2]}/>
+                    <CuboidCollider args={[5, 0.5, 1.1]} position={[0, -0.5, -11.3]}/>
+                </RigidBody>
+                <RigidBody type="fixed" colliders={false}>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.Estantes.geometry}
+                        material={nodes.Estantes.material}
+                        position={[-3.535, 0.006, -43.937]}
+                    >
+                    </mesh>
+                    <CuboidCollider args={[1.3, 1.0, 0.2]} position={[2.4, 0.1, 33.6]}/>
+                    <CuboidCollider args={[1.3, 1.0, 0.2]} position={[-3.3, 0.1, 33.5]} rotation={[0, -Math.PI / 1, 0]}/>
+                    <CuboidCollider args={[1.3, 1.0, 0.2]} position={[-0.5, 0.1, 33.6]}
+                                    rotation={[0, -Math.PI / 1, 0]}/>
+                    <CuboidCollider args={[0.3, 1.2, 1.5]} position={[-0.5, 0.8, 0.8]}
+                                    rotation={[0, -Math.PI / 3, 0]}/>
+                    <CuboidCollider args={[0.3, 1.2, 1.5]} position={[-1.5, 0.8, -0.7]}
+                                    rotation={[0, -Math.PI / 3, 0]}/>
+                 
+                    <CuboidCollider args={[1.5, 1.2, 0.3]} position={[3.2, 0.8, -30.15]}/>
+                    <CuboidCollider args={[1.5, 1.2, 0.3]} position={[2.2, 0.8, -35]}/>
+                    <CuboidCollider args={[1.5, 1.2, 0.3]} position={[-2.8, 0.8, -35.3]}/>
+                    <CuboidCollider args={[1.5, 1.2, 0.3]} position={[-0.3, 0.8, -39.7]}/>
+               
+                   
+                    <CuboidCollider args={[1.5, 1.2, 0.3]} position={[2.5, 0.8, -44]}
+                                    rotation={[0, -Math.PI / 4.5, 0]}/>
+                </RigidBody>
+
+                <RigidBody type="fixed" colliders={false}>
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        geometry={nodes.CarroCompras.geometry}
+                        material={materials.ShoppingCart}
+                        position={[-4.174, -0.849, 39.612]}
+                        rotation={[-Math.PI, 1.522, -Math.PI]}
+                        scale={0.015}
+                    >
+                    </mesh>
+                    <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4.3, -0.4, 44.1]}
+                                    rotation={[0, -Math.PI / 6, 0]}/>
+                    <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4.5, -0.4, 42]}/>
+                    <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-4, -0.4, 39.5]}/>
+                    <CuboidCollider args={[0.7, 0.5, 0.4]} position={[4.1, -0.4, 29.9]}
+                                    rotation={[0, Math.PI / 6, 0]}/>
+                    <CuboidCollider args={[0.4, 0.5, 0.7]} position={[1.3, -0.4, 22.8]}
+                                    rotation={[0, Math.PI / 8, 0]}/>
+                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-1.6, -0.4, 20.2]}/>
+                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-1.8, -0.4, 8]}/>
+                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-2.5, -0.4, -9.3]}/>
+                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[2.5, -0.4, -9.6]}/>
+                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[4.2, -0.4, -15]}/>
+                </RigidBody>
+                    
+                </group>
+            </group>
+
+          {/*   <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
                 <group>
                     <RigidBody type="fixed">
                         <mesh geometry={nodes.Floor.geometry} material={nodes.Floor.material} receiveShadow={true}>
-                         {/*    <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0}/> */}
+                            <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0}/>
                         </mesh>
                     </RigidBody>
                     <group position={[0, 1, 0]}>
@@ -142,15 +233,10 @@ const World = (props) => {
             <mesh>
                 <Sphere position={[-49, 0, 13]}>
                 </Sphere>
-            </mesh>
+            </mesh> */}
 
-            {/*     <group {...props} dispose={null}>
-                <group>
-                    <mesh geometry={nodes.Walls.geometry} material={materials.wallMaterial} />
-                    <mesh receiveShadow={true} geometry={nodes.Floor.geometry} material={materials.floorMaterial} />
-                    <mesh castShadow={true} geometry={nodes.WoodenFence.geometry} material={materials.woodMaterial} />
-                </group>
-            </group> */}
+
+         
 
         </>
 
@@ -158,4 +244,4 @@ const World = (props) => {
 }
 
 export default World;
-useGLTF.preload("/assets/models/floor/floor.glb");
+useGLTF.preload("/assets/models/floor/floormejorado.glb");
