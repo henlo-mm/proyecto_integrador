@@ -6,6 +6,7 @@ import Environments from "./environments/Environments";
 import { Canvas } from "@react-three/fiber";
 import World from "./world/World";
 import { OrbitControls } from "@react-three/drei";
+import Deadpool from "./characters/avatar/Deadpool";
 
 export default function Level1() {
 
@@ -28,6 +29,7 @@ export default function Level1() {
                     <Lights />
                     <Environments />
                     <Physics debug={true}>
+                        <Deadpool />
                         <World />
                     </Physics>
                 </Suspense>

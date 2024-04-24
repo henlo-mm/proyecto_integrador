@@ -1,11 +1,14 @@
 import RoutesDeadGame from "./routes/RoutesDeadGame";
+import { AvatarProvider } from "./context/AvatarContext";
 
 
 const Experience = () => {
 
     return (
         <>
-           <RoutesDeadGame />
+            <AvatarProvider>
+                <RoutesDeadGame />
+            </AvatarProvider>
         </>
 
     )
