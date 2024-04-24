@@ -1,16 +1,26 @@
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
-
 import Ecctrl, { EcctrlAnimation } from "ecctrl";
 
 export default function Deadpool() {
     const avatarRef = useRef();
-    const group = useRef()
 
     const rigidBodyAvatarRef = useRef();
-    const { nodes, materials, animations } = useGLTF("assets/models/avatar/AvatarDeadpool.glb");
     const { avatar, setAvatar } = useAvatar();
+    const { nodes, materials, animations } = useGLTF("assets/models/avatar/AvatarDeadpool.glb");
+
+    const { actions } = useAnimations(animations, avatarRef)
+
+    useEffect(() => {
+
+        console.log(actions)
+        actions[avatar.animation]?.reset().fadeIn(0.5).play();
+        return () => {
+            if (actions[avatar.animation])
+                actions[avatar.animation].fadeOut(0.5);
+        }
+    }, [actions, avatar.animation]);
 
     useEffect(()=>{
         setAvatar({
@@ -29,7 +39,7 @@ export default function Deadpool() {
             jumpVel={4}
             position={[0, 10, 0]}
         >
-          <group name="Scene">
+          <group ref={avatarRef} name="Scene" position-y={-0.8}>
             <group name="Armature">
               <skinnedMesh
                 name="EyeLeft"

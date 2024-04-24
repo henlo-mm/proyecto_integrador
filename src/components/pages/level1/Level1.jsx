@@ -5,16 +5,21 @@ import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
 import { Canvas } from "@react-three/fiber";
 import World from "./world/World";
-import { OrbitControls } from "@react-three/drei";
+import useMovements from "../../utils/key-movements";
+import { KeyboardControls, OrbitControls } from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
+import Controls from "./controls/Controls";
 
 export default function Level1() {
 
+    const map = useMovements();
+
     return (
+        <KeyboardControls map={map} >
             <Canvas
                 camera={
                     {
-                        position: [55, 5, -10],
+                        position: [0, 10, -2],
                         fov: 75
                     }
                 }
@@ -29,10 +34,12 @@ export default function Level1() {
                     <Lights />
                     <Environments />
                     <Physics debug={true}>
-                        <Deadpool />
                         <World />
+                        <Deadpool />
                     </Physics>
                 </Suspense>
+                <Controls />
             </Canvas>
+        </KeyboardControls>
     )
 }

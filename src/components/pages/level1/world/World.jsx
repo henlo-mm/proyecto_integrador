@@ -48,7 +48,7 @@ const World = (props) => {
         <>
         <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
             <group>
-                <RigidBody type="fixed">
+                <RigidBody type="fixed" colliders="trimesh">
                     <mesh
                         castShadow
                         receiveShadow
