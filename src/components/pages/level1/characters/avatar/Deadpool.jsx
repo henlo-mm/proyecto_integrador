@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl, { EcctrlAnimation } from "ecctrl";
@@ -15,6 +15,9 @@ export default function Deadpool() {
     const { gl } = useThree();
 
     const { actions } = useAnimations(animations, avatarRef)
+    const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
+
+
     
 
     const onMouseClick = useCallback(() => {
@@ -24,6 +27,9 @@ export default function Deadpool() {
                 animation: "Shooting"
             });
             actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
+
+            shootSound.currentTime = 0; 
+            shootSound.play();
         }
     
 
