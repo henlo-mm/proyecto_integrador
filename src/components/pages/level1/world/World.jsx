@@ -1,4 +1,4 @@
-import { useGLTF, useTexture} from '@react-three/drei';
+import { Plane, useGLTF, useTexture} from '@react-three/drei';
 import {RepeatWrapping} from "three";
 import {CuboidCollider, RigidBody} from "@react-three/rapier"
 
@@ -55,8 +55,15 @@ const World = (props) => {
                         geometry={nodes.Floor.geometry}
                         material={nodes.Floor.material}
                     >
-                        {/* <meshStandardMaterial {...propsTexture} transparent={true} opacity={0.0} /> */}
                     </mesh>
+                </RigidBody>
+                <RigidBody type="fixed" colliders="trimesh">
+                    <Plane args={[100, 10]} position={[-5, 1.5, 0]} rotation={[0, Math.PI / 2, 0]}>
+                        <meshStandardMaterial attach="material" />
+                    </Plane>
+                    <Plane args={[100, 10]} position={[5, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]}>
+                        <meshStandardMaterial attach="material" />
+                    </Plane>
                 </RigidBody>
                 <RigidBody type="fixed" colliders={false}>
                     <mesh

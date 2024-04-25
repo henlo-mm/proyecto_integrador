@@ -1,6 +1,6 @@
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
 import { Canvas } from "@react-three/fiber";
@@ -11,6 +11,16 @@ import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 
 export default function Level1() {
+
+    const [pausedPhysics, setPausedPhysics] = useState(true);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setPausedPhysics(false);
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, []);
 
     const map = useMovements();
 
@@ -33,12 +43,12 @@ export default function Level1() {
                 <Suspense fallback={null}>
                     <Lights />
                     <Environments />
-                    <Physics debug={true}>
+                    <Physics debug={true}  paused={pausedPhysics}>
                         <World />
                         <Deadpool />
+                        <Controls />
                     </Physics>
                 </Suspense>
-                <Controls />
             </Canvas>
         </KeyboardControls>
     )
