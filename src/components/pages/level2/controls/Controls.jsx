@@ -27,11 +27,11 @@ export default function Controls() {
 					soundToPlay = state.run ? runSound : walkSound;
 				}
 				if (state.jump) {
-					currentAnimation = "Jump";
+					currentAnimation = "Jumping";
 					soundToPlay = jumpSound;
 				}
 				if (state.attack) {
-					currentAnimation = state.shoot ? "Shoot" : "Punch";
+					currentAnimation = state.shoot ? "Shooting" : "Punch";
 					soundToPlay = state.shoot ? shootSound : punchSound;
 				}
 
@@ -59,9 +59,6 @@ export default function Controls() {
 			}
 		}
 	};
-
-
-
 
 
 }

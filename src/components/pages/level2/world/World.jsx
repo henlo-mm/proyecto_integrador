@@ -6,12 +6,12 @@ const World = (props) => {
 
     const {nodes, materials} = useGLTF("/assets/models/floor/floormejorado.glb");
 
-    const PATH = "/assets/textures/floor/";
+    const PATH = "/assets/textures/floor/level2/";
     const propsTexture = useTexture({
-        map: PATH + "dirty_concrete_diff_1k.jpg",
-        normalMap: PATH + "dirty_concrete_nor_gl_1k.jpg",
-        roughnessMap: PATH + "dirty_concrete_rough_1k.jpg",
-        displacementMap: PATH + "dirty_concrete_rough_1k.jpg",
+        map: PATH + "concrete_layers_02_diff_1k.jpg",
+        normalMap: PATH + "concrete_layers_02_nor_gl_1k.jpg",
+        roughnessMap: PATH + "concrete_layers_02_rough_1k.jpg",
+        displacementMap: PATH + "concrete_layers_02_disp_1k.png",
     });
 
     propsTexture.map.repeat.set(4, 64);
@@ -55,6 +55,7 @@ const World = (props) => {
                         geometry={nodes.Floor.geometry}
                         material={nodes.Floor.material}
                     >
+                        {/* <meshStandardMaterial attach="material" {...propsTexture}  castShadow receiveShadow transparent={true} opacity={0} /> */}
                     </mesh>
                 </RigidBody>
                 <RigidBody type="fixed" colliders="trimesh">

@@ -2,13 +2,13 @@ import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import { Suspense } from "react";
 import Lights from "./lights/Lights";
-import Environments from "./environment2/Environment2";
+import Environments from "./environments/Environment";
 import { Canvas } from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
 import { KeyboardControls, OrbitControls } from "@react-three/drei";
-import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
+import Wolverine from "./characters/avatar/Wolverine";
 
 export default function Level2() {
 
@@ -32,10 +32,10 @@ export default function Level2() {
                 />
                 <Suspense fallback={null}>
                     <Lights />
-                    <Environment2 />
+                    <Environments />
                     <Physics debug={true}>
                         <World />
-                        <Deadpool />
+                        <Wolverine />
                     </Physics>
                 </Suspense>
                 <Controls />
