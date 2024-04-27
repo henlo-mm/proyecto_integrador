@@ -1,65 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-@font-face {
-    font-family: 'FontDead';
-    src: url('../../../public/assets/fonts/DeadpoolFont.json');
-}
-
-.container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.9);
-    user-select: none;
-}
-
-.logo-univalle img{
-    width: 114px;
-    height: 159px;
-    margin-bottom: 4rem;
-}
-
-.title-dead-game{
-    font-size: 28px;
-    font-weight: bold;
-    color: red;
-    font-family: 'FontDead', Arial, sans-serif;
-    text-align: center;
-}
-
+  
 .button-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 4rem;
-
 }
 
 .button-start{
-    color: white;
-    background-color: red;
+    color: #FFF;
+    background: linear-gradient(45deg, #f0131e, #8b4513); 
     font-weight: bold;
-    width: 96px;
-    height: 32px;
+    width: 120px; 
+    height: 40px; 
     padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    border: 2px solid #4b4b4b; 
+    border-radius: 8px; 
     cursor: pointer;
+    font-family: 'MarvelHero', Arial, sans-serif;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5); 
     margin: 0.5rem;
+    transition: transform 0.1s ease; 
 }
 
 .button-start:hover {
-    background-color: #FF5757;
+    background: linear-gradient(45deg, #ff073a, #ffb300); 
+    transform: translateY(-3px); 
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.7);
 }
 
 .button-start:active {
     background-color: #920A0A; 
+    transform: translateY(2px); 
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.7);
 }
 
 .button-start:disabled {
     background-color: #fde6e7;
+    color: #b4b4b4;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.85);
+  background-blend-mode: darken;
+  background-image: url('../../../public/assets/images/deadpool-and-wolverine.jpg');
+  background-size: cover;
+  background-attachment: fixed; 
+}
+
+.title-dead-game {
+    font-size: 5rem; 
+    color: #f0131e;
+    -webkit-text-stroke: 2px #000; 
+    text-shadow: 0px 0px 10px #fff000; 
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Bangers', cursive;
+    position: relative;
+    z-index: 2; 
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 40px;
+    background: rgba(59, 57, 57, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.75); 
+    max-width: 400px;
+    width: 100%;
+    color: #fff;
+}
+  
+.login-title {
+    font-size: 2rem; 
+    color: #e8e8e8; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+    font-family: 'Bangers', cursive; 
+    font-weight: 400; 
+    margin-bottom: 1rem; 
+}
+  
+.login-input {
+    margin: 10px 0;
+    padding: 15px;
+    border: 2px solid #FFF; 
+    border-radius: 8px;
+    background-color: #282828; 
+    color: #FFF;
+    font-size: 1.1rem;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); 
+}
+  
+.login-button {
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #d12f2f; 
+    color: #e8e8e8; 
+    border: 2px solid #d12f2f; 
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 400; 
+    font-size: 1.1rem;
+    font-family: 'Roboto', sans-serif; 
+    transition: background-color 0.3s; 
+}
+  
+.login-button:hover {
+    background-color: #e04545; 
+}
+  
+.login-button:disabled {
+    background-color: #7a2929;
+    color: #b4b4b4;
     cursor: not-allowed;
 }
+  

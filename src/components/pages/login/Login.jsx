@@ -1,27 +1,43 @@
+import { useState } from "react";
 import "../../styles/login.css";
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate(); 
 
-    const onHandleButtonStart = (levelRoute) => {
-        console.log("Iniciar Juego");
-        navigate(levelRoute);
-    }
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      navigate('/profile', { state: { username: username } })
+    };
+
 
     return (
-        <div className="container">
+  
+        <div className="login-container">
             <div className="title-dead-game">
-                Bienvenido a<br/>
+                DevPool y Codeverine: En Busca de la Regeneración Perdida
             </div>
-            <div className="button-container">
-
-                <button onClick={() => onHandleButtonStart('/level1')} className="button-start">Nivel 1</button>
-                <button onClick={() => onHandleButtonStart('/level2')} className="button-start">Nivel 2</button>
-                <button onClick={() => onHandleButtonStart('/level3')} className="button-start">Nivel 3</button>
-                <button onClick={() => onHandleButtonStart('/level4')} className="button-start">Nivel 4</button>
-            </div>
+            <form onSubmit={handleSubmit} className="login-form">
+                <h1 className="login-title">INICIAR SESIÓN</h1>
+                <input
+                    type="text"
+                    placeholder="Usuario"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="login-input"
+                />
+                <input
+                    type="password"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="login-input"
+                />
+                <button type="submit" className="login-button">ENVIAR</button>
+            </form>
         </div>
     );
 

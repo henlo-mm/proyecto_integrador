@@ -2,9 +2,8 @@ import { Center, Text3D } from "@react-three/drei";
 import { useState } from "react";
 
 const WelcomeText = (props) => {
-    const text = "Iniciar juego";
-/*     const text = "DevPool y Codeverine: En Busca de la Regeneración Perdida";
- */
+
+    const text = "DevPool y Codeverine: En Busca de la Regeneración Perdida";
 
     const [color, setColor] = useState('red');
 
