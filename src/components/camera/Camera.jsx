@@ -1,25 +1,18 @@
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
-import * as THREE from "three";
+import { useThree, useFrame } from '@react-three/fiber';
 
-const Camera = ({ targetRef }) => {
-    const cameraRef = useRef();
+
+const Camera = ({ playerRef  }) => {
+    const { camera } = useThree();
 
     useFrame(() => {
-        if (cameraRef.current && targetRef.current) {
-            const { position } = targetRef.current;
-            cameraRef.current.position.lerp(position.clone().add(new THREE.Vector3(0, 5, 10)), 0.05);
-            cameraRef.current.lookAt(position);
+        if (playerRef.current) {
+            const { x, y, z } = playerRef.current.position;
+            camera.position.set(x, y + 2, z - 5);
+            camera.lookAt(x, y, z);
         }
     });
 
-    return (
-        <>
-            <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 10, 20]} />
-            <OrbitControls enableZoom={true} enablePan={true} />
-        </>
-    );
+    return null;
 };
 
 export default Camera;
