@@ -11,6 +11,7 @@ import Controls from "./controls/Controls";
 import Wolverine from "./characters/avatar/Wolverine";
 import Camera from "../../camera/Camera";
 import LoadingScreen from "../../loading/LoadingScreen";
+import Juggernaut from "./characters/enemies/Juggernaut";
 
 export default function Level4() {
 
@@ -56,6 +57,7 @@ export default function Level4() {
                         <Physics debug={false}>
                             <World />
                             <Wolverine />
+                            <Juggernaut />
                             <Camera  playerRef={wolverineRef} />
                             <Controls />
                         </Physics>
