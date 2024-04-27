@@ -9,6 +9,8 @@ import useMovements from "../../utils/key-movements";
 import { KeyboardControls, OrbitControls } from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
+import LoadingScreen from "../../loading/LoadingScreen";
+import { Html } from '@react-three/drei';
 
 export default function Level1() {
 
@@ -40,7 +42,7 @@ export default function Level1() {
                     enableZoom={true}
                     enablePan={true}
                 />
-                <Suspense fallback={null}>
+                <Suspense fallback={<Html><LoadingScreen /></Html>}>
                     <Lights />
                     <Environments />
                     <Physics debug={false}  paused={pausedPhysics}>
