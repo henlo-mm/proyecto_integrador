@@ -1,6 +1,6 @@
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
 import { Canvas } from "@react-three/fiber";
@@ -11,17 +11,20 @@ import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
 import { Html } from '@react-three/drei';
+import Camera from "../../camera/Camera";
 
 export default function Level1() {
 
-    const [pausedPhysics, setPausedPhysics] = useState(true);
+    const deadpoolRef = useRef();
+
+    const [showLoadingScreen, setShowLoadingScreen] = useState(true);
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setPausedPhysics(false);
-        }, 500);
+        const timer = setTimeout(() => {
+            setShowLoadingScreen(false);
+        }, 5000);
 
-        return () => clearTimeout(timeout);
+        return () => clearTimeout(timer);
     }, []);
 
     const map = useMovements();
@@ -37,20 +40,29 @@ export default function Level1() {
                 }
                 shadows={true}
             >
-                <Perf position="top-left" />
+                {/* <Perf position="top-left" /> */}
                 <OrbitControls 
                     enableZoom={true}
                     enablePan={true}
                 />
-                <Suspense fallback={<Html><LoadingScreen /></Html>}>
-                    <Lights />
-                    <Environments />
-                    <Physics debug={false}  paused={pausedPhysics}>
-                        <World />
-                        <Deadpool />
-                        <Controls />
-                    </Physics>
-                </Suspense>
+
+                {showLoadingScreen ? (
+                    <Html>
+                        <LoadingScreen />
+                    </Html>
+                ) : (
+
+                    <Suspense fallback={null}>
+                        <Lights />
+                        <Environments />
+                        <Physics debug={false}>
+                            <World />
+                            <Deadpool ref={deadpoolRef} />
+                            <Camera  playerRef={deadpoolRef} />
+                            <Controls />
+                        </Physics>
+                    </Suspense>
+                )}
             </Canvas>
         </KeyboardControls>
     )

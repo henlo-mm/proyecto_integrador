@@ -1,6 +1,6 @@
 
 
-import '../../styles/gameHud.css';
+import '../styles/gameHud.css';
 
 export default function GameStats() {
 
