@@ -12,6 +12,7 @@ import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
 import { Html } from '@react-three/drei';
 import Camera from "../../camera/Camera";
+import Juggernaut from "./characters/enemies/Juggernaut";
 
 export default function Level1() {
 
@@ -57,6 +58,7 @@ export default function Level1() {
                         <Environments />
                         <Physics debug={false}>
                             <World />
+                            <Juggernaut />
                             <Deadpool ref={deadpoolRef} />
                             <Camera  playerRef={deadpoolRef} />
                             <Controls />
