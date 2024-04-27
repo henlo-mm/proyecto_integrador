@@ -33,7 +33,7 @@ export default function Level2() {
                 <Suspense fallback={null}>
                     <Lights />
                     <Environments />
-                    <Physics debug={true}>
+                    <Physics debug={false}>
                         <World />
                         <Wolverine />
                     </Physics>
