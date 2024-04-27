@@ -1,7 +1,6 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useAvatar } from "../../../context/AvatarContext";
 import { useEffect, useState } from "react";
-import { useFrame } from "@react-three/fiber";
 
 export default function Controls() {
 	const { avatar, setAvatar } = useAvatar();
@@ -12,7 +11,6 @@ export default function Controls() {
 	const [punchSound] = useState(new Audio("/assets/sounds/punch.mp3"));
 	const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
-	const [play, setPlay] = useState(false)
 	const [currentSound, setCurrentSound] = useState(null);
 
 	useEffect(() => {

@@ -9,7 +9,6 @@ import useMovements from "../../utils/key-movements";
 import { KeyboardControls, OrbitControls } from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
-import WelcomeText from "../level2/world/WelcomeText";
 
 export default function Level1() {
 
