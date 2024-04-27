@@ -1,4 +1,4 @@
-import {  useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl from "ecctrl";
@@ -69,7 +69,6 @@ export default function Deadpool() {
       maxVelLimit={5}
       jumpVel={5}
       position={[0, 10, 0]}
-      debug
       animated
       mode="PointToMove"
     >

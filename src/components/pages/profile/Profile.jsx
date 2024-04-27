@@ -8,7 +8,7 @@ export default function Profile() {
     const user = location.state;
 
     const navigateToLevel = (level) => {
-        navigate(level);
+        navigate(`/${level}`);
     };
 
     return (

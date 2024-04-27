@@ -43,7 +43,7 @@ export default function Level1() {
                 <Suspense fallback={null}>
                     <Lights />
                     <Environments />
-                    <Physics debug={true}  paused={pausedPhysics}>
+                    <Physics debug={false}  paused={pausedPhysics}>
                         <World />
                         <Deadpool />
                         <Controls />
