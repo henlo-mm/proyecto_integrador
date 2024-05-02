@@ -1,55 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 .hud {
-  position: absolute;
+  position: fixed; 
   top: 0;
   left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: left;
-  padding: 1rem 0;
+  padding: 1rem;
+  z-index: 10; 
+}
+
+.bottomLeft {
+  background: rgba(0, 0, 0, 0.6); 
+  padding: 1rem;
+  border: 2px solid #ff0000; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); 
+  border-radius: 10px; 
 }
 
 .score__title {
-  color: #fe2079;
-  font-size: 2rem; 
-  font-weight: 700;
-  text-transform: uppercase; 
-  text-shadow: 0 0 5px rgba(238, 17, 17, 0.7); 
-  margin: 0 0.5rem; 
-  font-family: 'Press Start 2P', cursive; 
-  animation: pulse 1s infinite ease-in-out; 
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #ff0000;
+  margin: 0.5rem 0; 
+  font-family: 'Press Start 2P', cursive;
+  animation: neon 2s infinite alternate; 
 }
 
-
-@keyframes pulse {
+@keyframes neon {
   0% {
-    color: #eee;
-    opacity: 1;
-  }
-  50% {
-    color: #eb0f0f;
-    opacity: 0.7;
+    text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500, 0 0 50px #ff4500, 0 0 75px #ff4500;
+    color: #fff;
   }
   100% {
-    color: #eee;
-    opacity: 1;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff4500, 0 0 40px #ff4500, 0 0 50px #ff4500, 0 0 60px #ff4500, 0 0 70px #ff4500, 0 0 80px #ff4500;
+    color: #ff4500;
   }
 }
-  
-  @keyframes wiggle {
-    0% {
-      transform: translateY(0%);
-    }
-  
-    50% {
-      transform: translateY(10%);
-    }
-  
-    100% {
-      transform: translateY(0%);
-    }
-  }
-  
-  
-
-
-  

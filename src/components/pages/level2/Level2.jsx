@@ -1,16 +1,31 @@
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Lights from "./lights/Lights";
-import Environments from "./environment2/Environment2";
+import Environments from "./environments/Environment";
 import { Canvas } from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
-import Deadpool from "./characters/avatar/Deadpool";
+import { Html, KeyboardControls, OrbitControls } from "@react-three/drei";
 import Controls from "./controls/Controls";
+import Wolverine from "./characters/avatar/Wolverine";
+import Camera from "../../camera/Camera";
+import LoadingScreen from "../../loading/LoadingScreen";
+import Juggernaut from "./characters/enemies/Juggernaut";
 
 export default function Level2() {
+
+    const wolverineRef = useRef();
+
+    const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowLoadingScreen(false);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const map = useMovements();
 
@@ -25,20 +40,29 @@ export default function Level2() {
                 }
                 shadows={true}
             >
-                <Perf position="top-left" />
+               {/*  <Perf position="top-left" /> */}
                 <OrbitControls 
                     enableZoom={true}
                     enablePan={true}
                 />
-                <Suspense fallback={null}>
-                    <Lights />
-                    <Environment2 />
-                    <Physics debug={true}>
-                        <World />
-                        <Deadpool />
-                    </Physics>
-                </Suspense>
-                <Controls />
+                 {showLoadingScreen ? (
+                    <Html>
+                        <LoadingScreen />
+                    </Html>
+                ) : (
+
+                    <Suspense fallback={null}>
+                        <Lights />
+                        <Environments />
+                        <Physics debug={false}>
+                            <World />
+                            <Juggernaut />
+                            <Wolverine />
+                            <Camera  playerRef={wolverineRef} />
+                            <Controls />
+                        </Physics>
+                    </Suspense>
+                )}
             </Canvas>
         </KeyboardControls>
     )

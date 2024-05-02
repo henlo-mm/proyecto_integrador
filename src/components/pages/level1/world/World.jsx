@@ -59,10 +59,10 @@ const World = (props) => {
                 </RigidBody>
                 <RigidBody type="fixed" colliders="trimesh">
                     <Plane args={[100, 10]} position={[-5, 1.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-                        <meshStandardMaterial attach="material" />
+                        <meshStandardMaterial attach="material" transparent={true} opacity={0} />
                     </Plane>
                     <Plane args={[100, 10]} position={[5, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]}>
-                        <meshStandardMaterial attach="material" />
+                        <meshStandardMaterial attach="material" transparent={true} opacity={0} />
                     </Plane>
                 </RigidBody>
                 <RigidBody type="fixed" colliders={false}>

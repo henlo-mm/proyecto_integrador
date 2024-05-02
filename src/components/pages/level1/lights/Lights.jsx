@@ -4,7 +4,7 @@ import { Color, DirectionalLightHelper } from "three";
 
 const Lights = () => {
     const lightRef = useRef();
-    useHelper(lightRef, DirectionalLightHelper);
+    /* useHelper(lightRef, DirectionalLightHelper); */
     
     return <>
         <ambientLight

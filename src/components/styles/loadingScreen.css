@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.loading-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.75); 
+    z-index: 1000;
+    animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+    0% { box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.75); }
+    50% { box-shadow: 0 0 15px 10px rgba(255, 0, 0, 0.5); }
+    100% { box-shadow: 0 0 15px 5px rgba(255, 0, 0, 0.75); }
+}
+
+.loading-screen h1, .loading-screen h2 {
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+    text-shadow: 0 0 10px #ff0000; 
+    margin: 0;
+}
+
+.instructions-panel {
+    margin-top: 20px;
+}
+
+.instructions-panel ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+.instructions-panel li {
+    background: #222;
+    border: 1px solid #333;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+
+.instructions-panel li strong {
+    display: block;
+    color: #ff0000; 
+    margin-bottom: 5px;
+}
+
+.instructions-panel li:not(:last-child) {
+    animation: fadein 0.5s ease-in-out;
+}
+
+@keyframes fadein {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
