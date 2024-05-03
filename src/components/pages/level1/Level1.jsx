@@ -13,13 +13,13 @@ import LoadingScreen from "../../loading/LoadingScreen";
 import { Html } from '@react-three/drei';
 import Camera from "../../camera/Camera";
 import Juggernaut from "./characters/enemies/Juggernaut";
+import Health from "./objects/Health";
 
 export default function Level1() {
 
-    const deadpoolRef = useRef();
-
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
-
+    const [activeHealths, setActiveHealths] = useState([true, true]);
+    
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowLoadingScreen(false);
@@ -29,6 +29,14 @@ export default function Level1() {
     }, []);
 
     const map = useMovements();
+
+    const onHealthCollected = (index) => {
+        setActiveHealths((prev) => {
+            const newHealths = [...prev];
+            newHealths[index] = false;
+            return newHealths;
+        });
+    };
 
     return (
         <KeyboardControls map={map} >
@@ -41,7 +49,7 @@ export default function Level1() {
                 }
                 shadows={true}
             >
-                {/* <Perf position="top-left" /> */}
+                <Perf position="top-left" />
                 <OrbitControls 
                     enableZoom={true}
                     enablePan={true}
@@ -58,9 +66,21 @@ export default function Level1() {
                         <Environments />
                         <Physics debug={false}>
                             <World />
+                            <Deadpool />
                             <Juggernaut />
-                            <Deadpool ref={deadpoolRef} />
-                            <Camera  playerRef={deadpoolRef} />
+                            <Camera />
+                            {activeHealths[0] && (
+                                <Health
+                                    position={[-5, 0.2, 5]}
+                                    onCollected={() => onHealthCollected(0)}
+                                />
+                            )}
+                            {activeHealths[1] && (
+                                <Health
+                                    position={[-1, 0.2, -1]}
+                                    onCollected={() => onHealthCollected(1)}
+                                />
+                            )}
                             <Controls />
                         </Physics>
                     </Suspense>
