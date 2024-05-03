@@ -2,19 +2,57 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl, { EcctrlAnimation } from "ecctrl";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
-export default function Juggernaut() {
+export default function Juggernaut(props, deadpoolRef) {
 
-    const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
-   
+    const JuggernautCircleRef = useRef(null)
+    const { nodes, materials,animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
+    
+    const { actions } = useAnimations(animations, JuggernautCircleRef)
+    const { avatar, setAvatar } = useAvatar();
+
+    const radius = 3.5
+    const speed = 0.5
+
+    useFrame((state, delta) => {
+        const elapsedTime = state.clock.getElapsedTime()
+        const angle = elapsedTime * speed
+        const x = Math.cos(angle) * radius
+        const z = Math.sin(angle) * radius
+
+        JuggernautCircleRef.current.position.set(props.position[0] + x, props.position[1], props.position[2] + z)
+        JuggernautCircleRef.current.rotation.y = -angle
+    })
+
+    //
+    
+    useEffect(() => {
+
+        JuggernautCircleRef.animation = 'Walking'
+
+        actions[JuggernautCircleRef.animation]?.reset().fadeIn(1).play();
+        return () => {
+          if (actions[JuggernautCircleRef.animation])
+            actions[JuggernautCircleRef.animation].fadeOut(0.5);
+        }
+      }, [actions, JuggernautCircleRef.animation]);
+    
+    
+
+
+
+
+
+
+
     return (
         <RigidBody colliders={false} type='fixed' >
 
             <group name="Scene">
-                <group name="Armature" position-y={-0.8} position-x={-15} position-z={5} rotation={[0, Math.PI / 2, 0]}>
+                <group  name="Armature" ref={JuggernautCircleRef}  position-y={-0.8} position-x={-15} position-z={5} >
                     <skinnedMesh
                         name="EyeLeft"
                         geometry={nodes.EyeLeft.geometry}

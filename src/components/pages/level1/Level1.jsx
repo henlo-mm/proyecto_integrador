@@ -58,7 +58,7 @@ export default function Level1() {
                         <Environments />
                         <Physics debug={false}>
                             <World />
-                            <Juggernaut />
+                            <Juggernaut position={[-20, -0.8, 4]}/>
                             <Deadpool ref={deadpoolRef} />
                             <Camera  playerRef={deadpoolRef} />
                             <Controls />
