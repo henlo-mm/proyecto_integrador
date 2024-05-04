@@ -7,28 +7,29 @@ import * as THREE from 'three';
 export default function Health({ position, onCollected }) {
     const { nodes, materials } = useGLTF("assets/models/objects/first_aid_kit.glb");
     const groupRef = useRef();
+    const collisionRef = useRef(false);
 
-    // Función de colisión
     const handleCollision = (event) => {
-        onCollected();
+        console.log('collision', event)
+        if (!collisionRef.current) {
+            collisionRef.current = true;
+            onCollected();
+        }
     };
 
-    useFrame(({clock}) => {
-
-        const rotationSpeed = 2; 
+/*     useFrame(({ clock }) => {
         const elapsed = clock.getElapsedTime();
-    
-        groupRef.current.rotation.y = elapsed * rotationSpeed;
-    })
+        groupRef.current.rotation.y = elapsed * 2;
+    }); */
 
 
     return (
         <RigidBody
-            colliders="trimesh"
+            colliders="cuboid"
             type='fixed'
             onCollisionEnter={handleCollision}
         >
-            <group dispose={null} scale={[-0.1, -0.1, -0.1]} position={position} ref={groupRef}>
+            <group dispose={null} scale={[-0.09, -0.09, -0.09]} position={position} ref={groupRef}>
                 <group>
                     <group rotation={[Math.PI / 2, 0, 0]}>
                         <mesh

@@ -4,8 +4,9 @@ import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl from "ecctrl";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import React, { forwardRef } from "react";
 
-export default function Deadpool() {
+const Deadpool = forwardRef((props, ref) => {
   const avatarRef = useRef();
   const rigidBodyAvatarRef = useRef();
   const { avatar, setAvatar } = useAvatar();
@@ -69,12 +70,10 @@ export default function Deadpool() {
       maxVelLimit={5}
       jumpVel={5}
       position={[0, 10, 0]}
-      animated
-      mode="PointToMove"
     >
 
       <group ref={avatarRef} name="Scene" position-y={-0.8}>
-        <group name="Armature">
+        <group name="Armature"  ref={ref} >
           <skinnedMesh
             name="EyeLeft"
             geometry={nodes.EyeLeft.geometry}
@@ -177,4 +176,6 @@ export default function Deadpool() {
 
     </Ecctrl>
   )
-}
+});
+
+export default Deadpool;

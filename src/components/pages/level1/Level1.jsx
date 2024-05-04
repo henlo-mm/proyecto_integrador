@@ -14,29 +14,45 @@ import { Html } from '@react-three/drei';
 import Camera from "../../camera/Camera";
 import Juggernaut from "./characters/enemies/Juggernaut";
 import Health from "./objects/Health";
+import { HealthHUD } from "./hud/HealthHUD";
 
 export default function Level1() {
 
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
-    const [activeHealths, setActiveHealths] = useState([true, true]);
-    
+    const [activeHealths, setActiveHealths] = useState([true, true, true, true, true, true, true, true, true, true]);
+    const [collectedLives, setCollectedLives] = useState(3); 
+
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowLoadingScreen(false);
-        }, 5000);
+        }, 500);
 
         return () => clearTimeout(timer);
     }, []);
 
     const map = useMovements();
+    const deadpoolRef = useRef(null);
+
 
     const onHealthCollected = (index) => {
+
         setActiveHealths((prev) => {
             const newHealths = [...prev];
             newHealths[index] = false;
+
             return newHealths;
         });
     };
+
+    const handleCollisionWithTarget = () => {
+        setCollectedLives((prev) => {
+            const newLives = Math.max(0, prev - 1);
+            console.log('collision with target', newLives); 
+            return newLives;
+        });
+    };
+    
 
     return (
         <KeyboardControls map={map} >
@@ -49,7 +65,7 @@ export default function Level1() {
                 }
                 shadows={true}
             >
-                <Perf position="top-left" />
+                <Perf position="top-right" />
                 <OrbitControls 
                     enableZoom={true}
                     enablePan={true}
@@ -64,10 +80,10 @@ export default function Level1() {
                     <Suspense fallback={null}>
                         <Lights />
                         <Environments />
-                        <Physics debug={false}>
+                        <Physics debug={true}>
                             <World />
-                            <Deadpool />
-                            <Juggernaut />
+                            <Deadpool ref={deadpoolRef} />
+                            <Juggernaut targetRef={deadpoolRef} onCollisionWithTarget={handleCollisionWithTarget}  />
                             <Camera />
                             {activeHealths[0] && (
                                 <Health
@@ -81,11 +97,61 @@ export default function Level1() {
                                     onCollected={() => onHealthCollected(1)}
                                 />
                             )}
+                            {activeHealths[2] && (
+                                <Health
+                                    position={[-4, 0.2, 5]}
+                                    onCollected={() => onHealthCollected(2)}
+                                />
+                            )}
+                            {activeHealths[3] && (
+                                <Health
+                                    position={[-3, 0.2, 4]}
+                                    onCollected={() => onHealthCollected(3)}
+                                />
+                            )}
+                            {activeHealths[4] && (
+                                <Health
+                                    position={[-2, 0.2, 7]}
+                                    onCollected={() => onHealthCollected(4)}
+                                />
+                            )}
+                            {activeHealths[5] && (
+                                <Health
+                                    position={[-7, 0.2, 4]}
+                                    onCollected={() => onHealthCollected(5)}
+                                />
+                            )}
+                            {activeHealths[6] && (
+                                <Health
+                                    position={[-8, 0.2, 3]}
+                                    onCollected={() => onHealthCollected(6)}
+                                />
+                            )}
+                            {activeHealths[7] && (
+                                <Health
+                                    position={[-9, 0.2, 5]}
+                                    onCollected={() => onHealthCollected(7)}
+                                />
+                            )}
+                            {activeHealths[8] && (
+                                <Health
+                                    position={[-2, 0.2, 8]}
+                                    onCollected={() => onHealthCollected(8)}
+                                />
+                            )}
+                            {activeHealths[9] && (
+                                <Health
+                                    position={[-6, 0.2, 4]}
+                                    onCollected={() => onHealthCollected(9)}
+                                />
+                            )}
                             <Controls />
                         </Physics>
                     </Suspense>
                 )}
             </Canvas>
+            <HealthHUD collectedLives={collectedLives} />
+
         </KeyboardControls>
     )
 }
