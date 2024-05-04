@@ -59,12 +59,24 @@ export default function Level1() {
         <KeyboardControls map={map}>
             <Canvas
                 shadows={true}
+                camera={
+                    {
+                        position: [0, 10, -2],
+                        fov: 75
+                    }
+                }
             >
-                <PerspectiveCamera makeDefault position={[10, 10, 10]} zoom={1.3}/>
+              {/*   <PerspectiveCamera makeDefault position={[20, 15, 20]} rotation={[0, -Math.PI / 2, 0]} fov="100" />
                 <OrbitControls makeDefault
                                target={[0, 3, 0]}
                                enablePan={true}
+                /> */}
+
+                <OrbitControls 
+                    enableZoom={true}
+                    enablePan={true}
                 />
+
                 <Perf position="top-right"/>
                 {showLoadingScreen ? (
                     <Html>

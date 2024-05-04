@@ -44,12 +44,19 @@ const Deadpool = forwardRef((props, ref) => {
     shootSound.play();
   },[actions,avatar,setAvatar,shootSound])
 
-  useEffect(() => {
+/*   useEffect(() => {
     gl.domElement.addEventListener('contextmenu', onRightClick);
     return () => {
       gl.domElement.removeEventListener('contextmenu', onRightClick);
     };
-  }, [gl.domElement, onRightClick]);
+  }, [gl.domElement, onRightClick]); */
+
+  useEffect(() => {
+    gl.domElement.addEventListener('click', onMouseClick);
+    return () => {
+      gl.domElement.removeEventListener('click', onMouseClick);
+    };
+  }, [gl.domElement, onMouseClick]);
 
   useEffect(() => {
 
@@ -77,10 +84,11 @@ const Deadpool = forwardRef((props, ref) => {
       camMaxDis={-2}
       maxVelLimit={5}
       jumpVel={5}
+     /*  position={[45, 10, -8]}  */
       position={[0, 10, 0]}
     >
 
-      <group ref={avatarRef} name="Scene" position-y={-0.8}>
+      <group ref={avatarRef} name="Scene" position-y={-0.8}/*  rotation={[0, -Math.PI / 2, 0]} */>
         <group name="Armature"  ref={ref} >
           <skinnedMesh
             name="EyeLeft"
