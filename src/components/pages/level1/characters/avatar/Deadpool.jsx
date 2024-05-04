@@ -6,7 +6,7 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import React, { forwardRef } from "react";
 
-const Deadpool = forwardRef((props, ref) => {
+export default function Deadpool() {
   const avatarRef = useRef();
   const rigidBodyAvatarRef = useRef();
   const { avatar, setAvatar } = useAvatar();
@@ -18,7 +18,7 @@ const Deadpool = forwardRef((props, ref) => {
   const { actions } = useAnimations(animations, avatarRef)
   const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
-  const onMouseClick = useCallback(() => {
+/*   const onMouseClick = useCallback(() => {
     if (actions.Shooting) {
       setAvatar({
         ...avatar,
@@ -42,7 +42,7 @@ const Deadpool = forwardRef((props, ref) => {
 
     shootSound.currentTime=0;
     shootSound.play();
-  },[actions,avatar,setAvatar,shootSound])
+  },[actions,avatar,setAvatar,shootSound]) */
 
 /*   useEffect(() => {
     gl.domElement.addEventListener('contextmenu', onRightClick);
@@ -51,13 +51,13 @@ const Deadpool = forwardRef((props, ref) => {
     };
   }, [gl.domElement, onRightClick]); */
 
-  useEffect(() => {
+/*   useEffect(() => {
     gl.domElement.addEventListener('click', onMouseClick);
     return () => {
       gl.domElement.removeEventListener('click', onMouseClick);
     };
   }, [gl.domElement, onMouseClick]);
-
+ */
   useEffect(() => {
 
     actions[avatar.animation]?.reset().fadeIn(0.5).play();
@@ -80,16 +80,17 @@ const Deadpool = forwardRef((props, ref) => {
   return (
     <Ecctrl
       ref={rigidBodyAvatarRef}
-      camInitDis={-2}
-      camMaxDis={-2}
+      camInitDis={-5}
+      camMaxDis={-7}
       maxVelLimit={5}
       jumpVel={5}
-     /*  position={[45, 10, -8]}  */
-      position={[0, 10, 0]}
+      position={[45, 10, -8]}
+      camFollowMult={100}
+      floatHeight={0}
     >
 
-      <group ref={avatarRef} name="Scene" position-y={-0.8}/*  rotation={[0, -Math.PI / 2, 0]} */>
-        <group name="Armature"  ref={ref} >
+      <group ref={avatarRef} name="Scene" position-y={-0.5} rotation={[0, -Math.PI / 2, 0]}>
+        <group name="Armature">
           <skinnedMesh
             name="EyeLeft"
             geometry={nodes.EyeLeft.geometry}
@@ -192,6 +193,4 @@ const Deadpool = forwardRef((props, ref) => {
 
     </Ecctrl>
   )
-});
-
-export default Deadpool;
+}
