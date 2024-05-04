@@ -33,12 +33,23 @@ const Deadpool = forwardRef((props, ref) => {
 
   }, [actions, avatar, setAvatar]);
 
+  const onRightClick = useCallback((event) => {
+    event.preventDefault();
+    if(actions.Shooting){
+      setAvatar({...avatar,animation: "Shooting"})
+    }
+    actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
+
+    shootSound.currentTime=0;
+    shootSound.play();
+  },[actions,avatar,setAvatar,shootSound])
+
   useEffect(() => {
-    gl.domElement.addEventListener('click', onMouseClick);
+    gl.domElement.addEventListener('contextmenu', onRightClick);
     return () => {
-      gl.domElement.removeEventListener('click', onMouseClick);
+      gl.domElement.removeEventListener('contextmenu', onRightClick);
     };
-  }, [gl.domElement, onMouseClick]);
+  }, [gl.domElement, onRightClick]);
 
   useEffect(() => {
 

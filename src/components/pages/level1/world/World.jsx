@@ -71,22 +71,16 @@ const World = (props) => {
                         receiveShadow
                         geometry={nodes.Mesas.geometry}
                         material={nodes.Mesas.material}
-                        position={[2.219, -0.238, 25.799]}
-                        rotation={[0, -0.442, 0]}
+                        position={[4.427, -0.232, -10.577]}
                         scale={0.1}
                     >
                         <meshStandardMaterial {...propsTextureMesa} />
 
                     </mesh>
-                    <CuboidCollider args={[1, 0.5, 1]} position={[1.8, -0.5, 24.8]} 
-                                    rotation={[0, -Math.PI / 7, 0]}/>
                     <CuboidCollider args={[1, 0.5, 0.9]} position={[-0.8, -0.5, 22.2]}/>
                     <CuboidCollider args={[1, 0.5, 0.9]} position={[-3.5, -0.5, 19.8]}/>
                     <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3, -0.5, 15]}/>
-                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[0.5, -0.5, 15]}/>
                     <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-3, -0.5, 10]}/>
-                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[-0.5, -0.5, 10]}/>
-                    <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 3]}/>
                     <CuboidCollider args={[1.2, 0.5, 1.1]} position={[3.5, -0.5, 0.2]}/>
                     <CuboidCollider args={[5, 0.5, 1.1]} position={[0, -0.5, -11.3]}/>
                 </RigidBody>
@@ -101,24 +95,11 @@ const World = (props) => {
                          <meshStandardMaterial {...propsTextureEstante} />
                     </mesh>
                     <CuboidCollider args={[1.3, 1.0, 0.2]} position={[2.4, 0.1, 33.6]}/>
-                    <CuboidCollider args={[1.3, 1.0, 0.2]} position={[-3.3, 0.1, 33.6]} />
-                    <CuboidCollider args={[1.3, 1.0, 0.2]} position={[-0.3, 0.1, 33.6]}
-                                    rotation={[0, -Math.PI / 1, 0]}/>
-                                    
-                    <CuboidCollider args={[0.3, 1.0, 1.3]} position={[-2.7, 0.1, 0.8]}
+                    <CuboidCollider args={[0.3, 1.0, 1.3]} position={[0.7, 0.1, 0.8]}
                                     rotation={[0, Math.PI / 2, 0]}/>
-                    <CuboidCollider args={[0.3, 1.0, 1.3]} position={[0.7, 0.1, 0.8]} 
-                                    rotation={[0, Math.PI / 2, 0]}/>
-                 
-                    <CuboidCollider args={[1.3, 1.0, 0.3]} position={[3.5, 0.1, -30.15]}/>
-
                     <CuboidCollider args={[1.3, 1.0, 0.3]} position={[2.3, 0.1, -35]}/>
-                    
                     <CuboidCollider args={[1.3, 1.0, 0.3]} position={[-3.5, 0.1, -43.8]}/>
                     <CuboidCollider args={[1.3, 1.0, 0.3]} position={[-0.3, 0.1, -39.8]}/>
-               
-                   
-                    <CuboidCollider args={[1.3, 1.0, 0.3]} position={[-0.9, 0.1, -43.8]}/>
                 </RigidBody>
 
                 <RigidBody type="fixed" colliders={false}>
@@ -132,19 +113,10 @@ const World = (props) => {
                         scale={0.015}
                     >
                     </mesh>
-                    <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4.3, -0.4, 44.1]}
-                                    rotation={[0, -Math.PI / 6, 0]}/>
-                    <CuboidCollider args={[0.7, 0.5, 0.5]} position={[4.5, -0.4, 42]}/>
                     <CuboidCollider args={[0.7, 0.5, 0.5]} position={[-4, -0.4, 39.5]}/>
-                    <CuboidCollider args={[0.7, 0.5, 0.4]} position={[4.1, -0.4, 29.9]}
-                                    rotation={[0, Math.PI / 6, 0]}/>
-                    <CuboidCollider args={[0.4, 0.5, 0.7]} position={[1.3, -0.4, 22.8]}
-                                    rotation={[0, Math.PI / 8, 0]}/>
                     <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-1.6, -0.4, 20.2]}/>
                     <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-1.8, -0.4, 8]}/>
-                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[-2.5, -0.4, -9.3]}/>
-                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[2.5, -0.4, -9.6]}/>
-                    <CuboidCollider args={[0.5, 0.5, 0.7]} position={[4.2, -0.4, -15]}/>
+
                 </RigidBody>
                     
                 </group>

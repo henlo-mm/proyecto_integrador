@@ -1,26 +1,26 @@
-import { Perf } from "r3f-perf";
-import { Physics } from "@react-three/rapier";
-import { Suspense, useEffect, useRef, useState } from "react";
+import {Perf} from "r3f-perf";
+import {Physics} from "@react-three/rapier";
+import {Suspense, useEffect, useRef, useState} from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
-import { Canvas } from "@react-three/fiber";
+import {Canvas} from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
+import {KeyboardControls, OrbitControls, PerspectiveCamera} from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
-import { Html } from '@react-three/drei';
+import {Html} from '@react-three/drei';
 import Camera from "../../camera/Camera";
 import Juggernaut from "./characters/enemies/Juggernaut";
 import Health from "./objects/Health";
-import { HealthHUD } from "./hud/HealthHUD";
+import {HealthHUD} from "./hud/HealthHUD";
 
 export default function Level1() {
 
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
     const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
-    const [collectedLives, setCollectedLives] = useState(3); 
+    const [collectedLives, setCollectedLives] = useState(3);
 
 
     useEffect(() => {
@@ -49,45 +49,38 @@ export default function Level1() {
         console.log('collision with target');
         setCollectedLives((prev) => {
             const newLives = Math.max(0, prev - 1);
-            console.log('collision with target', newLives); 
+            console.log('collision with target', newLives);
             return newLives;
         });
     };
-    
+
 
     return (
-        <KeyboardControls map={map} >
+        <KeyboardControls map={map}>
             <Canvas
-                camera={
-                    {
-                        position: [0, 10, -2],
-                        fov: 75
-                    }
-                }
                 shadows={true}
             >
-                <Perf position="top-right" />
-                <OrbitControls 
-                    enableZoom={true}
-                    enablePan={true}
+                <PerspectiveCamera makeDefault position={[10, 10, 10]} zoom={1.3}/>
+                <OrbitControls makeDefault
+                               target={[0, 3, 0]}
+                               enablePan={true}
                 />
-
+                <Perf position="top-right"/>
                 {showLoadingScreen ? (
                     <Html>
-                        <LoadingScreen />
+                        <LoadingScreen/>
                     </Html>
                 ) : (
 
                     <Suspense fallback={null}>
-                        <Lights />
-                        <Environments />
+                        <Lights/>
+                        <Environments/>
                         <Physics debug={true}>
-                            <World />
-                            <Deadpool ref={deadpoolRef} />
-                            
-                            <Juggernaut targetRef={deadpoolRef} onCollisionWithTarget={handleCollisionWithTarget}  />
-                            <Camera />
-                            {activeHealths[0] && (
+                            <World/>
+                            <Deadpool ref={deadpoolRef}/>
+                            {/*<Juggernaut targetRef={deadpoolRef} onCollisionWithTarget={handleCollisionWithTarget}/>
+                            <Camera />*/}
+                            {/*{activeHealths[0] && (
                                 <Health
                                     position={[-5, 0.2, 5]}
                                     onCollected={() => onHealthCollected(0)}
@@ -116,14 +109,14 @@ export default function Level1() {
                                     position={[-2, 0.2, 7]}
                                     onCollected={() => onHealthCollected(4)}
                                 />
-                            )}
-                            
-                            <Controls />
+                            )}*/}
+
+                            <Controls/>
                         </Physics>
                     </Suspense>
                 )}
             </Canvas>
-            <HealthHUD collectedLives={collectedLives} />
+            <HealthHUD collectedLives={collectedLives}/>
 
         </KeyboardControls>
     )
