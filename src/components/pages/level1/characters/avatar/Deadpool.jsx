@@ -18,9 +18,6 @@ const Deadpool = forwardRef((props, ref) => {
   const { actions } = useAnimations(animations, avatarRef)
   const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
-
-
-
   const onMouseClick = useCallback(() => {
     if (actions.Shooting) {
       setAvatar({
@@ -52,15 +49,15 @@ const Deadpool = forwardRef((props, ref) => {
     }
   }, [actions, avatar.animation]);
 
-
-
   useEffect(() => {
     setAvatar({
       ...avatar,
       avatarRef: avatarRef,
       rigidBodyAvatarRef: rigidBodyAvatarRef?.current
-    })
-  }, [avatarRef?.current, rigidBodyAvatarRef?.current])
+    });
+
+  }, [avatar, rigidBodyAvatarRef?.current]);
+
 
   return (
     <Ecctrl

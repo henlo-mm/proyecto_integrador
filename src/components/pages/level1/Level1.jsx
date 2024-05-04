@@ -19,7 +19,7 @@ import { HealthHUD } from "./hud/HealthHUD";
 export default function Level1() {
 
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
-    const [activeHealths, setActiveHealths] = useState([true, true, true, true, true, true, true, true, true, true]);
+    const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
     const [collectedLives, setCollectedLives] = useState(3); 
 
 
@@ -46,6 +46,7 @@ export default function Level1() {
     };
 
     const handleCollisionWithTarget = () => {
+        console.log('collision with target');
         setCollectedLives((prev) => {
             const newLives = Math.max(0, prev - 1);
             console.log('collision with target', newLives); 
@@ -83,6 +84,7 @@ export default function Level1() {
                         <Physics debug={true}>
                             <World />
                             <Deadpool ref={deadpoolRef} />
+                            
                             <Juggernaut targetRef={deadpoolRef} onCollisionWithTarget={handleCollisionWithTarget}  />
                             <Camera />
                             {activeHealths[0] && (
@@ -115,36 +117,7 @@ export default function Level1() {
                                     onCollected={() => onHealthCollected(4)}
                                 />
                             )}
-                            {activeHealths[5] && (
-                                <Health
-                                    position={[-7, 0.2, 4]}
-                                    onCollected={() => onHealthCollected(5)}
-                                />
-                            )}
-                            {activeHealths[6] && (
-                                <Health
-                                    position={[-8, 0.2, 3]}
-                                    onCollected={() => onHealthCollected(6)}
-                                />
-                            )}
-                            {activeHealths[7] && (
-                                <Health
-                                    position={[-9, 0.2, 5]}
-                                    onCollected={() => onHealthCollected(7)}
-                                />
-                            )}
-                            {activeHealths[8] && (
-                                <Health
-                                    position={[-2, 0.2, 8]}
-                                    onCollected={() => onHealthCollected(8)}
-                                />
-                            )}
-                            {activeHealths[9] && (
-                                <Health
-                                    position={[-6, 0.2, 4]}
-                                    onCollected={() => onHealthCollected(9)}
-                                />
-                            )}
+                            
                             <Controls />
                         </Physics>
                     </Suspense>
