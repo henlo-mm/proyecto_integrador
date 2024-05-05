@@ -1,51 +1,74 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { RigidBody } from "@react-three/rapier";
+import { useFrame } from "@react-three/fiber";
+import { Vector3 } from "three";
 
-export default function Juggernaut({ targetRef, onCollisionWithTarget  }) {
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
+
+export default function Juggernaut({ onCollision  }) {
     const avatarRef = useRef();
-    
+
     const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
     const { actions } = useAnimations(animations, avatarRef)
 
-    useFrame(() => {
-        if (targetRef.current) {
-            const targetPosition = new THREE.Vector3().setFromMatrixPosition(targetRef.current.matrixWorld);
-            const currentPosition = avatarRef.current.position;
-            const distance = targetPosition.distanceTo(currentPosition);
 
-            const minDistance = 1.0;
-            const speed = 0.05;
+	const rigidBodyRef = useRef();
+    const [inCollision, setInCollision] = useState(false);
 
-            if (distance > minDistance) {
-                const direction = targetPosition.clone().sub(currentPosition).normalize();
+    const initialPosition = [2, -0.5, 30];
+    const resetCollisionTimeout = 2000; 
 
-                avatarRef.current.lookAt(targetPosition);
-                avatarRef.current.position.add(direction.multiplyScalar(speed));
+    useFrame(({ scene }) => {
 
+        if (rigidBodyRef.current && !inCollision) {
+            const translation = rigidBodyRef.current.translation();
+            const juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
+
+            const deadpool = scene.getObjectByName("Deadpool");
+            if (deadpool) {
+                const deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
+                const distance = juggernautPosition.distanceTo(deadpoolPosition);
+
+                if (distance < 1) { 
+                    
+                    setInCollision(true);
+                    onCollision();
+                    setTimeout(() => setInCollision(false), resetCollisionTimeout);
+                }
             }
         }
     });
-    
+
+    const movementDistance = 2; 
+    const movementSpeed = 0.01;
+    const [direction, setDirection] = useState(1); 
+
 
     useEffect(() => {
-        actions["Walking"]?.reset().fadeIn(0.5).play();
+        if (actions.Swiping) {
+            actions.Swiping.reset().fadeIn(0.2).play();
+        }
     }, [actions]);
 
-    const handleCollision = (event) => {
-        const { other } = event;
-        if (other) {
-            onCollisionWithTarget();
+    useFrame(() => {
+        if (rigidBodyRef.current) {
+            const position = rigidBodyRef.current.translation();
+            position.x += movementSpeed * direction;
+
+            if (position.x > movementDistance || position.x < -movementDistance) {
+                setDirection(-direction); 
+            }
+
+            rigidBodyRef.current.setTranslation(position, true);
         }
-    };
+    });
 
     return (
-        
-        <RigidBody colliders="cuboid"  type="dynamic" onCollisionEnter={handleCollision} >
-            <group name="Scene" ref={avatarRef}>
-                <group name="Armature" position-y={-0.8} position-x={-15} position-z={5} >
+        <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed">
+            <CuboidCollider args={[-0.4, 0.5, -0.2]} position={[0, 1, 0]} /> 
+
+            <group  ref={avatarRef} >
+                <group name="Armature"  >
                     <skinnedMesh
                         name="EyeLeft"
                         geometry={nodes.EyeLeft.geometry}
@@ -99,7 +122,7 @@ export default function Juggernaut({ targetRef, onCollisionWithTarget  }) {
                     <primitive object={nodes.Hips} />
                 </group>
             </group>
-
         </RigidBody>
+
     )
 }

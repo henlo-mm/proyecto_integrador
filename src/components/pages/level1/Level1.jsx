@@ -6,34 +6,20 @@ import Environments from "./environments/Environments";
 import {Canvas} from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
-import {KeyboardControls, OrbitControls, PerspectiveCamera} from "@react-three/drei";
+import {KeyboardControls} from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
-import {Html} from '@react-three/drei';
-import Camera from "../../camera/Camera";
 import Juggernaut from "./characters/enemies/Juggernaut";
 import Health from "./objects/Health";
 import {HealthHUD} from "./hud/HealthHUD";
-import { EcctrlJoystick } from "ecctrl";
 
 export default function Level1() {
 
-    const [showLoadingScreen, setShowLoadingScreen] = useState(true);
     const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
     const [collectedLives, setCollectedLives] = useState(3);
 
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowLoadingScreen(false);
-        }, 500);
-
-        return () => clearTimeout(timer);
-    }, []);
-
     const map = useMovements();
-    const deadpoolRef = useRef(null);
 
 
     const onHealthCollected = (index) => {
@@ -46,73 +32,71 @@ export default function Level1() {
         });
     };
 
-    const handleCollisionWithTarget = () => {
-        console.log('collision with target');
-        setCollectedLives((prev) => {
-            const newLives = Math.max(0, prev - 1);
-            console.log('collision with target', newLives);
-            return newLives;
-        });
+    const handleCollisionWithJuggernaut = () => {
+        console.log('Colisión detectada con Juggernaut');
+        setCollectedLives((prev) => Math.max(0, prev - 1));
     };
 
+    const handleCollision = (event) => {
+
+        console.log('Colisión con Juggernaut detectada');
+        console.log('event', event);
+
+        const { other } = event; // Other object involved in the collision
+        if (other && other.userData?.name === "Juggernaut") { 
+            setCollectedLives((prev) => Math.max(0, prev - 1));
+        }
+    };
 
     return (
-        <Suspense fallback={null}>
+        <Suspense fallback={ <LoadingScreen/> }>
             <KeyboardControls map={map}>
 
                 <Canvas
                     shadows={true}
                 >
-                  {/*   <Perf position="top-right"/> */}
-                  {/*   {showLoadingScreen ? (
-                        <Html>
-                            <LoadingScreen/>
-                        </Html>
-                    ) : (
+                    <Perf position="top-right"/>
+                 
+                    <Lights/>
+                    <Environments/>
+                    <Physics debug={true}>
+                        <World/>
+                        <Deadpool  onCollision={handleCollisionWithJuggernaut} />
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut} />
+                        {activeHealths[0] && (
+                            <Health
+                                position={[-5, 0.2, 5]}
+                                onCollected={() => onHealthCollected(0)}
+                            />
+                        )}
+                        {activeHealths[1] && (
+                            <Health
+                                position={[-1, 0.2, -1]}
+                                onCollected={() => onHealthCollected(1)}
+                            />
+                        )}
+                        {activeHealths[2] && (
+                            <Health
+                                position={[-4, 0.2, 5]}
+                                onCollected={() => onHealthCollected(2)}
+                            />
+                        )}
+                        {activeHealths[3] && (
+                            <Health
+                                position={[-3, 0.2, 4]}
+                                onCollected={() => onHealthCollected(3)}
+                            />
+                        )}
+                        {activeHealths[4] && (
+                            <Health
+                                position={[-2, 0.2, 7]}
+                                onCollected={() => onHealthCollected(4)}
+                            />
+                        )}
 
-                    <> */}
-                            <Lights/>
-                            <Environments/>
-                            <Physics debug={true}>
-                                <World/>
-                                <Deadpool />
-                                {/*<Juggernaut targetRef={deadpoolRef} onCollisionWithTarget={handleCollisionWithTarget}/>*/}
-                                {/*{activeHealths[0] && (
-                                    <Health
-                                        position={[-5, 0.2, 5]}
-                                        onCollected={() => onHealthCollected(0)}
-                                    />
-                                )}
-                                {activeHealths[1] && (
-                                    <Health
-                                        position={[-1, 0.2, -1]}
-                                        onCollected={() => onHealthCollected(1)}
-                                    />
-                                )}
-                                {activeHealths[2] && (
-                                    <Health
-                                        position={[-4, 0.2, 5]}
-                                        onCollected={() => onHealthCollected(2)}
-                                    />
-                                )}
-                                {activeHealths[3] && (
-                                    <Health
-                                        position={[-3, 0.2, 4]}
-                                        onCollected={() => onHealthCollected(3)}
-                                    />
-                                )}
-                                {activeHealths[4] && (
-                                    <Health
-                                        position={[-2, 0.2, 7]}
-                                        onCollected={() => onHealthCollected(4)}
-                                    />
-                                )}*/}
-
-                                <Controls/>
-                            </Physics>
-                 {/*    </>
-                        
-                    )} */}
+                        <Controls/>
+                    </Physics>
+            
                 </Canvas>
                 <HealthHUD collectedLives={collectedLives}/>
 
