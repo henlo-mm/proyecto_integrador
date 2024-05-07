@@ -1,62 +1,65 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useAvatar } from "../../../context/AvatarContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export default function Controls() {
-	const { avatar, setAvatar } = useAvatar();
-	const [sub, get] = useKeyboardControls()
-	const [runSound] = useState(new Audio("/assets/sounds/run.mp3"))
-	const [walkSound] = useState(new Audio("/assets/sounds/walk.mp3"));
-	const [jumpSound] = useState(new Audio("/assets/sounds/jump.wav"));
-	const [punchSound] = useState(new Audio("/assets/sounds/punch.mp3"));
-	const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
+    const { avatar, setAvatar } = useAvatar();
+    const [sub] = useKeyboardControls();
 
-	const [currentSound, setCurrentSound] = useState(null);
+    const sounds = useMemo(() => ({
+        run: new Audio("/assets/sounds/run.mp3"),
+        walk: new Audio("/assets/sounds/walk.mp3"),
+        jump: new Audio("/assets/sounds/jump.wav"),
+        punch: new Audio("/assets/sounds/punch.mp3"),
+        shoot: new Audio("/assets/sounds/shoot.mp3"),
+    }), []);
 
-	useEffect(() => {
-		const unsubscribe = sub(
-			(state) => state,
-			(state) => {
-				let currentAnimation = "Idle";
-				let soundToPlay = null;
+    const [currentSound, setCurrentSound] = useState(null);
 
-				if (state.forward || state.backward || state.leftward || state.rightward) {
-					currentAnimation = state.run ? "Running" : "Walking";
-					soundToPlay = state.run ? runSound : walkSound;
-				}
-				if (state.jump) {
-					currentAnimation = "Jumping";
-					soundToPlay = jumpSound;
-				}
-				if (state.attack) {
-					currentAnimation = state.shoot ? "Shooting" : "Punch";
-					soundToPlay = state.shoot ? shootSound : punchSound;
-				}
+    useEffect(() => {
+        const unsubscribe = sub(
+            (state) => state,
+            (state) => {
+                let currentAnimation = "Idle";
+                let soundToPlay = null;
 
-				setAvatar({ ...avatar, animation: currentAnimation });
-				manageSound(soundToPlay);
-			}
-		);
+                if (state.forward || state.backward || state.leftward || state.rightward) {
+                    currentAnimation = state.run ? "Running" : "Walking";
+                    soundToPlay = state.run ? sounds.run : sounds.walk;
+                }
+                if (state.jump) {
+                    currentAnimation = "Jumping";
+                    soundToPlay = sounds.jump;
+                }
+                if (state.attack) {
+                    currentAnimation = state.shoot ? "Shooting" : "Punch";
+                    soundToPlay = state.shoot ? sounds.shoot : sounds.punch;
+                }
 
-		return () => unsubscribe();
-	}, [avatar, setAvatar, sub, runSound, walkSound, jumpSound, punchSound, shootSound]);
+                setAvatar({ ...avatar, animation: currentAnimation });
+                manageSound(soundToPlay);
+            }
+        );
 
-	const manageSound = (soundToPlay) => {
-		if (currentSound !== soundToPlay) {
-			if (currentSound) {
-				const pausePromise = currentSound.play();
-				pausePromise.then(() => {
-					currentSound.pause();
-					currentSound.currentTime = 0;
-				}).catch(error => console.error("Error pausing the current sound:", error));
-			}
-			setCurrentSound(soundToPlay);
-			if (soundToPlay) {
-				const playPromise = soundToPlay.play();
-				playPromise.catch(error => console.error("Error playing the sound:", error));
-			}
-		}
-	};
+        return () => {
+            unsubscribe();
+            Object.values(sounds).forEach(sound => {
+                sound.pause();
+                sound.src = "";
+            });
+        };
+    }, [avatar, setAvatar, sub, sounds]);
 
-
+    const manageSound = (soundToPlay) => {
+        if (currentSound !== soundToPlay) {
+            if (currentSound) {
+                currentSound.pause();
+                currentSound.currentTime = 0;
+            }
+            setCurrentSound(soundToPlay);
+            if (soundToPlay) {
+                soundToPlay.play().catch(error => console.error("Error playing the sound:", error));
+            }
+        }
+    };
 }

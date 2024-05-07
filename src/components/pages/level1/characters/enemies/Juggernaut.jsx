@@ -1,81 +1,91 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
-import { useAvatar } from "../../../../context/AvatarContext";
-import Ecctrl, { EcctrlAnimation } from "ecctrl";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import { Vector3 } from "three";
+
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
-export default function Juggernaut(props, deadpoolRef) {
+export default function Juggernaut({ onCollision  }) {
+    const avatarRef = useRef();
 
-    const JuggernautCircleRef = useRef(null)
-    const { nodes, materials,animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
-    
-    const { actions } = useAnimations(animations, JuggernautCircleRef)
-    const { avatar, setAvatar } = useAvatar();
+    const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
+    const { actions } = useAnimations(animations, avatarRef)
 
-    const radius = 3.5
-    const speed = 0.5
 
-    useFrame((state, delta) => {
-        const elapsedTime = state.clock.getElapsedTime()
-        const angle = elapsedTime * speed
-        const x = Math.cos(angle) * radius
-        const z = Math.sin(angle) * radius
+	const rigidBodyRef = useRef();
+    const [inCollision, setInCollision] = useState(false);
 
-        JuggernautCircleRef.current.position.set(props.position[0] + x, props.position[1], props.position[2] + z)
-        JuggernautCircleRef.current.rotation.y = -angle
-    })
+    const initialPosition = [2, -0.5, 30];
+    const resetCollisionTimeout = 2000; 
 
-    //
-    
-    useEffect(() => {
+    useFrame(({ scene }) => {
 
-        JuggernautCircleRef.animation = 'Walking'
+        if (rigidBodyRef.current && !inCollision) {
+            const translation = rigidBodyRef.current.translation();
+            const juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
 
-        actions[JuggernautCircleRef.animation]?.reset().fadeIn(1).play();
-        return () => {
-          if (actions[JuggernautCircleRef.animation])
-            actions[JuggernautCircleRef.animation].fadeOut(0.5);
+            const deadpool = scene.getObjectByName("Deadpool");
+            if (deadpool) {
+                const deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
+                const distance = juggernautPosition.distanceTo(deadpoolPosition);
+
+                if (distance < 1) { 
+                    
+                    setInCollision(true);
+                    onCollision();
+                    setTimeout(() => setInCollision(false), resetCollisionTimeout);
+                }
+            }
         }
-      }, [actions, JuggernautCircleRef.animation]);
-    
-    
+    });
+
+    const movementDistance = 2; 
+    const movementSpeed = 0.01;
+    const [direction, setDirection] = useState(1); 
 
 
+    useEffect(() => {
+        if (actions.Swiping) {
+            actions.Swiping.reset().fadeIn(0.2).play();
+        }
+    }, [actions]);
 
+    useFrame(() => {
+        if (rigidBodyRef.current) {
+            const position = rigidBodyRef.current.translation();
+            position.x += movementSpeed * direction;
 
+            if (position.x > movementDistance || position.x < -movementDistance) {
+                setDirection(-direction); 
+            }
 
-
+            rigidBodyRef.current.setTranslation(position, true);
+        }
+    });
 
     return (
-        <RigidBody colliders={false} type='fixed' >
+        <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed">
+            <CuboidCollider args={[-0.4, 0.5, -0.2]} position={[0, 1, 0]} /> 
 
-            <group name="Scene">
-                <group  name="Armature" ref={JuggernautCircleRef}  position-y={-0.8} position-x={-15} position-z={5} >
+            <group  ref={avatarRef} >
+                <group name="Armature">
                     <skinnedMesh
                         name="EyeLeft"
                         geometry={nodes.EyeLeft.geometry}
                         material={materials.Wolf3D_Eye}
                         skeleton={nodes.EyeLeft.skeleton}
-                        morphTargetDictionary={nodes.EyeLeft.morphTargetDictionary}
-                        morphTargetInfluences={nodes.EyeLeft.morphTargetInfluences}
                     />
                     <skinnedMesh
                         name="EyeRight"
                         geometry={nodes.EyeRight.geometry}
                         material={materials.Wolf3D_Eye}
                         skeleton={nodes.EyeRight.skeleton}
-                        morphTargetDictionary={nodes.EyeRight.morphTargetDictionary}
-                        morphTargetInfluences={nodes.EyeRight.morphTargetInfluences}
                     />
                     <skinnedMesh
                         name="Wolf3D_Head"
                         geometry={nodes.Wolf3D_Head.geometry}
                         material={materials.Wolf3D_Skin}
                         skeleton={nodes.Wolf3D_Head.skeleton}
-                        morphTargetDictionary={nodes.Wolf3D_Head.morphTargetDictionary}
-                        morphTargetInfluences={nodes.Wolf3D_Head.morphTargetInfluences}
                     />
                     <skinnedMesh
                         name="Wolf3D_Outfit_Bottom"
@@ -100,13 +110,11 @@ export default function Juggernaut(props, deadpoolRef) {
                         geometry={nodes.Wolf3D_Teeth.geometry}
                         material={materials.Wolf3D_Teeth}
                         skeleton={nodes.Wolf3D_Teeth.skeleton}
-                        morphTargetDictionary={nodes.Wolf3D_Teeth.morphTargetDictionary}
-                        morphTargetInfluences={nodes.Wolf3D_Teeth.morphTargetInfluences}
                     />
                     <primitive object={nodes.Hips} />
                 </group>
             </group>
-
         </RigidBody>
+
     )
 }

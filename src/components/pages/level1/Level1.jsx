@@ -1,71 +1,105 @@
-import { Perf } from "r3f-perf";
-import { Physics } from "@react-three/rapier";
-import { Suspense, useEffect, useRef, useState } from "react";
+import {Perf} from "r3f-perf";
+import {Physics} from "@react-three/rapier";
+import {Suspense, useEffect, useRef, useState} from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
-import { Canvas } from "@react-three/fiber";
+import {Canvas} from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
+import {KeyboardControls, OrbitControls} from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
-import { Html } from '@react-three/drei';
-import Camera from "../../camera/Camera";
 import Juggernaut from "./characters/enemies/Juggernaut";
+import Health from "./objects/Health";
+import {HealthHUD} from "./hud/HealthHUD";
 
 export default function Level1() {
 
-    const deadpoolRef = useRef();
-
-    const [showLoadingScreen, setShowLoadingScreen] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowLoadingScreen(false);
-        }, 5000);
-
-        return () => clearTimeout(timer);
-    }, []);
+    const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
+    const [collectedLives, setCollectedLives] = useState(3);
 
     const map = useMovements();
 
+
+    const onHealthCollected = (index) => {
+
+        setActiveHealths((prev) => {
+            const newHealths = [...prev];
+            newHealths[index] = false;
+
+            return newHealths;
+        });
+    };
+
+    const handleCollisionWithJuggernaut = () => {
+        console.log('Colisión detectada con Juggernaut');
+        setCollectedLives((prev) => Math.max(0, prev - 1));
+    };
+
+    const handleCollision = (event) => {
+
+        console.log('Colisión con Juggernaut detectada');
+        console.log('event', event);
+
+        const {other} = event; // Other object involved in the collision
+        if (other && other.userData?.name === "Juggernaut") {
+            setCollectedLives((prev) => Math.max(0, prev - 1));
+        }
+    };
+
     return (
-        <KeyboardControls map={map} >
-            <Canvas
-                camera={
-                    {
-                        position: [0, 10, -2],
-                        fov: 75
-                    }
-                }
-                shadows={true}
-            >
-                {/* <Perf position="top-left" /> */}
-                <OrbitControls 
-                    enableZoom={true}
-                    enablePan={true}
-                />
+        <Suspense fallback={<LoadingScreen/>}>
+            <KeyboardControls map={map}>
+                <Canvas
+                    shadows={true}
+                >
+                    <Perf position="top-right"/>
+                    <Lights/>
+                    <Environments/>
+                    <Physics debug={true}>
+                        <World/>
+                        <Deadpool onCollision={handleCollisionWithJuggernaut}/>
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut} />
+                        {activeHealths[0] && (
+                            <Health
+                                position={[-0.8, 0.5, 22.2]}
+                                onCollected={() => onHealthCollected(0)}
+                            />
+                        )}
+                        {activeHealths[1] && (
+                            <Health
+                                position={[-3, 0.5, 10]}
+                                onCollected={() => onHealthCollected(1)}
+                            />
+                        )}
+                        {activeHealths[2] && (
+                            <Health
+                                position={[3.5, 0.5, 0.2]}
+                                onCollected={() => onHealthCollected(2)}
+                            />
+                        )}
+                        {activeHealths[3] && (
+                            <Health
+                                position={[0, 0.5, -11.3]}
+                                onCollected={() => onHealthCollected(3)}
+                            />
+                        )}
+                        {activeHealths[4] && (
+                            <Health
+                                position={[0.7, 1.5, 0.8]}
+                                onCollected={() => onHealthCollected(4)}
+                            />
+                        )}
 
-                {showLoadingScreen ? (
-                    <Html>
-                        <LoadingScreen />
-                    </Html>
-                ) : (
+                        <Controls/>
+                    </Physics>
 
-                    <Suspense fallback={null}>
-                        <Lights />
-                        <Environments />
-                        <Physics debug={false}>
-                            <World />
-                            <Juggernaut position={[-20, -0.8, 4]}/>
-                            <Deadpool ref={deadpoolRef} />
-                            <Camera  playerRef={deadpoolRef} />
-                            <Controls />
-                        </Physics>
-                    </Suspense>
-                )}
-            </Canvas>
-        </KeyboardControls>
+                </Canvas>
+                <HealthHUD collectedLives={collectedLives}/>
+
+            </KeyboardControls>
+        </Suspense>
+
     )
 }
