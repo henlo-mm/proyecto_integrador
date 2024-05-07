@@ -2,48 +2,66 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl from "ecctrl";
-import { useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import React, { forwardRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Vector3, LoopOnce } from "three";
+import React from "react";
 
-export default function Deadpool({ onCollision }) {
+export default function Deadpool() {
 	const avatarRef = useRef();
 	const rigidBodyAvatarRef = useRef();
 	const { avatar, setAvatar } = useAvatar();
+    const [bullets, setBullets] = useState([]);
 
 
 	const { nodes, materials, animations } = useGLTF("assets/models/avatar/AvatarDeadpool.glb");
 	const { gl } = useThree();
 
 	const { actions } = useAnimations(animations, avatarRef)
-	const shootSound = useMemo(() => {
-		const audio = new Audio("/assets/sounds/shoot.mp3");
-		audio.load(); 
-		return audio;
-	}, []);
-	
-
-	const onRightClick = useCallback((event) => {
-		event.preventDefault();
-		if (actions.Shooting) {
-			setAvatar({ ...avatar, animation: "Shooting" });
-			actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
-	
-			shootSound.pause();
-			shootSound.currentTime = 0;
-			shootSound.play().catch(error => console.error("Error playing the sound:", error));
-		}
-	}, [actions, avatar, setAvatar, shootSound]);
-	
-
+    const shootSound = useRef(new Audio("/assets/sounds/shoot.mp3"));
+    
 	useEffect(() => {
-		gl.domElement.addEventListener('contextmenu', onRightClick);
-		return () => {
-			gl.domElement.removeEventListener('contextmenu', onRightClick);
-		};
-	}, [gl.domElement, onRightClick]);
+        if (shootSound.current) {
+            shootSound.current.load();
+        }
+
+    }, []);
 
 
+	const shoot = useCallback(() => {
+        if (!actions.Shooting || !avatarRef.current) return;
+        const startPosition = new Vector3().setFromMatrixPosition(avatarRef.current.matrixWorld);
+        startPosition.y += 1.5;  
+        startPosition.z += 0.5;  
+        const forwardDirection = new Vector3(0, 0, -1).applyQuaternion(avatarRef.current.quaternion);
+        setBullets(bullets => [...bullets, { position: startPosition, velocity: forwardDirection }]);
+        setAvatar({ ...avatar, animation: "Shooting" });
+        actions.Shooting.reset().fadeIn(0.05).setLoop(LoopOnce).play();
+        if (shootSound.current) {
+            shootSound.current.pause();
+            shootSound.current.currentTime = 0;
+            shootSound.current.play().catch(error => console.error("Error playing the sound:", error));
+        }
+    }, [actions, setAvatar, avatar]);
+
+    useFrame((state, delta) => {
+        if (bullets.length) {
+            setBullets(bullets => bullets.map(bullet => ({
+                ...bullet,
+                position: bullet.position.add(bullet.velocity.clone().multiplyScalar(delta * 50))
+            })).filter(bullet => bullet.position.z > -50 && bullet.position.y > -5));
+        }
+    });
+
+    useEffect(() => {
+        const handleRightClick = (event) => {
+            event.preventDefault();
+            shoot();
+        };
+        gl.domElement.addEventListener('contextmenu', handleRightClick);
+        return () => {
+            gl.domElement.removeEventListener('contextmenu', handleRightClick);
+        };
+    }, [shoot, gl.domElement]);
 	useEffect(() => {
 
 		actions[avatar.animation]?.reset().fadeIn(0.5).play();
@@ -68,17 +86,26 @@ export default function Deadpool({ onCollision }) {
 			ref={rigidBodyAvatarRef}
 			camInitDis={-5}
 			camMaxDis={-7}
-			maxVelLimit={20}
+			maxVelLimit={5}
 			jumpVel={5}
 			position={[2, 10, 48]}
 			characterInitDir={170}
 			camInitDir={{ x: 0, y: 10 }}
 			floatHeight={0}
-			animated
-			followLight
+			
 			userData={{ name: "Deadpool" }}
 		>
 
+			<group>
+			{bullets.map((bullet, index) => (
+				<mesh key={`bullet-${index}`} position={bullet.position}>
+					<sphereGeometry args={[0.2, 16, 16]} />  
+					<meshStandardMaterial color='red' /> 
+				</mesh>
+			))}
+
+
+			</group>
 			<group ref={avatarRef} position-y={-0.5} name="Deadpool">
 				<group name="Armature">
 					<skinnedMesh
