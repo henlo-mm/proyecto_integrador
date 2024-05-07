@@ -1,29 +1,24 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useFrame } from "@react-three/fiber";
 
 export default function Health({ position, onCollected }) {
     const { nodes, materials } = useGLTF("assets/models/objects/first_aid_kit.glb");
     const groupRef = useRef();
-    const collisionRef = useRef(false);
+    const collisionRef = useRef(false)
+
+    const rigidBodyRef = useRef();
 
     const handleCollision = (event) => {
-        console.log('collision', event)
         if (!collisionRef.current) {
             collisionRef.current = true;
             onCollected();
         }
     };
 
-/*     useFrame(({ clock }) => {
-        const elapsed = clock.getElapsedTime();
-        groupRef.current.rotation.y = elapsed * 2;
-    }); */
-
-
     return (
         <RigidBody
+            ref={rigidBodyRef}
             colliders="cuboid"
             type='fixed'
             onCollisionEnter={handleCollision}

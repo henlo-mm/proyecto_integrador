@@ -12,54 +12,54 @@ export default function Controls() {
 	const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
 	const [currentSound, setCurrentSound] = useState(null);
+    const [soundReady, setSoundReady] = useState(true);
 
 	useEffect(() => {
-		const unsubscribe = sub(
-			(state) => state,
-			(state) => {
-				let currentAnimation = "Idle";
-				let soundToPlay = null;
+        const unsubscribe = sub(
+            (state) => state,
+            (state) => {
+                let currentAnimation = "Idle";
+                let soundToPlay = null;
 
-				if (state.forward || state.backward || state.leftward || state.rightward) {
-					currentAnimation = state.run ? "Running" : "Walking";
-					soundToPlay = state.run ? runSound : walkSound;
-				}
-				if (state.jump) {
-					currentAnimation = "Jump";
-					soundToPlay = jumpSound;
-				}
-				if (state.attack) {
-					currentAnimation = state.shoot ? "Shoot" : "Punch";
-					soundToPlay = state.shoot ? shootSound : punchSound;
-				}
+                if (state.forward || state.backward || state.leftward || state.rightward) {
+                    currentAnimation = state.run ? "Running" : "Walking";
+                    soundToPlay = state.run ? runSound : walkSound;
+                }
+                if (state.jump) {
+                    currentAnimation = "Jump";
+                    soundToPlay = jumpSound;
+                }
+                if (state.attack) {
+                    currentAnimation = state.shoot ? "Shoot" : "Punch";
+                    soundToPlay = state.shoot ? shootSound : punchSound;
+                }
 
-				setAvatar({ ...avatar, animation: currentAnimation });
-				manageSound(soundToPlay);
-			}
-		);
+                setAvatar({ ...avatar, animation: currentAnimation });
+                manageSound(soundToPlay);
+            }
+        );
 
-		return () => unsubscribe();
-	}, [avatar, setAvatar, sub, runSound, walkSound, jumpSound, punchSound, shootSound]);
+        return () => unsubscribe();
+    }, [avatar, setAvatar, sub, runSound, walkSound, jumpSound, punchSound, shootSound]);
 
 	const manageSound = (soundToPlay) => {
-		if (currentSound !== soundToPlay) {
-			if (currentSound) {
-				const pausePromise = currentSound.play();
-				pausePromise.then(() => {
-					currentSound.pause();
-					currentSound.currentTime = 0;
-				}).catch(error => console.error("Error pausing the current sound:", error));
-			}
-			setCurrentSound(soundToPlay);
-			if (soundToPlay) {
-				const playPromise = soundToPlay.play();
-				playPromise.catch(error => console.error("Error playing the sound:", error));
-			}
-		}
-	};
+        if (currentSound && currentSound !== soundToPlay && soundReady) {
+            setSoundReady(false);
+            currentSound.pause();
+            currentSound.onpause = () => {
+                currentSound.currentTime = 0;
+                setSoundReady(true);
+                playSound(soundToPlay);
+            };
+        } else if (soundReady) {
+            playSound(soundToPlay);
+        }
+    };
 
-
-
-
-
+    const playSound = (sound) => {
+        setCurrentSound(sound);
+        if (sound) {
+            sound.play().catch(error => console.error("Error playing the sound:", error));
+        }
+    };
 }
