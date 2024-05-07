@@ -1,52 +1,67 @@
 import {Perf} from "r3f-perf";
 import {Physics} from "@react-three/rapier";
-import {Suspense, useEffect, useRef, useState} from "react";
+import {Suspense, useState} from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
 import {Canvas} from "@react-three/fiber";
 import World from "./world/World";
 import useMovements from "../../utils/key-movements";
-import {KeyboardControls, OrbitControls} from "@react-three/drei";
+import {KeyboardControls } from "@react-three/drei";
 import Deadpool from "./characters/avatar/Deadpool";
 import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
 import Juggernaut from "./characters/enemies/Juggernaut";
 import Health from "./objects/Health";
 import {HealthHUD} from "./hud/HealthHUD";
+import { useLives } from "../../context/LivesContext";
+import { RewardHUD } from "./hud/RewardHUD";
 
 export default function Level1() {
 
     const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
-    const [collectedLives, setCollectedLives] = useState(3);
+    const [healthCount, setHealthCount] = useState(0);
+
+    const { collectedLives, loseLife, gainLife } = useLives();
+
 
     const map = useMovements();
 
-
     const onHealthCollected = (index) => {
 
-        setActiveHealths((prev) => {
-            const newHealths = [...prev];
-            newHealths[index] = false;
+        setHealthCount(prev => {
+            const newCount = prev + 1;
 
-            return newHealths;
+            if (newCount >= 4) {
+                gainLife();  
+                return 0;  
+            }
+            return newCount;
+        });
+
+        //Desaparece el objeto de salud cada que colisiona con el avatar
+        setActiveHealths(prev => {
+            return prev.map((isActive, idx) => {
+                return idx === index ? false : isActive;
+            });
         });
     };
 
+    //Cada que colisiona con el enemigo quita una vida
     const handleCollisionWithJuggernaut = () => {
-        console.log('Colisión detectada con Juggernaut');
-        setCollectedLives((prev) => Math.max(0, prev - 1));
+        loseLife();
     };
 
-    const handleCollision = (event) => {
-
-        console.log('Colisión con Juggernaut detectada');
-        console.log('event', event);
-
-        const {other} = event; // Other object involved in the collision
-        if (other && other.userData?.name === "Juggernaut") {
-            setCollectedLives((prev) => Math.max(0, prev - 1));
-        }
-    };
+    //Posiciones de los objetos de salud
+    const getPositionForIndex = (index)  => {
+        const positions = [
+            [-0.8, 0.5, 22.2],
+            [-3, 0.5, 10],
+            [3.5, 0.5, 0.2],
+            [2, 0.5, -11.3],
+            [0.7, 1.5, 0.8]
+        ];
+        return positions[index] || [0, 0, 0];
+    }
 
     return (
         <Suspense fallback={<LoadingScreen/>}>
@@ -61,42 +76,20 @@ export default function Level1() {
                         <World/>
                         <Deadpool onCollision={handleCollisionWithJuggernaut}/>
                         <Juggernaut onCollision={handleCollisionWithJuggernaut} />
-                        {activeHealths[0] && (
+                        {activeHealths.map((isActive, index) => isActive && (
                             <Health
-                                position={[-0.8, 0.5, 22.2]}
-                                onCollected={() => onHealthCollected(0)}
+                                key={index}
+                                position={getPositionForIndex(index)}
+                                onCollected={() => onHealthCollected(index)}
                             />
-                        )}
-                        {activeHealths[1] && (
-                            <Health
-                                position={[-3, 0.5, 10]}
-                                onCollected={() => onHealthCollected(1)}
-                            />
-                        )}
-                        {activeHealths[2] && (
-                            <Health
-                                position={[3.5, 0.5, 0.2]}
-                                onCollected={() => onHealthCollected(2)}
-                            />
-                        )}
-                        {activeHealths[3] && (
-                            <Health
-                                position={[0, 0.5, -11.3]}
-                                onCollected={() => onHealthCollected(3)}
-                            />
-                        )}
-                        {activeHealths[4] && (
-                            <Health
-                                position={[0.7, 1.5, 0.8]}
-                                onCollected={() => onHealthCollected(4)}
-                            />
-                        )}
+                        ))}
 
                         <Controls/>
                     </Physics>
 
                 </Canvas>
-                <HealthHUD collectedLives={collectedLives}/>
+                <HealthHUD collectedLives={collectedLives} />
+                <RewardHUD healthCount={healthCount} />
 
             </KeyboardControls>
         </Suspense>

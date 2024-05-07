@@ -27,13 +27,14 @@ export default function Deadpool({ onCollision }) {
 		event.preventDefault();
 		if (actions.Shooting) {
 			setAvatar({ ...avatar, animation: "Shooting" });
+			actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
+	
+			shootSound.pause();
+			shootSound.currentTime = 0;
+			shootSound.play().catch(error => console.error("Error playing the sound:", error));
 		}
-		actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
-
-		shootSound.pause();
-		shootSound.currentTime = 0; 
-		shootSound.play();
 	}, [actions, avatar, setAvatar, shootSound]);
+	
 
 	useEffect(() => {
 		gl.domElement.addEventListener('contextmenu', onRightClick);
