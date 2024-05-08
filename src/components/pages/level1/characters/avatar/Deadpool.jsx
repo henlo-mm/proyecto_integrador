@@ -93,6 +93,8 @@ export default function Deadpool() {
 			camInitDir={{ x: 0, y: 10 }}
 			floatHeight={0}
 			animated={true}
+			autoBalance={false}
+			dampingC={0.5} 
 			userData={{ name: "Deadpool" }}
 		>
 
