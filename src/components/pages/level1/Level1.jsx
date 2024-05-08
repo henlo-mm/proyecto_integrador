@@ -15,6 +15,7 @@ import Health from "./objects/Health";
 import {HealthHUD} from "./hud/HealthHUD";
 import { useLives } from "../../context/LivesContext";
 import { RewardHUD } from "./hud/RewardHUD";
+import Logout from "../../logout/Logout";
 
 export default function Level1() {
 
@@ -66,13 +67,14 @@ export default function Level1() {
     return (
         <Suspense fallback={<LoadingScreen/>}>
             <KeyboardControls map={map}>
+                <Logout/>
                 <Canvas
                     shadows={true}
                 >
                     <Perf position="top-right"/>
                     <Lights/>
                     <Environments/>
-                    <Physics debug={true}>
+                    <Physics debug={false}>
                         <World/>
                         <Deadpool onCollision={handleCollisionWithJuggernaut}/>
                         <Juggernaut onCollision={handleCollisionWithJuggernaut} />
