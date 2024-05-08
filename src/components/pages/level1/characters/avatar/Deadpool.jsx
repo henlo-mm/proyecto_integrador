@@ -87,14 +87,13 @@ export default function Deadpool() {
 			camInitDis={-5}
 			camMaxDis={-7}
 			maxVelLimit={5}
-			jumpVel={5}
+			jumpVel={4}
 			position={[2, 10, 48]}
 			characterInitDir={170}
 			camInitDir={{ x: 0, y: 10 }}
 			floatHeight={0}
 			animated={true}
 			autoBalance={false}
-			dampingC={0.5} 
 			userData={{ name: "Deadpool" }}
 		>
 
