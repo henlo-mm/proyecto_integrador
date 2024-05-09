@@ -64,7 +64,15 @@ const World = (props) => {
                     <Plane args={[100, 10]} position={[5, 4, 0]} rotation={[0, -Math.PI / 2, 0]}>
                         <meshStandardMaterial attach="material" transparent={true} opacity={0} />
                     </Plane>
+                    <Plane args={[10, 10]} position={[0, 4, 50]} rotation={[0, 0, Math.PI / 2]}>
+                        <meshStandardMaterial attach="material" transparent={true} opacity={0} />
+                    </Plane>
+                    <Plane args={[10, 10]} position={[0, 4, -50]} rotation={[0, 0, Math.PI / 2]}>
+                        <meshStandardMaterial attach="material" transparent={true} opacity={0} />
+                    </Plane>
                 </RigidBody>
+
+
                 <RigidBody type="fixed" colliders={false}>
                     <mesh
                         castShadow

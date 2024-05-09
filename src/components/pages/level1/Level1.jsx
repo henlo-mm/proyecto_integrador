@@ -16,6 +16,7 @@ import {HealthHUD} from "./hud/HealthHUD";
 import { useLives } from "../../context/LivesContext";
 import { RewardHUD } from "./hud/RewardHUD";
 import Logout from "../../logout/Logout";
+import CheckPoint from "../../checkpoint/CheckPoint";
 
 export default function Level1() {
 
@@ -74,10 +75,11 @@ export default function Level1() {
                     <Perf position="top-right"/>
                     <Lights/>
                     <Environments/>
-                    <Physics debug={false}>
+                    <Physics debug={true}>
                         <World/>
                         <Deadpool onCollision={handleCollisionWithJuggernaut}/>
                         <Juggernaut onCollision={handleCollisionWithJuggernaut} />
+                        <CheckPoint/>
                         {activeHealths.map((isActive, index) => isActive && (
                             <Health
                                 key={index}
