@@ -22,14 +22,10 @@ export default function Level1() {
 
     const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
     const [healthCount, setHealthCount] = useState(0);
-
     const { collectedLives, loseLife, gainLife } = useLives();
-
-
     const map = useMovements();
 
     const onHealthCollected = (index) => {
-
         setHealthCount(prev => {
             const newCount = prev + 1;
 
@@ -69,9 +65,7 @@ export default function Level1() {
         <Suspense fallback={<LoadingScreen/>}>
             <KeyboardControls map={map}>
                 <Logout/>
-                <Canvas
-                    shadows={true}
-                >
+                <Canvas shadows={true}>
                     <Perf position="top-right"/>
                     <Lights/>
                     <Environments/>
@@ -87,16 +81,12 @@ export default function Level1() {
                                 onCollected={() => onHealthCollected(index)}
                             />
                         ))}
-
                         <Controls/>
                     </Physics>
-
                 </Canvas>
                 <HealthHUD collectedLives={collectedLives} />
                 <RewardHUD healthCount={healthCount} />
-
             </KeyboardControls>
         </Suspense>
-
     )
 }

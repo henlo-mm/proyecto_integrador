@@ -11,6 +11,7 @@ export default function Logout() {
             .then((res) => navigate("/"))
             .catch((error) => console.error(error))
     }
+
     return (
         <div className="button-logout">
             <button onClick={onHandleButtonLogout}> Logout </button>

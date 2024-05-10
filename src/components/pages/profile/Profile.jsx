@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import "../../styles/profile.css";
 import { useAuth } from '../../context/AuthContext';
 import { createUser, readUser } from '../../../db/users-collection'
-import Logout from "../../logout/Logout";
-
 
 export default function Profile() {
     const location = useLocation();
@@ -17,6 +15,7 @@ export default function Profile() {
         if (!success)
             await createUser(valuesUser)
     }
+
     useEffect(() => {
         if(auth.userLogged){
             const {displayName, email} = auth.userLogged;
