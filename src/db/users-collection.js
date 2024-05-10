@@ -1,8 +1,8 @@
-
 "use strict";
 
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebase/firebase.config";
+import {addDoc, collection, getDocs, query, where} from "firebase/firestore";
+import {db} from "../firebase/firebase.config";
+
 /**
  * Collection reference to the 'users' collection in Firestore.
  * @type {CollectionReference<DocumentData>}
@@ -31,11 +31,11 @@ const readUser = async (userEmail) => {
         const userSnapshot = await getDocs(query(usersRef, where("email", "==", userEmail)));
 
         if (userSnapshot.empty) {
-            return { success: false, message: "User not found" };
+            return {success: false, message: "User not found"};
         }
 
-        const userData = userSnapshot.docs.map((doc) => doc.data());
-        return { success: true, userData: userData };
+        const userData = userSnapshot.docs[0].data(); // Obtener los datos del primer documento directamente
+        return {success: true, userData: userData};
     } catch (error) {
         return error;
     }
@@ -52,10 +52,10 @@ const updateUser = async (userEmail, userData) => {
 
         const userDoc = userSnapshot.docs[0];
         await userDoc.ref.update(userData);
-        return { success: true, message: "User updated successfully" };
+        return {success: true, message: "User updated successfully"};
     } catch (error) {
         return error;
     }
 };
 
-export { createUser, readUser, updateUser };
+export {createUser, readUser, updateUser};

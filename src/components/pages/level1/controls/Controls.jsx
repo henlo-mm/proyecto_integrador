@@ -5,44 +5,44 @@ import { useEffect, useState } from "react";
 export default function Controls() {
 	const { avatar, setAvatar } = useAvatar();
 	const [sub, get] = useKeyboardControls()
-	const [runSound] = useState(new Audio("/assets/sounds/run.mp3"))
+	/*const [runSound] = useState(new Audio("/assets/sounds/run.mp3"))
 	const [walkSound] = useState(new Audio("/assets/sounds/walk.mp3"));
 	const [jumpSound] = useState(new Audio("/assets/sounds/jump.wav"));
 	const [punchSound] = useState(new Audio("/assets/sounds/punch.mp3"));
-	const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
+	const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));*/
 
-	const [currentSound, setCurrentSound] = useState(null);
-    const [soundReady, setSoundReady] = useState(true);
+	/*const [currentSound, setCurrentSound] = useState(null);
+    const [soundReady, setSoundReady] = useState(true);*/
 
 	useEffect(() => {
         const unsubscribe = sub(
             (state) => state,
             (state) => {
                 let currentAnimation = "Idle";
-                let soundToPlay = null;
+                //let soundToPlay = null;
 
                 if (state.forward || state.backward || state.leftward || state.rightward) {
                     currentAnimation = state.run ? "Running" : "Walking";
-                    soundToPlay = state.run ? runSound : walkSound;
+                    //soundToPlay = state.run ? runSound : walkSound;
                 }
                 if (state.jump) {
                     currentAnimation = "Jump";
-                    soundToPlay = jumpSound;
+                    //soundToPlay = jumpSound;
                 }
                 if (state.attack) {
                     currentAnimation = state.shoot ? "Shoot" : "Punch";
-                    soundToPlay = state.shoot ? shootSound : punchSound;
+                    //soundToPlay = state.shoot ? shootSound : punchSound;
                 }
 
                 setAvatar({ ...avatar, animation: currentAnimation });
-                manageSound(soundToPlay);
+                //manageSound(soundToPlay);
             }
         );
 
         return () => unsubscribe();
-    }, [avatar, setAvatar, sub, runSound, walkSound, jumpSound, punchSound, shootSound]);
+    }, [avatar, setAvatar, sub, /*runSound, walkSound, jumpSound, punchSound, shootSound*/]);
 
-	const manageSound = (soundToPlay) => {
+	/*const manageSound = (soundToPlay) => {
         if (currentSound && currentSound !== soundToPlay && soundReady) {
             setSoundReady(false);
             currentSound.pause();
@@ -54,12 +54,12 @@ export default function Controls() {
         } else if (soundReady) {
             playSound(soundToPlay);
         }
-    };
+    };*/
 
-    const playSound = (sound) => {
+    /*const playSound = (sound) => {
         setCurrentSound(sound);
         if (sound) {
             sound.play().catch(error => console.error("Error playing the sound:", error));
         }
-    };
+    };*/
 }
