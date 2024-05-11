@@ -88,10 +88,10 @@ export default function Juggernaut({ onCollision  }) {
     };
 
     return (
-        <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed">
+        <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed" onClick={handleRightClick}>
             <CuboidCollider args={[-0.4, 0.5, -0.2]} position={[0, 1, 0]} /> 
 
-            <group  ref={avatarRef} name="Juggernaut" onContextMenu={handleRightClick}>
+            <group  ref={avatarRef} name="Juggernaut">
                 <group name="Armature">
                     <skinnedMesh
                         name="EyeLeft"
