@@ -30,7 +30,7 @@ export default function Profile() {
                 displayName: displayName,
                 email: email,
                 level1: true,
-                level2: false,
+               // level2: false,
                 level3: false,
                 level4: false,
                 checkPoint1: false,
@@ -47,7 +47,7 @@ export default function Profile() {
 
             setValuesUser({
                     displayName: displayName, email: email, level1: true,
-                    level2: false,
+                   // level2: false,
                     level3: false,
                     level4: false,
                     checkPoint1: false,

@@ -14,7 +14,7 @@ export default function Logout() {
 
     return (
         <div className="button-logout">
-            <button onClick={onHandleButtonLogout}> Logout </button>
+            <button onClick={onHandleButtonLogout}> Cerrar sesión </button>
         </div>
     )
 }

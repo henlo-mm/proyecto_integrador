@@ -51,7 +51,6 @@ export default function CheckPoint({onCollision, position}) {
 
                     userData.coleccion = collectedRewards;
 
-                    console.log('userData: ', userData);
                     updateUser(userData.email, userData);
 
                 }

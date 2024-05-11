@@ -27,16 +27,16 @@ export function CheckpointMessage() {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 1000,
-            backgroundColor: '#4CAF50', // Color verde intenso
-            color: 'white', // Texto blanco para mayor contraste
+            backgroundColor: '#4CAF50', 
+            color: 'white', 
             padding: '15px 30px',
             borderRadius: '10px',
             boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-            animation: 'slidein 0.5s, fadeout 0.5s 4.5s', // Animaciones de entrada y salida
-            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', // Fuente más estética
+            animation: 'slidein 0.5s, fadeout 0.5s 4.5s', 
+            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', 
         }}>
             <p style={{ fontWeight: 'bold', margin: 0 }}>
-                <i style={{ paddingRight: '10px' }}>💾</i> {/* Icono de disco */}
+                <i style={{ paddingRight: '10px' }}>💾</i> 
                 ¡Checkpoint alcanzado! ¡Se ha guardado exitosamente tu estado en el juego!
             </p>
             <button onClick={handleClose} style={{

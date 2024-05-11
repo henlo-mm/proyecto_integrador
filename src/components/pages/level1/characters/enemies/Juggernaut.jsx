@@ -4,16 +4,17 @@ import { useFrame } from "@react-three/fiber";
 import { Vector3, LoopOnce } from "three";
 
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import { useAvatar } from "../../../../context/AvatarContext";
 
 export default function Juggernaut({ onCollision  }) {
     const avatarRef = useRef();
+    const { setAnimation } = useAvatar();
 
     const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
     const { actions } = useAnimations(animations, avatarRef)
 
-    const [ enemyState, setEnemyState ] = useState(true);
-
-    const [isDying, setIsDying] = useState(false);
+    const [isDead, setIsDead] = useState(false);
+    const [clickCount, setClickCount] = useState(0);
 
 	const rigidBodyRef = useRef();
     const [inCollision, setInCollision] = useState(false);
@@ -21,9 +22,14 @@ export default function Juggernaut({ onCollision  }) {
     const initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000; 
 
-    useFrame(({ scene }) => {
+    useEffect(() => {
+        if (actions.Swiping) {
+            actions.Swiping.reset().fadeIn(0.2).play();
+        }
+    }, [actions]);
 
-        if (rigidBodyRef.current && !inCollision && enemyState) {
+    useFrame(({ scene }) => {
+        if (rigidBodyRef.current && !inCollision && !isDead) {
             const translation = rigidBodyRef.current.translation();
             const juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
 
@@ -32,8 +38,7 @@ export default function Juggernaut({ onCollision  }) {
                 const deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
                 const distance = juggernautPosition.distanceTo(deadpoolPosition);
 
-                if (distance < 1) { 
-                    
+                if (distance < 1) {
                     setInCollision(true);
                     onCollision();
                     setTimeout(() => setInCollision(false), resetCollisionTimeout);
@@ -41,53 +46,53 @@ export default function Juggernaut({ onCollision  }) {
             }
         }
     });
-
-    const movementDistance = 2; 
+    
+    const movementDistance = 2;
     const movementSpeed = 0.01;
-    const [direction, setDirection] = useState(1); 
-
-    useEffect(() => {
-        if (isDying && actions.Dying) {
-            actions.Dying.reset().play();
-        }
-        return () => {
-            if (isDying && actions.Dying) {
-                actions.Dying.stop();
-            }
-        };
-    }, [isDying, actions.Dying]);
-
-    useEffect(() => {
-        if (actions.Swiping) {
-            actions.Swiping.reset().fadeIn(0.2).play();
-        }
-    }, [actions]);
+    const [direction, setDirection] = useState(1);
 
     useFrame(() => {
-        if (rigidBodyRef.current && !isDying && enemyState) {
+        if (rigidBodyRef.current && !isDead) {
             const position = rigidBodyRef.current.translation();
             position.x += movementSpeed * direction;
 
             if (position.x > movementDistance || position.x < -movementDistance) {
-                setDirection(-direction); 
+                setDirection(-direction);
             }
 
             rigidBodyRef.current.setTranslation(position, true);
         }
     });
 
-    const onHandleClick = (e) => {
-        setIsDying(true);
-        actions.Swiping.stop();
-        setEnemyState(false);
+    useEffect(() => {
+        if (isDead && actions.Dying) {
+            actions.Swiping.stop();
+            actions.Dying.reset().setLoop(LoopOnce).play();
+            actions.Dying.clampWhenFinished = true; 
+        }
+    }, [isDead, actions.Dying]);
+
+    const handleRightClick = () => {
+        setAnimation("Shooting");
+        if (!isDead) {
+            const newCount = clickCount + 1;
+            setClickCount(newCount);
+            if (newCount >= 3) {
+                setIsDead(true);
+                if (actions.Dying) {
+                    actions.Swiping.stop();
+                    actions.Dying.reset().play();
+                }
+            }
+        }
     };
 
     return (
         <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed">
             <CuboidCollider args={[-0.4, 0.5, -0.2]} position={[0, 1, 0]} /> 
 
-            <group  ref={avatarRef} name="Juggernaut">
-                <group name="Armature" onContextMenu={(e) => onHandleClick(e)}>
+            <group  ref={avatarRef} name="Juggernaut" onContextMenu={handleRightClick}>
+                <group name="Armature">
                     <skinnedMesh
                         name="EyeLeft"
                         geometry={nodes.EyeLeft.geometry}

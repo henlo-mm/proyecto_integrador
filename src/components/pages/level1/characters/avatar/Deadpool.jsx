@@ -1,41 +1,16 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { useEffect, useRef} from "react";
 import {useAnimations, useGLTF} from "@react-three/drei";
 import {useAvatar} from "../../../../context/AvatarContext";
 import Ecctrl from "ecctrl";
-import {useFrame, useThree} from "@react-three/fiber";
-import {Vector3, LoopOnce} from "three";
-import React from "react";
 
 export default function Deadpool({position}) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
     const {avatar, setAvatar} = useAvatar();
-    const [bullets, setBullets] = useState([]);
-
-    const [juggernautPosition, setjuggernautPosition] = useState();
 
     const {nodes, materials, animations} = useGLTF("assets/models/avatar/AvatarDeadpool.glb");
-    const {gl} = useThree();
 
     const {actions} = useAnimations(animations, avatarRef)
-    //const shootSound = useRef(new Audio("/assets/sounds/shoot.mp3"));
-
-    /*useEffect(() => {
-        if (shootSound.current) {
-            shootSound.current.load();
-        }
-
-    }, []);*/
-
-    const shoot = useCallback(() => {
-        if (!actions.Shooting || !avatarRef.current) return;
-  
-        setAvatar({ ...avatar, animation: "Shooting" });
-        actions.Shooting.reset().fadeIn(0.05).setLoop(LoopOnce).play();
-    }, [actions, setAvatar, avatar, juggernautPosition]);
-
-  
-
 
     useEffect(() => {
 
@@ -71,16 +46,6 @@ export default function Deadpool({position}) {
             userData={{name: "Deadpool"}}
         >
 
-            <group>
-                {bullets.map((bullet, index) => (
-                    <mesh key={`bullet-${index}`} position={bullet.position}>
-                        <sphereGeometry args={[0.2, 16, 16]}/>
-                        <meshStandardMaterial color='gray'/>
-                    </mesh>
-                ))}
-
-
-            </group>
             <group ref={avatarRef} position-y={-0.5} name="Deadpool">
                 <group name="Armature">
                     <skinnedMesh

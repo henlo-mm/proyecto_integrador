@@ -20,6 +20,9 @@ import CheckPoint from "../../checkpoint/CheckPoint";
 import { CheckpointMessage } from "../../html/CheckpointMessage";
 import { useRewards } from "../../context/RewardsContext"; 
 import { useUser  } from "../../context/UserContext"; 
+import { GameOverScreen } from "../../html/GameOverMessage";
+import { updateUser } from "../../../db/users-collection";
+import { LevelCompletedMessage } from "../../html/LevelCompleteMessage";
 
 export default function Level1() {
 
@@ -34,6 +37,8 @@ export default function Level1() {
     const { userData, isLoading } = useUser();
 
     const { increaseHealthCount, healthCount } = useRewards();
+    const [showLevelCompleted, setShowLevelCompleted] = useState(false);
+
 
     const map = useMovements();
   
@@ -55,10 +60,30 @@ export default function Level1() {
 
     const [colisiono, setColisiono] = useState(false);
     
-    const handleCollisionWithCheckPoint = () => {
-        setColisiono(true);
-    };
+    const handleCollisionWithCheckPoint = (checkpointId) => {
+        if (checkpointId === 1) {
+            setColisiono(true);
+            setTimeout(() => {
+                setColisiono(false);
+            }, 3000);
+        } else if (checkpointId === 2) {
 
+            setColisiono(true);
+            setTimeout(() => {
+                setColisiono(false);
+            }, 2000);
+
+            userData.level2 = true;
+
+            updateUser(userData.email, userData).then(() => {
+                setTimeout(() => {
+                    setShowLevelCompleted(true); 
+                }, 3000);
+                
+            }).catch((error) => console.error(error));
+        }
+    };
+    
     const getPositionForIndex = (index) => {
         const positions = [
             [-0.8, 0.5, 22.2],
@@ -69,6 +94,23 @@ export default function Level1() {
         ];
         return positions[index] || [0, 0, 0];
     }
+
+    const handleRestartLevel = () => {
+
+        userData.positionLevel1.x = 2;
+        userData.positionLevel1.y = 10;
+        userData.positionLevel1.z = 48;
+        userData.checkPoint1 = true;
+        userData.coleccion = 0;
+        userData.vidas = 3;
+       
+        updateUser(userData.email, userData);
+        window.location.reload();
+    };
+
+    const handleContinueFromCheckpoint = () => {
+        window.location.reload();
+    };
 
     return (
         <Suspense fallback={<LoadingScreen/>}>
@@ -85,13 +127,14 @@ export default function Level1() {
                                 userData.positionLevel1.x,
                                 userData.positionLevel1.y,
                                 userData.positionLevel1.z
+                                
                             ]}/>
                         )}
 
                         
                         <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
-                        <CheckPoint onCollision={handleCollisionWithCheckPoint} position={[-4, -0.9, 25]} />
-                        <CheckPoint onCollision={handleCollisionWithCheckPoint} position={[-4, -0.9, -49]} />
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[-4, -0.9, 25]} />
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[-4, -0.9, -49]} />
                         {activeHealths.map((isActive, index) => isActive && (
                             <Health
                                 key={index}
@@ -107,6 +150,14 @@ export default function Level1() {
                 {colisiono &&
                    <CheckpointMessage />
                 }
+                {collectedLives === 0 &&
+                    <GameOverScreen
+                        onRestart={handleRestartLevel}
+                        onContinue={handleContinueFromCheckpoint}
+                    /> 
+                }
+                {showLevelCompleted && <LevelCompletedMessage />}
+
             </KeyboardControls>
         </Suspense>
     )
