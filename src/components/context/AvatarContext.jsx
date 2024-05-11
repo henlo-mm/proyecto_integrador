@@ -18,8 +18,15 @@ export function AvatarProvider({ children }) {
         rigidBodyAvatarRef: null
     })
 
+    const setAnimation = (animationName) => {
+        setAvatar(current => ({
+            ...current,
+            animation: animationName
+        }));
+    };
+
     return (
-        <avatarContext.Provider value={{ avatar, setAvatar }}>
+        <avatarContext.Provider value={{ avatar, setAvatar, setAnimation }}>
             {children}
         </avatarContext.Provider>
     )

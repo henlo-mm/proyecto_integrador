@@ -73,3 +73,8 @@
     background-color: #c51104; 
     transform: translateY(-2px); 
 }
+
+.logout-container {
+    margin-top: 2em;
+
+}

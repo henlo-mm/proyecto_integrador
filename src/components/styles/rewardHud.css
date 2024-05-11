@@ -1,0 +1,36 @@
+.reward-hud {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 10px;
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 1000;
+}
+
+.reward-icon {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.reward-count {
+    display: flex;
+    align-items: center;
+}
+
+.count-label {
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.count-value {
+    font-weight: bold;
+    font-size: 20px;
+    color: #ff0000; 
+}

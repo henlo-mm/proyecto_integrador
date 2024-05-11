@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+
+.button-logout {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px; 
+    position: fixed; 
+    right: 0;
+    top: 0; 
+    z-index: 1500; 
+    width: 100%; 
+}
+
+.button-logout button {
+    font-family: 'Orbitron', sans-serif; 
+    background-color: #540000; 
+    color: white;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; 
+}
+
+.button-logout button:hover {
+    background-color: #8B0000;
+    transform: scale(1.1); 
+}
