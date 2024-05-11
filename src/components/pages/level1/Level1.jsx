@@ -24,6 +24,9 @@ import { GameOverScreen } from "../../html/GameOverMessage";
 import { updateUser } from "../../../db/users-collection";
 import { LevelCompletedMessage } from "../../html/LevelCompleteMessage";
 
+
+const defaultPosition = [2, 10, 48];
+
 export default function Level1() {
 
 
@@ -112,6 +115,14 @@ export default function Level1() {
         window.location.reload();
     };
 
+    const getValidPosition = (position) => {
+        if (position && !isNaN(position.x) && !isNaN(position.y) && !isNaN(position.z)) {
+            return [position.x, position.y, position.z];
+        }
+        return defaultPosition; 
+    };
+
+
     return (
         <Suspense fallback={<LoadingScreen/>}>
             <KeyboardControls map={map}>
@@ -120,15 +131,10 @@ export default function Level1() {
                    {/*  <Perf position="top-center"/> */}
                     <Lights/>
                     <Environments/>
-                    <Physics debug={true}>
+                    <Physics debug={false}>
                         <World/>
                         {!isLoading && userData && (
-                            <Deadpool position={[
-                                userData.positionLevel1.x,
-                                userData.positionLevel1.y,
-                                userData.positionLevel1.z
-                                
-                            ]}/>
+                            <Deadpool position={getValidPosition(userData.positionLevel1)} />
                         )}
 
                         
