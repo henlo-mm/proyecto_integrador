@@ -9,7 +9,7 @@ import {useLocation} from "react-router-dom";
 import { RigidBody} from "@react-three/rapier";
 import { useRewards } from "../context/RewardsContext";
 
-export default function CheckPoint({onCollision}) {
+export default function CheckPoint({onCollision, position}) {
     const checkPointRef = useRef();
     const rigidBodyRef = useRef();
 
@@ -22,7 +22,7 @@ export default function CheckPoint({onCollision}) {
 
     const {nodes, materials} = useGLTF("assets/models/checkpoint/CheckPoint_unido.glb");
 
-    const initialPosition = [-4, -0.9, 0];
+    const initialPosition = position;
 
     useFrame(({scene}) => {
         if (rigidBodyRef.current && !inCollision) {

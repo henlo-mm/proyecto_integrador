@@ -75,7 +75,7 @@ export default function Level1() {
             <KeyboardControls map={map}>
                 <Logout/>
                 <Canvas shadows={true}>
-                    <Perf position="top-right"/>
+                   {/*  <Perf position="top-center"/> */}
                     <Lights/>
                     <Environments/>
                     <Physics debug={true}>
@@ -90,7 +90,8 @@ export default function Level1() {
 
                         
                         <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
-                        <CheckPoint onCollision={handleCollisionWithCheckPoint}/>
+                        <CheckPoint onCollision={handleCollisionWithCheckPoint} position={[-4, -0.9, 25]} />
+                        <CheckPoint onCollision={handleCollisionWithCheckPoint} position={[-4, -0.9, -49]} />
                         {activeHealths.map((isActive, index) => isActive && (
                             <Health
                                 key={index}
