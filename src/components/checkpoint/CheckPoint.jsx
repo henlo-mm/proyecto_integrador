@@ -2,18 +2,27 @@ import {useEffect, useRef, useState} from "react";
 import {useGLTF} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {Vector3} from "three";
+import { updateUser } from "../../db/users-collection";
+import { useLives } from "../context/LivesContext";
+import {useLocation} from "react-router-dom";
 
-import {CuboidCollider, RigidBody} from "@react-three/rapier";
+import { RigidBody} from "@react-three/rapier";
+import { useRewards } from "../context/RewardsContext";
 
 export default function CheckPoint({onCollision}) {
     const checkPointRef = useRef();
     const rigidBodyRef = useRef();
 
+    const location = useLocation();
+    const userData = location.state.userData;
+    const { collectedLives } = useLives();
+    const { collectedRewards} = useRewards();
+
     const [inCollision, setInCollision] = useState(false);
 
     const {nodes, materials} = useGLTF("assets/models/checkpoint/CheckPoint_unido.glb");
 
-    const initialPosition = [0, -0.5, 0];
+    const initialPosition = [-4, -0.9, 0];
 
     useFrame(({scene}) => {
         if (rigidBodyRef.current && !inCollision) {
@@ -27,8 +36,24 @@ export default function CheckPoint({onCollision}) {
 
                 if (distance < 1) {
                     setInCollision(true);
-                    console.log("Collision detected at position:", checkPointPosition.toArray());
                     onCollision();
+
+                    userData.checkPoint1 = true;
+                    const adjustedPosition = deadpoolPosition.add(new Vector3(0, 10, 2));
+
+                    userData.positionLevel1 = {
+                        x: parseFloat(adjustedPosition.x.toFixed(2)),
+                        y: parseFloat(adjustedPosition.y.toFixed(2)),
+                        z: parseFloat(adjustedPosition.z.toFixed(2))
+                    };
+
+                    userData.vidas = collectedLives;
+
+                    userData.coleccion = collectedRewards;
+
+                    console.log('userData: ', userData);
+                    updateUser(userData.email, userData);
+
                 }
             }
         }
@@ -49,9 +74,7 @@ export default function CheckPoint({onCollision}) {
     }, [inCollision]);
 
     return (
-        <RigidBody ref={rigidBodyRef} userData={{name: "CheckPoint"}} position={initialPosition} type="fixed"
-                   colliders={false}>
-            <CuboidCollider args={[-0.4, 0.8, -0.2]} position={[0, 0.5, 0]}/>
+        <RigidBody ref={rigidBodyRef} userData={{name: "CheckPoint"}} position={initialPosition} type="fixed" colliders="cuboid">
 
             <group ref={checkPointRef} scale={[0.2, 0.2, 0.2]}>
                 <group name="Armature">

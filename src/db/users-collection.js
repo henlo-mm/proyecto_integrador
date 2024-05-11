@@ -1,6 +1,6 @@
 "use strict";
 
-import {addDoc, collection, getDocs, query, where} from "firebase/firestore";
+import {addDoc, collection, getDocs, query, where, updateDoc } from "firebase/firestore";
 import {db} from "../firebase/firebase.config";
 
 /**
@@ -15,12 +15,15 @@ const usersRef = collection(db, "users");
  */
 const createUser = async (userData) => {
     try {
-        const res = await addDoc(usersRef, userData);
-        return res;
+        const docRef = await addDoc(usersRef, userData);
+        console.log("Document written with ID: ", docRef.id);
+        return { success: true, docRef: docRef };
     } catch (error) {
-        return error;
+        console.error("Error adding document: ", error);
+        return { success: false, error: error };
     }
 };
+
 /**
  * Reads the data of a user from Firestore based on their email.
  * @param {string} userEmail - The email of the user to be read.
@@ -28,18 +31,20 @@ const createUser = async (userData) => {
  */
 const readUser = async (userEmail) => {
     try {
-        const userSnapshot = await getDocs(query(usersRef, where("email", "==", userEmail)));
-
-        if (userSnapshot.empty) {
-            return {success: false, message: "User not found"};
+        const querySnapshot = await getDocs(query(usersRef, where("email", "==", userEmail)));
+        if (querySnapshot.empty) {
+            console.log("No matching documents.");
+            return { success: false, message: "No user found" };
         }
-
-        const userData = userSnapshot.docs[0].data(); // Obtener los datos del primer documento directamente
-        return {success: true, userData: userData};
+        const userData = querySnapshot.docs[0].data();
+        console.log("User data retrieved successfully");
+        return { success: true, userData: userData };
     } catch (error) {
-        return error;
+        console.error("Error retrieving user data: ", error);
+        return { success: false, error: error };
     }
 };
+
 /**
  * Updates the data of a user in Firestore.
  * @param {string} userEmail - The email of the user to be updated.
@@ -48,13 +53,22 @@ const readUser = async (userEmail) => {
  */
 const updateUser = async (userEmail, userData) => {
     try {
-        const userSnapshot = await getDocs(query(usersRef, where("email", "==", userEmail)));
+        const userQuerySnapshot = await getDocs(query(usersRef, where("email", "==", userEmail)));
 
-        const userDoc = userSnapshot.docs[0];
-        await userDoc.ref.update(userData);
+        if (userQuerySnapshot.empty) {
+            console.log("No user found with that email.");
+            return {success: false, message: "No user found with that email"};
+        }
+
+        const userDocRef = userQuerySnapshot.docs[0].ref;
+
+        await updateDoc(userDocRef, userData);
+
+        console.log("User updated successfully");
         return {success: true, message: "User updated successfully"};
     } catch (error) {
-        return error;
+        console.log("Error updating user: ", error);
+        return {success: false, message: "Error updating user: " + error.message};
     }
 };
 

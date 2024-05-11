@@ -6,11 +6,13 @@ import {useFrame, useThree} from "@react-three/fiber";
 import {Vector3, LoopOnce} from "three";
 import React from "react";
 
-export default function Deadpool() {
+export default function Deadpool({position}) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
     const {avatar, setAvatar} = useAvatar();
     const [bullets, setBullets] = useState([]);
+
+    const [juggernautPosition, setjuggernautPosition] = useState();
 
     const {nodes, materials, animations} = useGLTF("assets/models/avatar/AvatarDeadpool.glb");
     const {gl} = useThree();
@@ -25,41 +27,48 @@ export default function Deadpool() {
 
     }, []);*/
 
-    /*const shoot = useCallback(() => {
+    useFrame(({ scene }) => {
+        const juggernaut  = scene.getObjectByName("Juggernaut");
+
+        if (juggernaut) {
+            setjuggernautPosition(new Vector3().setFromMatrixPosition(juggernaut.matrixWorld));
+        }
+       
+    });
+
+    /* const shoot = useCallback(() => {
         if (!actions.Shooting || !avatarRef.current) return;
         const startPosition = new Vector3().setFromMatrixPosition(avatarRef.current.matrixWorld);
-        startPosition.y += 1.5;
+        startPosition.y += 1.5; 
         startPosition.z += 0.5;
-        const forwardDirection = new Vector3(0, 0, -1).applyQuaternion(avatarRef.current.quaternion);
-        setBullets(bullets => [...bullets, {position: startPosition, velocity: forwardDirection}]);
-        setAvatar({...avatar, animation: "Shooting"});
+
+        const directionToJuggernaut = juggernautPosition;
+
+        setBullets(bullets => [...bullets, { position: startPosition, velocity: directionToJuggernaut }]);
+        setAvatar({ ...avatar, animation: "Shooting" });
         actions.Shooting.reset().fadeIn(0.05).setLoop(LoopOnce).play();
-        if (shootSound.current) {
-            shootSound.current.pause();
-            shootSound.current.currentTime = 0;
-            shootSound.current.play().catch(error => console.error("Error playing the sound:", error));
-        }
-    }, [actions, setAvatar, avatar]);*/
+    }, [actions, setAvatar, avatar, juggernautPosition]);
 
     useFrame((state, delta) => {
         if (bullets.length) {
             setBullets(bullets => bullets.map(bullet => ({
                 ...bullet,
-                position: bullet.position.add(bullet.velocity.clone().multiplyScalar(delta * 50))
+                position: bullet.position.add(bullet.velocity.clone().multiplyScalar(delta * 200))
             })).filter(bullet => bullet.position.z > -50 && bullet.position.y > -5));
         }
     });
 
+
     useEffect(() => {
         const handleRightClick = (event) => {
             event.preventDefault();
-            //shoot();
+            shoot();
         };
         gl.domElement.addEventListener('contextmenu', handleRightClick);
         return () => {
             gl.domElement.removeEventListener('contextmenu', handleRightClick);
         };
-    }, [/*shoot*/, gl.domElement]);
+    }, [shoot, gl.domElement]); */
 
     useEffect(() => {
 
@@ -85,8 +94,8 @@ export default function Deadpool() {
             camInitDis={-5}
             camMaxDis={-7}
             maxVelLimit={5}
-            jumpVel={4}
-            position={[2, 10, 48]}
+            jumpVel={8}
+            position={position}
             characterInitDir={170}
             camInitDir={{x: 0, y: 10}}
             floatHeight={0}
@@ -95,16 +104,15 @@ export default function Deadpool() {
             userData={{name: "Deadpool"}}
         >
 
-            <group>
+           {/*  <group>
                 {bullets.map((bullet, index) => (
                     <mesh key={`bullet-${index}`} position={bullet.position}>
                         <sphereGeometry args={[0.2, 16, 16]}/>
-                        <meshStandardMaterial color='red'/>
+                        <meshStandardMaterial color='gray'/>
                     </mesh>
                 ))}
+            </group> */}
 
-
-            </group>
             <group ref={avatarRef} position-y={-0.5} name="Deadpool">
                 <group name="Armature">
                     <skinnedMesh

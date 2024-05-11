@@ -1,6 +1,6 @@
 import {Perf} from "r3f-perf";
 import {Physics} from "@react-three/rapier";
-import {Suspense, useState} from "react";
+import {Suspense, useEffect, useState} from "react";
 import Lights from "./lights/Lights";
 import Environments from "./environments/Environments";
 import {Canvas} from "@react-three/fiber";
@@ -17,50 +17,48 @@ import {useLives} from "../../context/LivesContext";
 import {RewardHUD} from "./hud/RewardHUD";
 import Logout from "../../logout/Logout";
 import CheckPoint from "../../checkpoint/CheckPoint";
-import {useLocation} from "react-router-dom";
+import { CheckpointMessage } from "../../html/CheckpointMessage";
+import { useRewards } from "../../context/RewardsContext"; 
+import { useUser  } from "../../context/UserContext"; 
 
 export default function Level1() {
-    const location = useLocation();
-    const userData = location.state.userData;
 
-    console.log('userData: ', userData);
-    const [activeHealths, setActiveHealths] = useState([true, true, true, true, true]);
-    const [healthCount, setHealthCount] = useState(0);
-    const {collectedLives, loseLife, gainLife} = useLives();
+
+    const [activeHealths, setActiveHealths] = useState(() => {
+        const savedHealths = localStorage.getItem('activeHealths');
+        return savedHealths ? JSON.parse(savedHealths) : [true, true, true, true, true];
+    });
+
+    const {collectedLives, loseLife } = useLives();
+
+    const { userData, isLoading } = useUser();
+
+    const { increaseHealthCount, healthCount } = useRewards();
+
     const map = useMovements();
+  
 
     const onHealthCollected = (index) => {
-        setHealthCount(prev => {
-            const newCount = prev + 1;
-
-            if (newCount >= 4) {
-                gainLife();
-                return 0;
-            }
-            return newCount;
-        });
-
-        //Desaparece el objeto de salud cada que colisiona con el avatar
+        increaseHealthCount();
         setActiveHealths(prev => {
-            return prev.map((isActive, idx) => {
+            const newHealths = prev.map((isActive, idx) => {
                 return idx === index ? false : isActive;
             });
+            localStorage.setItem('activeHealths', JSON.stringify(newHealths));
+            return newHealths;
         });
     };
 
-    //Cada que colisiona con el enemigo quita una vida
     const handleCollisionWithJuggernaut = () => {
         loseLife();
     };
 
-    const [colisiono, setColisiono] = useState({estado: false});
+    const [colisiono, setColisiono] = useState(false);
+    
     const handleCollisionWithCheckPoint = () => {
-        // Lógica para manejar la colisión
-        console.log("Collision occurred!");
         setColisiono(true);
     };
 
-    //Posiciones de los objetos de salud
     const getPositionForIndex = (index) => {
         const positions = [
             [-0.8, 0.5, 22.2],
@@ -82,7 +80,15 @@ export default function Level1() {
                     <Environments/>
                     <Physics debug={true}>
                         <World/>
-                        <Deadpool onCollision={handleCollisionWithJuggernaut}/>
+                        {!isLoading && userData && (
+                            <Deadpool position={[
+                                userData.positionLevel1.x,
+                                userData.positionLevel1.y,
+                                userData.positionLevel1.z
+                            ]}/>
+                        )}
+
+                        
                         <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
                         <CheckPoint onCollision={handleCollisionWithCheckPoint}/>
                         {activeHealths.map((isActive, index) => isActive && (
@@ -97,16 +103,8 @@ export default function Level1() {
                 </Canvas>
                 <HealthHUD collectedLives={collectedLives}/>
                 <RewardHUD healthCount={healthCount}/>
-                {colisiono.estado &&
-                    <div className="checkpoint-message" style={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: 'start',
-                        position: 'absolute',
-                        zIndex: 1
-                    }}>
-                        <p>¡Checkpoint alcanzado! ¡Guardado exitoso!</p>
-                    </div>
+                {colisiono &&
+                   <CheckpointMessage />
                 }
             </KeyboardControls>
         </Suspense>

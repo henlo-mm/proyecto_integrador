@@ -19,10 +19,10 @@ export default function Login() {
             <div className="title-dead-game">
                 DevPool y Codeverine: En Busca de la Regeneración Perdida
             </div>
-                <h1 className="login-title">INICIAR SESIÓN</h1>
-                <div onClick={onHandleButtonLogin} >
-                     <button  className="login-button">Login</button>
-                 </div>
+                <h1 className="login-title">Haz clic en el siguiente botón para iniciar sesión</h1>
+                <div onClick={onHandleButtonLogin}>
+                     <button  className="login-button">INGRESAR</button>
+                </div>
         </div>
     );
 }
