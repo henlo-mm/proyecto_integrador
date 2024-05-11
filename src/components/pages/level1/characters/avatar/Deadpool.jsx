@@ -27,48 +27,15 @@ export default function Deadpool({position}) {
 
     }, []);*/
 
-    useFrame(({ scene }) => {
-        const juggernaut  = scene.getObjectByName("Juggernaut");
-
-        if (juggernaut) {
-            setjuggernautPosition(new Vector3().setFromMatrixPosition(juggernaut.matrixWorld));
-        }
-       
-    });
-
-    /* const shoot = useCallback(() => {
+    const shoot = useCallback(() => {
         if (!actions.Shooting || !avatarRef.current) return;
-        const startPosition = new Vector3().setFromMatrixPosition(avatarRef.current.matrixWorld);
-        startPosition.y += 1.5; 
-        startPosition.z += 0.5;
-
-        const directionToJuggernaut = juggernautPosition;
-
-        setBullets(bullets => [...bullets, { position: startPosition, velocity: directionToJuggernaut }]);
+  
         setAvatar({ ...avatar, animation: "Shooting" });
         actions.Shooting.reset().fadeIn(0.05).setLoop(LoopOnce).play();
     }, [actions, setAvatar, avatar, juggernautPosition]);
 
-    useFrame((state, delta) => {
-        if (bullets.length) {
-            setBullets(bullets => bullets.map(bullet => ({
-                ...bullet,
-                position: bullet.position.add(bullet.velocity.clone().multiplyScalar(delta * 200))
-            })).filter(bullet => bullet.position.z > -50 && bullet.position.y > -5));
-        }
-    });
+  
 
-
-    useEffect(() => {
-        const handleRightClick = (event) => {
-            event.preventDefault();
-            shoot();
-        };
-        gl.domElement.addEventListener('contextmenu', handleRightClick);
-        return () => {
-            gl.domElement.removeEventListener('contextmenu', handleRightClick);
-        };
-    }, [shoot, gl.domElement]); */
 
     useEffect(() => {
 
@@ -104,15 +71,16 @@ export default function Deadpool({position}) {
             userData={{name: "Deadpool"}}
         >
 
-           {/*  <group>
+            <group>
                 {bullets.map((bullet, index) => (
                     <mesh key={`bullet-${index}`} position={bullet.position}>
                         <sphereGeometry args={[0.2, 16, 16]}/>
                         <meshStandardMaterial color='gray'/>
                     </mesh>
                 ))}
-            </group> */}
 
+
+            </group>
             <group ref={avatarRef} position-y={-0.5} name="Deadpool">
                 <group name="Armature">
                     <skinnedMesh

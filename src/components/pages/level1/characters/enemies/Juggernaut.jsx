@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
+import { Vector3, LoopOnce } from "three";
 
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
@@ -11,16 +11,19 @@ export default function Juggernaut({ onCollision  }) {
     const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
     const { actions } = useAnimations(animations, avatarRef)
 
+    const [ enemyState, setEnemyState ] = useState(true);
+
+    const [isDying, setIsDying] = useState(false);
 
 	const rigidBodyRef = useRef();
     const [inCollision, setInCollision] = useState(false);
 
-    const initialPosition = [2, -0.5, 30];
+    const initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000; 
 
     useFrame(({ scene }) => {
 
-        if (rigidBodyRef.current && !inCollision) {
+        if (rigidBodyRef.current && !inCollision && enemyState) {
             const translation = rigidBodyRef.current.translation();
             const juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
 
@@ -43,6 +46,16 @@ export default function Juggernaut({ onCollision  }) {
     const movementSpeed = 0.01;
     const [direction, setDirection] = useState(1); 
 
+    useEffect(() => {
+        if (isDying && actions.Dying) {
+            actions.Dying.reset().play();
+        }
+        return () => {
+            if (isDying && actions.Dying) {
+                actions.Dying.stop();
+            }
+        };
+    }, [isDying, actions.Dying]);
 
     useEffect(() => {
         if (actions.Swiping) {
@@ -51,7 +64,7 @@ export default function Juggernaut({ onCollision  }) {
     }, [actions]);
 
     useFrame(() => {
-        if (rigidBodyRef.current) {
+        if (rigidBodyRef.current && !isDying && enemyState) {
             const position = rigidBodyRef.current.translation();
             position.x += movementSpeed * direction;
 
@@ -63,12 +76,18 @@ export default function Juggernaut({ onCollision  }) {
         }
     });
 
+    const onHandleClick = (e) => {
+        setIsDying(true);
+        actions.Swiping.stop();
+        setEnemyState(false);
+    };
+
     return (
         <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed">
             <CuboidCollider args={[-0.4, 0.5, -0.2]} position={[0, 1, 0]} /> 
 
             <group  ref={avatarRef} name="Juggernaut">
-                <group name="Armature">
+                <group name="Armature" onContextMenu={(e) => onHandleClick(e)}>
                     <skinnedMesh
                         name="EyeLeft"
                         geometry={nodes.EyeLeft.geometry}
