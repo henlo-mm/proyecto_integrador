@@ -9,16 +9,26 @@ import useMovements from "../../utils/key-movements";
 import { Html, KeyboardControls, OrbitControls } from "@react-three/drei";
 import Controls from "./controls/Controls";
 import Wolverine from "./characters/avatar/Wolverine";
-import Camera from "../../camera/Camera";
+import {HealthHUD} from "./hud/HealthHUD";
+import {useLives} from "../../context/LivesContext";
 import LoadingScreen from "../../loading/LoadingScreen";
 import Juggernaut from "./characters/enemies/Juggernaut";
+import CheckPoint from "../../checkpoint/CheckPoint";
+import { updateUser } from "../../../db/users-collection";
+import { useUser  } from "../../context/UserContext"; 
+import { useRewards } from "../../context/RewardsContext"; 
 
 export default function Level2() {
 
     const wolverineRef = useRef();
+    const defaultPosition = [2, 10, 48];
 
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+    const [showLevelCompleted, setShowLevelCompleted] = useState(false);
 
+    const { userData, isLoading } = useUser();
+
+    
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowLoadingScreen(false);
@@ -27,43 +37,51 @@ export default function Level2() {
         return () => clearTimeout(timer);
     }, []);
 
+    const [colisiono, setColisiono] = useState(false);
+
+   
+
+    const getValidPosition = (position) => {
+        if (position && !isNaN(position.x) && !isNaN(position.y) && !isNaN(position.z)) {
+            return [position.x, position.y, position.z];
+        }
+        return defaultPosition; 
+    };
+
     const map = useMovements();
 
     return (
-        <KeyboardControls map={map} >
-            <Canvas
-                camera={
-                    {
-                        position: [0, 10, -2],
-                        fov: 75
-                    }
-                }
-                shadows={true}
-            >
-               {/*  <Perf position="top-left" /> */}
-                <OrbitControls 
-                    enableZoom={true}
-                    enablePan={true}
-                />
-                 {showLoadingScreen ? (
-                    <Html>
-                        <LoadingScreen />
-                    </Html>
-                ) : (
+        <Suspense fallback={<LoadingScreen />}>
+            <KeyboardControls map={map} >
+                <Canvas
+                 /*    camera={
+                        {
+                            position: [0, 10, -2],
+                            fov: 75
+                        }
+                    } */
+                    shadows={true}
+                >
+                    <Perf position="top-center"/>
+                 {/*    <OrbitControls
+                        enableZoom={true}
+                        enablePan={true}
+                    /> */}
 
-                    <Suspense fallback={null}>
-                        <Lights />
-                        <Environments />
-                        <Physics debug={false}>
-                            <World />
-                            <Juggernaut />
-                            <Wolverine />
-                            <Camera  playerRef={wolverineRef} />
-                            <Controls />
-                        </Physics>
-                    </Suspense>
-                )}
-            </Canvas>
-        </KeyboardControls>
+                    <Lights />
+                    <Environments />
+                    <Physics debug={true}>
+                        <World />
+                        {!isLoading && userData && (
+                            <Wolverine position={getValidPosition(userData.positionLevel2)} />
+                        )}
+                        <Juggernaut />
+                  
+                        <Controls />
+                    </Physics>
+
+                </Canvas>
+            </KeyboardControls>
+        </Suspense>
     )
 }

@@ -128,7 +128,7 @@ export default function Level1() {
             <KeyboardControls map={map}>
                 <Logout/>
                 <Canvas shadows={true}>
-                   {/*  <Perf position="top-center"/> */}
+                    <Perf position="top-center"/>
                     <Lights/>
                     <Environments/>
                     <Physics debug={false}>

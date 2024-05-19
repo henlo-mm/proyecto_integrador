@@ -29,7 +29,8 @@ export default function CheckPoint({onCollision, position}) {
             const translation = rigidBodyRef.current.translation();
             const checkPointPosition = new Vector3(translation.x, translation.y, translation.z);
 
-            const deadpool = scene.getObjectByName("Deadpool");
+            //const deadpool = scene.getObjectByName("Deadpool");
+            const deadpool = scene.getObjectByName("Wolverine");
             if (deadpool) {
                 const deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
                 const distance = checkPointPosition.distanceTo(deadpoolPosition);

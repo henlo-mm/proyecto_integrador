@@ -5,7 +5,7 @@ import Ecctrl, { EcctrlAnimation } from "ecctrl";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-export default function Wolverine() {
+export default function Wolverine({ position}) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
     const { avatar, setAvatar } = useAvatar();
@@ -65,12 +65,14 @@ export default function Wolverine() {
             camMaxDis={-2}
             maxVelLimit={5}
             jumpVel={5}
-            position={[0, 10, 0]}
+            position={position}
             animated
-            mode="PointToMove"
+            floatHeight={0}
+            autoBalance={false}
+            userData={{name: "Wolverine"}}
         >
 
-            <group ref={avatarRef} name="Scene" position-y={-0.8}>
+            <group ref={avatarRef} position-y={-0.5} name="Wolverine" >
                 <group name="Scene">
                     <group name="Armature">
                         <skinnedMesh

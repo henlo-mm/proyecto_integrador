@@ -6,28 +6,7 @@ const World = (props) => {
 
     const {nodes, materials} = useGLTF("/assets/models/floor/floormejorado.glb");
 
-    const PATH = "/assets/textures/floor/";
-    const propsTexture = useTexture({
-        map: PATH + "dirty_concrete_diff_1k.jpg",
-        normalMap: PATH + "dirty_concrete_nor_gl_1k.jpg",
-        roughnessMap: PATH + "dirty_concrete_rough_1k.jpg",
-        displacementMap: PATH + "dirty_concrete_rough_1k.jpg",
-    });
-
-    propsTexture.map.repeat.set(4, 64);
-    propsTexture.map.wrapS = propsTexture.map.wrapT = RepeatWrapping;
-
-    propsTexture.normalMap.repeat.set(4, 64);
-    propsTexture.normalMap.wrapS = propsTexture.normalMap.wrapT = RepeatWrapping;
-
-    propsTexture.roughnessMap.repeat.set(4, 64);
-    propsTexture.roughnessMap.wrapS = propsTexture.roughnessMap.wrapT = RepeatWrapping;
-
-    propsTexture.displacementMap.repeat.set(4, 64);
-    propsTexture.displacementMap.wrapS = propsTexture.displacementMap.wrapT = RepeatWrapping;
-
-
-    const PATH_ESTANTE = "/assets/textures/estantes/";
+   /*  const PATH_ESTANTE = "/assets/textures/estantes/";
     const propsTextureEstante = useTexture({
         map: PATH_ESTANTE + "rusty_metal_02_diff_1k.jpg",
         normalMap: PATH_ESTANTE + "rusty_metal_02_nor_gl_1k.jpg",
@@ -42,7 +21,7 @@ const World = (props) => {
         roughnessMap: PATH_MESA + "fabric_pattern_07_rough_1k.jpg",
         // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
     });
-
+ */
 
     return (
         <>
@@ -82,7 +61,7 @@ const World = (props) => {
                         position={[4.427, -0.232, -10.577]}
                         scale={0.1}
                     >
-                        <meshStandardMaterial {...propsTextureMesa} />
+                       {/*  <meshStandardMaterial {...propsTextureMesa} /> */}
 
                     </mesh>
                     <CuboidCollider args={[1, 0.5, 0.9]} position={[-0.8, -0.5, 22.2]}/>
@@ -100,7 +79,7 @@ const World = (props) => {
                         material={nodes.Estantes.material}
                         position={[-3.535, 0.006, -43.937]}
                     >
-                         <meshStandardMaterial {...propsTextureEstante} />
+                         {/* <meshStandardMaterial {...propsTextureEstante} /> */}
                     </mesh>
                     <CuboidCollider args={[1.3, 1.0, 0.2]} position={[2.4, 0.1, 33.6]}/>
                     <CuboidCollider args={[0.3, 1.0, 1.3]} position={[0.7, 0.1, 0.8]}

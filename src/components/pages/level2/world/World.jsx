@@ -1,31 +1,11 @@
 import { Plane, useGLTF, useTexture} from '@react-three/drei';
 import {RepeatWrapping} from "three";
 import {CuboidCollider, RigidBody} from "@react-three/rapier"
+import { MeshStandardMaterial } from 'three';
 
 const World = (props) => {
 
-    const {nodes, materials} = useGLTF("/assets/models/floor/floorlevel2.glb");
-
-    const PATH = "/assets/textures/floor/level2/";
-    const propsTexture = useTexture({
-        map: PATH + "concrete_layers_02_diff_1k.jpg",
-        normalMap: PATH + "concrete_layers_02_nor_gl_1k.jpg",
-        roughnessMap: PATH + "concrete_layers_02_rough_1k.jpg",
-        displacementMap: PATH + "concrete_layers_02_disp_1k.png",
-    });
-
-    propsTexture.map.repeat.set(4, 64);
-    propsTexture.map.wrapS = propsTexture.map.wrapT = RepeatWrapping;
-
-    propsTexture.normalMap.repeat.set(4, 64);
-    propsTexture.normalMap.wrapS = propsTexture.normalMap.wrapT = RepeatWrapping;
-
-    propsTexture.roughnessMap.repeat.set(4, 64);
-    propsTexture.roughnessMap.wrapS = propsTexture.roughnessMap.wrapT = RepeatWrapping;
-
-    propsTexture.displacementMap.repeat.set(4, 64);
-    propsTexture.displacementMap.wrapS = propsTexture.displacementMap.wrapT = RepeatWrapping;
-
+    const {nodes, materials} = useGLTF("/assets/models/floor/floorlevel2_modificado.glb");
 
     const PATH_ESTANTE = "/assets/textures/estantes/";
     const propsTextureEstante = useTexture({
@@ -43,10 +23,15 @@ const World = (props) => {
         // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
     });
 
+    const floorMaterial = new MeshStandardMaterial({
+        color: 0x222222, // Un gris oscuro
+        roughness: 0.8,  // Aumenta la rugosidad para menos reflejos, más textura de fábrica
+        metalness: 0.5   // Ligera metalicidad para simular superficies desgastadas
+    });
 
     return (
         <>
-            <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
+            <group {...props} dispose={null}>
                     {/* <meshStandardMaterial attach="material" {...propsTexture}  castShadow receiveShadow transparent={true} opacity={0} /> */}
                 <group>
                     <RigidBody type="fixed" colliders="trimesh">
@@ -54,32 +39,36 @@ const World = (props) => {
                             castShadow
                             receiveShadow
                             geometry={nodes.Floor.geometry}
-                            material={nodes.Floor.material}
+                            material={floorMaterial}
                         />
                     </RigidBody>
 
                     <RigidBody type="fixed" colliders="trimesh">
-                        <Plane args={[100, 10]} position={[-5, 1.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-                            <meshStandardMaterial attach="material" transparent={true} opacity={0} />
+                        <Plane args={[200, 80]} position={[-15, -20, 0]} rotation={[0, Math.PI / 2, 0]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */ color="#413830" />
                         </Plane>
-                        <Plane args={[100, 10]} position={[5, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]}>
-                            <meshStandardMaterial attach="material" transparent={true} opacity={0} />
+                        <Plane args={[200, 80]} position={[15, -20, 0]} rotation={[0, -Math.PI / 2, 0]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */ color="#413830" />
+                        </Plane>
+                        <Plane args={[30, 30]} position={[0, 4.2, 70]} rotation={[Math.PI, 0, Math.PI / 2]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */ color="#413830" />
+                        </Plane>
+                        <Plane args={[30, 30]} position={[0, 4.2, -70]} rotation={[0, 0, Math.PI / 2]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */ color="#413830" />
                         </Plane>
                     </RigidBody>
+
                     <mesh
                         castShadow
                         receiveShadow
                         geometry={nodes.Cajas.geometry}
                         material={materials.Wooden_box_01_mtl}
-                        position={[4.343, -0.48, 27.315]}
                     />
                     <mesh
                         castShadow
                         receiveShadow
                         geometry={nodes.Estantes.geometry}
                         material={nodes.Estantes.material}
-                        position={[0.712, 0.006, 0.647]}
-                        rotation={[0, -0.007, 0]}
                     />
                 </group>
             </group>
@@ -89,4 +78,4 @@ const World = (props) => {
 }
 
 export default World;
-useGLTF.preload("/assets/models/floor/floorlevel2.glb");
+useGLTF.preload("/assets/models/floor/floorlevel2_modificado.glb");
