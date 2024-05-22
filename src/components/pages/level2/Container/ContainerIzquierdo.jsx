@@ -3,29 +3,29 @@ import {useFrame} from "@react-three/fiber"
 import {RigidBody} from "@react-three/rapier"
 import {useRef, useState} from "react"
 
-export default function CajaIzquierda({position, offset}) {
-    const cajaIzquierdaRef = useRef(null)
-    const cajaIzquierdaBodyRef = useRef(null)
+export default function ContainerIzquierdo({position, offset, rotation}) {
+    const containerIzquierdoRef = useRef(null)
+    const containerIzquierdoBodyRef = useRef(null)
     const [shouldReset, setShouldReset] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
 
-    const {nodes, materials} = useGLTF("/assets/models/caja/caja.glb");
+    const {nodes, materials} = useGLTF("/assets/models/container/Container.glb");
 
-    const amplitude = 25;
+    const amplitude = 22;
     const speed = 20; // velocidad del movimiento
     const initialPositionX = position[0];
     const limitPositionX = 13; // Límite izquierdo
     const resetPositionX = -16; // Posición de reinicio en x
 
     useFrame(({clock}) => {
-        if (cajaIzquierdaBodyRef.current && !shouldReset) {
+        if (containerIzquierdoBodyRef.current && !shouldReset) {
             const elapsedTime = clock.getElapsedTime() + offset;
             const moveX = initialPositionX + (elapsedTime * speed) % amplitude;
 
-            cajaIzquierdaBodyRef.current.setTranslation({
+            containerIzquierdoBodyRef.current.setTranslation({
                 x: moveX,
-                y: cajaIzquierdaBodyRef.current.translation().y,
-                z: cajaIzquierdaBodyRef.current.translation().z,
+                y: containerIzquierdoBodyRef.current.translation().y,
+                z: containerIzquierdoBodyRef.current.translation().z,
             }, true);
 
             // Comprobar si alcanzó el límite izquierdo
@@ -38,10 +38,10 @@ export default function CajaIzquierda({position, offset}) {
         if (shouldReset && !isResetting) {
             isResetting = true;
             setTimeout(() => {
-                cajaIzquierdaBodyRef.current.setTranslation({
+                containerIzquierdoBodyRef.current.setTranslation({
                     x: resetPositionX,
-                    y: cajaIzquierdaBodyRef.current.translation().y,
-                    z: cajaIzquierdaBodyRef.current.translation().z,
+                    y: containerIzquierdoBodyRef.current.translation().y,
+                    z: containerIzquierdoBodyRef.current.translation().z,
                 }, true);
                 isResetting = false;
                 setShouldReset(false);
@@ -50,15 +50,17 @@ export default function CajaIzquierda({position, offset}) {
     });
 
     return (
-        <RigidBody ref={cajaIzquierdaBodyRef} type="fixed" position={position}>
-            <group ref={cajaIzquierdaRef} dispose={null}>
+        <RigidBody ref={containerIzquierdoBodyRef} type="fixed" position={position}>
+            <group ref={containerIzquierdoRef} dispose={null} scale={0.01} rotation={rotation}>
                 <group name="Scene">
                     <group name="Rigid">
                         <mesh
                             castShadow
                             receiveShadow
-                            geometry={nodes.Caja.geometry}
-                            material={materials['Small_Wooden_Box.01']}
+                            geometry={nodes.Container.geometry}
+                            material={materials['Material.001']}
+                            rotation={[-Math.PI / 2, 0, 0]}
+                            scale={[165.535, 607.601, 165.535]}
                         />
                     </group>
                 </group>
@@ -67,4 +69,4 @@ export default function CajaIzquierda({position, offset}) {
     )
 }
 
-useGLTF.preload("/assets/models/caja/caja.glb");
+useGLTF.preload("/assets/models/container/Container.glb");

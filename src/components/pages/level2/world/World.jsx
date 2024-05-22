@@ -9,6 +9,8 @@ import Container from "../Container/Container";
 import Cinta from "../Cinta/Cinta";
 import CajaIzquierda from "../Caja/CajaIzquierda";
 import CajaDerecha from "../Caja/CajaDerecha";
+import ContainerDerecho from "../Container/ContainerDerecho";
+import ContainerIzquierdo from "../Container/ContainerIzquierdo";
 
 const World = (props) => {
     const {nodes, materials} = useGLTF("/assets/models/floor/floorlevel2_modificado.glb");
@@ -145,16 +147,21 @@ const World = (props) => {
                     {/*Containers de las cintas transportadoras*/}
                     <>
                         {/*Tercer cinta transportadora*/}
-                        <Container position={[13, 14, 40]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[13, 6, 40]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[6, 14, 40]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[6, 6, 40]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                        <ContainerDerecho position={[14, 14, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                        <ContainerDerecho position={[14, 6, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                        <ContainerDerecho position={[9, 14, 40]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
+                                          castShadow/>
+                        <ContainerDerecho position={[9, 6, 40]} offset={0.1} rotation={[Math.PI / 2, 0, 0]} castShadow/>
 
                         {/*Cuarta cinta transportadora*/}
-                        <Container position={[-13, 14, 50]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[-13, 6, 50]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[-6, 14, 50]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <Container position={[-6, 6, 50]} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                        <ContainerIzquierdo position={[-15, 14, 50]} offset={0} rotation={[Math.PI / 2, 0, 0]}
+                                            castShadow/>
+                        <ContainerIzquierdo position={[-15, 6, 50]} offset={0} rotation={[Math.PI / 2, 0, 0]}
+                                            castShadow/>
+                        <ContainerIzquierdo position={[-10, 14, 50]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
+                                            castShadow/>
+                        <ContainerIzquierdo position={[-10, 6, 50]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
+                                            castShadow/>
                     </>
                 </group>
             </group>
