@@ -17,7 +17,7 @@ export default function Wolverine({ position}) {
     const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
 
-    const onMouseClick = useCallback(() => {
+    /*const onMouseClick = useCallback(() => {
         if (actions.Shooting) {
             setAvatar({
                 ...avatar,
@@ -30,14 +30,14 @@ export default function Wolverine({ position}) {
         }
 
 
-    }, [actions, avatar, setAvatar]);
+    }, [actions, avatar, setAvatar]);*/
 
-    useEffect(() => {
+    /*useEffect(() => {
         gl.domElement.addEventListener('click', onMouseClick);
         return () => {
             gl.domElement.removeEventListener('click', onMouseClick);
         };
-    }, [gl.domElement, onMouseClick]);
+    }, [gl.domElement, onMouseClick]);*/
 
     useEffect(() => {
 
