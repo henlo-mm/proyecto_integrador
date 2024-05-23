@@ -5,8 +5,13 @@ import { Vector3, LoopOnce } from "three";
 
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { useAvatar } from "../../../../context/AvatarContext";
+import {normalize} from "../../../../utils/enemies-utils";
 
-export default function Juggernaut({ onCollision  }) {
+
+
+
+
+export default function Juggernaut({ onCollision  }, props) {
     const avatarRef = useRef();
     const { setAnimation } = useAvatar();
 
@@ -21,6 +26,10 @@ export default function Juggernaut({ onCollision  }) {
 
     const initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000; 
+
+
+    const spiderBody = useRef()
+
 
     useEffect(() => {
         if (actions.Swiping) {
@@ -86,6 +95,46 @@ export default function Juggernaut({ onCollision  }) {
             }
         }
     };
+
+    useFrame(({ clock }, delta) => {
+        if (spiderBody.current) {
+          const position = spiderBody.current.translation()
+          var velocity = spiderBody.current.linvel()
+          if (velocity.x == NaN) {
+            velocity.x = 0
+          }
+          if (velocity.y == NaN) {
+            velocity.y = 0
+          }
+          if (velocity.z == NaN) {
+            velocity.z = 0
+          }
+    
+          if (props.action == 0) {
+            if (position.x > props.position[0] + 0.05) {
+              velocity.x = -1
+            } else if (position.x < props.position[0] - 0.05) {
+              velocity.x = 1
+            } else {
+              velocity.x = 0
+            }
+            if (position.z > props.position[2] + 0.05) {
+              velocity.z = -1
+            } else if (position.z < props.position[2] - 0.05) {
+              velocity.z = 1
+            } else {
+              velocity.z = 0
+            }
+            velocity = normalize(velocity)
+            spiderBody.current.setLinvel(
+              { x: velocity.x, y: velocity.y, z: velocity.z },
+              true
+            )
+          }
+          }})
+
+
+
 
     return (
         <RigidBody ref={rigidBodyRef}  userData={{ name: "Juggernaut" }} position={initialPosition} type="fixed" onClick={handleRightClick}>
