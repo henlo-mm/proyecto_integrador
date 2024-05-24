@@ -3,11 +3,12 @@ import {useFrame} from "@react-three/fiber"
 import {RigidBody} from "@react-three/rapier"
 import {useRef, useState} from "react"
 
-export default function ContainerDerecho({position, offset, rotation}) {
+export default function ContainerDerecho({position, offset, rotation, onCollision}) {
     const containerDerechoRef = useRef(null)
     const containerDerechoBodyRef = useRef(null)
     const [shouldReset, setShouldReset] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
+    const [isCooldown, setIsCooldown] = useState(false);
 
     const {nodes, materials} = useGLTF("/assets/models/container/Container.glb");
 
@@ -49,8 +50,19 @@ export default function ContainerDerecho({position, offset, rotation}) {
         }
     });
 
+    const handleCollisionEnter = (event) => {
+        if (!isCooldown && event.rigidBody.userData.name === "wolverine") {
+            console.log("Colisión con caja derecha");
+            onCollision();
+            setIsCooldown(true);
+            setTimeout(() => {
+                setIsCooldown(false);
+            }, 1000); 
+        }
+    };
+
     return (
-        <RigidBody ref={containerDerechoBodyRef} type="fixed" position={position}>
+        <RigidBody ref={containerDerechoBodyRef} type="fixed" position={position} onCollisionEnter={handleCollisionEnter}>
             <group ref={containerDerechoRef} dispose={null} scale={0.01} rotation={rotation}>
                 <group name="Scene">
                     <group name="Rigid">

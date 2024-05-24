@@ -134,34 +134,34 @@ const World = (props) => {
                         <Caja position={[0, 1.3, -15]} castShadow/>
 
                         {/*Primer cinta transportadora*/}
-                        <CajaIzquierda position={[-16, -0.4, -10]} offset={0} castShadow/>
-                        <CajaIzquierda position={[-14, -0.4, -10]} offset={0.05} castShadow/>
-                        <CajaIzquierda position={[-12, -0.4, -10]} offset={0.1} castShadow/>
+                        <CajaIzquierda position={[-16, -0.4, -10]} offset={0} castShadow  onCollision={props.handleCollisionWithObject}  />
+                        <CajaIzquierda position={[-14, -0.4, -10]} offset={0.05} castShadow  onCollision={props.handleCollisionWithObject} />
+                        <CajaIzquierda position={[-12, -0.4, -10]} offset={0.1} castShadow  onCollision={props.handleCollisionWithObject} />
 
                         {/*Segunda cinta transportadora*/}
-                        <CajaDerecha position={[13, -0.4, -5]} offset={0} castShadow/>
-                        <CajaDerecha position={[11, -0.4, -5]} offset={0.05} castShadow/>
-                        <CajaDerecha position={[9, -0.4, -5]} offset={0.1} castShadow/>
+                        <CajaDerecha position={[13, -0.4, -5]} offset={0} castShadow onCollision={props.handleCollisionWithObject} />
+                        <CajaDerecha position={[11, -0.4, -5]} offset={0.05} castShadow onCollision={props.handleCollisionWithObject} />
+                        <CajaDerecha position={[9, -0.4, -5]} offset={0.1} castShadow onCollision={props.handleCollisionWithObject} />
                     </>
 
                     {/*Containers de las cintas transportadoras*/}
                     <>
                         {/*Tercer cinta transportadora*/}
-                        <ContainerDerecho position={[14, 14, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow/>
-                        <ContainerDerecho position={[14, 6, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                        <ContainerDerecho position={[14, 14, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow onCollision={props.handleCollisionWithObject} />
+                        <ContainerDerecho position={[14, 6, 40]} offset={0} rotation={[Math.PI / 2, 0, 0]} castShadow onCollision={props.handleCollisionWithObject} />
                         <ContainerDerecho position={[9, 14, 40]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
-                                          castShadow/>
-                        <ContainerDerecho position={[9, 6, 40]} offset={0.1} rotation={[Math.PI / 2, 0, 0]} castShadow/>
+                                          castShadow onCollision={props.handleCollisionWithObject} />
+                        <ContainerDerecho position={[9, 6, 40]} offset={0.1} rotation={[Math.PI / 2, 0, 0]} castShadow onCollision={props.handleCollisionWithObject} />
 
                         {/*Cuarta cinta transportadora*/}
                         <ContainerIzquierdo position={[-15, 14, 50]} offset={0} rotation={[Math.PI / 2, 0, 0]}
-                                            castShadow/>
+                                            castShadow onCollision={props.handleCollisionWithObject} />
                         <ContainerIzquierdo position={[-15, 6, 50]} offset={0} rotation={[Math.PI / 2, 0, 0]}
-                                            castShadow/>
+                                            castShadow onCollision={props.handleCollisionWithObject} />
                         <ContainerIzquierdo position={[-10, 14, 50]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
-                                            castShadow/>
+                                            castShadow onCollision={props.handleCollisionWithObject} />
                         <ContainerIzquierdo position={[-10, 6, 50]} offset={0.1} rotation={[Math.PI / 2, 0, 0]}
-                                            castShadow/>
+                                            castShadow onCollision={props.handleCollisionWithObject} />
                     </>
                 </group>
             </group>

@@ -9,13 +9,15 @@ import {useLocation} from "react-router-dom";
 import { RigidBody} from "@react-three/rapier";
 import { useRewards } from "../context/RewardsContext";
 
-export default function CheckPoint({onCollision, position}) {
+export default function CheckPoint({onCollision, position, level}) {
     const checkPointRef = useRef();
     const rigidBodyRef = useRef();
 
     const location = useLocation();
     const userData = location.state.userData;
+
     const { collectedLives } = useLives();
+
     const { collectedRewards} = useRewards();
 
     const [inCollision, setInCollision] = useState(false);
@@ -29,31 +31,34 @@ export default function CheckPoint({onCollision, position}) {
             const translation = rigidBodyRef.current.translation();
             const checkPointPosition = new Vector3(translation.x, translation.y, translation.z);
 
-            //const deadpool = scene.getObjectByName("Deadpool");
-            const deadpool = scene.getObjectByName("Wolverine");
-            if (deadpool) {
-                const deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
-                const distance = checkPointPosition.distanceTo(deadpoolPosition);
+            const deadpool = scene.getObjectByName("Deadpool");
+            const wolverine = scene.getObjectByName("Wolverine");
 
-                if (distance < 1) {
+            if (deadpool || wolverine) {
+                const deadpoolPosition = deadpool ? new Vector3().setFromMatrixPosition(deadpool.matrixWorld) : null;
+                const wolverinePosition = wolverine ? new Vector3().setFromMatrixPosition(wolverine.matrixWorld) : null;
+
+                const deadpoolDistance = deadpoolPosition ? checkPointPosition.distanceTo(deadpoolPosition) : Infinity;
+                const wolverineDistance = wolverinePosition ? checkPointPosition.distanceTo(wolverinePosition) : Infinity;
+
+                if (deadpoolDistance < 1 || wolverineDistance < 1) {
                     setInCollision(true);
                     onCollision();
 
-                    userData.checkPoint1 = true;
-                    const adjustedPosition = deadpoolPosition.add(new Vector3(0, 10, 2));
+                    const characterPosition = deadpoolDistance < 1 ? deadpoolPosition : wolverinePosition;
+                    const adjustedPosition = characterPosition.add(new Vector3(0, 10, 2));
 
-                    userData.positionLevel1 = {
+                    userData[`checkPoint${level}`] = true;
+                    userData[`positionLevel${level}`] = {
                         x: parseFloat(adjustedPosition.x.toFixed(2)),
                         y: parseFloat(adjustedPosition.y.toFixed(2)),
                         z: parseFloat(adjustedPosition.z.toFixed(2))
                     };
 
                     userData.vidas = collectedLives;
-
                     userData.coleccion = collectedRewards;
 
                     updateUser(userData.email, userData);
-
                 }
             }
         }

@@ -64,12 +64,13 @@ export default function Wolverine({ position}) {
             camInitDis={-2}
             camMaxDis={-2}
             maxVelLimit={5}
-            jumpVel={5}
+            jumpVel={8}
             position={position}
             animated
             floatHeight={0}
             autoBalance={false}
-            userData={{name: "Wolverine"}}
+            userData={{ name: "wolverine" }} 
+            name="wolverine"
         >
 
             <group ref={avatarRef} position-y={-0.5} name="Wolverine" >

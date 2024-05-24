@@ -1,14 +1,15 @@
 import {useGLTF} from "@react-three/drei"
 import {useFrame} from "@react-three/fiber"
 import {RigidBody} from "@react-three/rapier"
-import {useRef, useState} from "react"
+import {useEffect, useRef, useState} from "react"
 
-export default function CajaIzquierda({position, offset}) {
+export default function CajaIzquierda({position, offset, onCollision }) {
     const cajaIzquierdaRef = useRef(null)
     const cajaIzquierdaBodyRef = useRef(null)
     const [shouldReset, setShouldReset] = useState(false);
     const [isResetting, setIsResetting] = useState(false);
-
+    const [isCooldown, setIsCooldown] = useState(false);
+    
     const {nodes, materials} = useGLTF("/assets/models/caja/caja.glb");
 
     const amplitude = 25;
@@ -34,7 +35,6 @@ export default function CajaIzquierda({position, offset}) {
             }
         }
 
-        // Reiniciar si se ha alcanzado el límite y no se está reiniciando actualmente
         if (shouldReset && !isResetting) {
             isResetting = true;
             setTimeout(() => {
@@ -49,8 +49,20 @@ export default function CajaIzquierda({position, offset}) {
         }
     });
 
+    const handleCollisionEnter = (event) => {
+        if (!isCooldown && event.rigidBody.userData.name === "wolverine") {
+            console.log("Colisión con caja izquierda");
+            onCollision();
+            setIsCooldown(true);
+            setTimeout(() => {
+                setIsCooldown(false);
+            }, 1000); 
+        }
+    };
+  
+
     return (
-        <RigidBody ref={cajaIzquierdaBodyRef} type="fixed" position={position}>
+        <RigidBody ref={cajaIzquierdaBodyRef} type="fixed" position={position}  onCollisionEnter={handleCollisionEnter}>
             <group ref={cajaIzquierdaRef} dispose={null}>
                 <group name="Scene">
                     <group name="Rigid">
