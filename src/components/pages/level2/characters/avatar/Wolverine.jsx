@@ -16,7 +16,6 @@ export default function Wolverine({ position}) {
     const { actions } = useAnimations(animations, avatarRef)
     const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
-
     /*const onMouseClick = useCallback(() => {
         if (actions.Shooting) {
             setAvatar({
@@ -48,8 +47,6 @@ export default function Wolverine({ position}) {
         }
     }, [actions, avatar.animation]);
 
-
-
     useEffect(() => {
         setAvatar({
             ...avatar,
@@ -64,7 +61,7 @@ export default function Wolverine({ position}) {
             camInitDis={-2}
             camMaxDis={-2}
             maxVelLimit={5}
-            jumpVel={8}
+            jumpVel={4}
             position={position}
             animated
             floatHeight={0}

@@ -13,7 +13,7 @@ export default function ContainerIzquierdo({position, offset, rotation, onCollis
     const {nodes, materials} = useGLTF("/assets/models/container/Container.glb");
 
     const amplitude = 22;
-    const speed = 20; // velocidad del movimiento
+    const speed = 10; // velocidad del movimiento
     const initialPositionX = position[0];
     const limitPositionX = 13; // Límite izquierdo
     const resetPositionX = -16; // Posición de reinicio en x

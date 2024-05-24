@@ -129,10 +129,6 @@ const World = (props) => {
 
                     {/*Cajas de las cintas transportadoras*/}
                     <>
-                        <Caja position={[13, 1.3, -15]} castShadow/>
-                        <Caja position={[-16, 1.3, -15]} castShadow/>
-                        <Caja position={[0, 1.3, -15]} castShadow/>
-
                         {/*Primer cinta transportadora*/}
                         <CajaIzquierda position={[-16, -0.4, -10]} offset={0} castShadow  onCollision={props.handleCollisionWithObject}  />
                         <CajaIzquierda position={[-14, -0.4, -10]} offset={0.05} castShadow  onCollision={props.handleCollisionWithObject} />

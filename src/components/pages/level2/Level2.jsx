@@ -19,9 +19,9 @@ import {updateUser} from "../../../db/users-collection";
 import {useUser} from "../../context/UserContext";
 import {useRewards} from "../../context/RewardsContext";
 import Health from "./objects/Health";
-import { CheckpointMessage } from "../../html/CheckpointMessage";
-import { GameOverScreen } from "../../html/GameOverMessage";
-import { LevelCompletedMessage } from "../../html/LevelCompleteMessage";
+import {CheckpointMessage} from "../../html/CheckpointMessage";
+import {GameOverScreen} from "../../html/GameOverMessage";
+import {LevelCompletedMessage} from "../../html/LevelCompleteMessage";
 import mainSong from '../../sounds/wolverine_game_sound.mp3';
 import Music from "../../music/Music";
 import MusicControls from "../../music/MusicControls";
@@ -30,14 +30,14 @@ export default function Level2() {
 
 
     const defaultPosition = [0, 10, -65];
-    const { increaseHealthCount, healthCount } = useRewards();
+    const {increaseHealthCount, healthCount} = useRewards();
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
     const [showLevelCompleted, setShowLevelCompleted] = useState(false);
     const [colisiono, setColisiono] = useState(false);
 
     const {userData, isLoading} = useUser();
 
-    const {collectedLives, loseLife } = useLives();
+    const {collectedLives, loseLife} = useLives();
 
     const [activeHealths, setActiveHealths] = useState(() => {
 
@@ -57,7 +57,6 @@ export default function Level2() {
         });
     };
 
-   
     useEffect(() => {
         const timer = setTimeout(() => {
             setShowLoadingScreen(false);
@@ -66,13 +65,10 @@ export default function Level2() {
         return () => clearTimeout(timer);
     }, []);
 
-
     const getPositionForIndex = (index) => {
         const positions = [
-           /*  [-10, 3.0, -20],
-            [-5, 3.0, -20], */
-            [14, 0.5, 15],
-            [-14, 0.5, 34],
+            [14.3, 3, 13],
+            [-14.5, 3, 32.5],
             [-8, 0.5, 40],
             [-2, 0.5, 50],
         ];
@@ -96,13 +92,13 @@ export default function Level2() {
 
             updateUser(userData.email, userData).then(() => {
                 setTimeout(() => {
-                    setShowLevelCompleted(true); 
+                    setShowLevelCompleted(true);
                 }, 3000);
-                
+
             }).catch((error) => console.error(error));
         }
     };
-    
+
     const handleCollisionWithJuggernaut = () => {
         loseLife();
     };
@@ -128,7 +124,7 @@ export default function Level2() {
         userData.checkPoint2 = true;
         userData.coleccion = 0;
         userData.vidas = 3;
-       
+
         await updateUser(userData.email, userData);
         localStorage.removeItem('activeHealthsLevel2');
         window.location.reload();
@@ -167,14 +163,16 @@ export default function Level2() {
                     <Lights/>
                     <Environments/>
                     <Physics debug={true}>
-                        <World handleCollisionWithObject={handleCollision} />
+                        <World handleCollisionWithObject={handleCollision}/>
                         {!isLoading && userData && (
-                            <Wolverine position={getValidPosition(userData.positionLevel2)} />
+                            <Wolverine position={getValidPosition(userData.positionLevel2)}/>
                         )}
-                          <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
+                        {/* <Juggernaut onCollision={handleCollisionWithJuggernaut}/>*/}
 
-                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 0]} level="2" />
-                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[14.5, -0.9, 65]} level="2" />
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 0]}
+                                    level="2"/>
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[14.5, -0.9, 65]}
+                                    level="2"/>
                         {activeHealths.map((isActive, index) => isActive && (
                             <Health
                                 key={index}
@@ -185,13 +183,13 @@ export default function Level2() {
                             />
                         ))}
                         <Controls/>
-                        <Music 
-                            track={mainSong} 
-                            volume={volume} 
-                            isMuted={isMuted} 
+                        <Music
+                            track={mainSong}
+                            volume={volume}
+                            isMuted={isMuted}
                             autoPlay={true}
-                            onPlay={() => setIsPlaying(true)} 
-                            onStop={() => setIsPlaying(false)} 
+                            onPlay={() => setIsPlaying(true)}
+                            onStop={() => setIsPlaying(false)}
                         />
 
                     </Physics>
@@ -208,15 +206,35 @@ export default function Level2() {
                 />
 
                 {colisiono &&
-                   <CheckpointMessage />
+                    <CheckpointMessage/>
                 }
                 {collectedLives === 0 &&
                     <GameOverScreen
                         onRestart={handleRestartLevel}
                         onContinue={handleContinueFromCheckpoint}
-                    /> 
+                    />
                 }
-                {showLevelCompleted && <LevelCompletedMessage />}
+                {showLevelCompleted && <LevelCompletedMessage/>}
+
+                {/* Aquí puedes mostrar las instrucciones de movimiento */}
+                <div className="mute-button" style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    padding: '10px',
+                    color: 'white',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+                }}>
+                    <h2 style={{textAlign: 'center'}}>Controles</h2>
+                    <ul>
+                        {map.map((movement, index) => (
+                            <li key={index}>{movement.description}</li>
+                        ))}
+                    </ul>
+                </div>
+
             </KeyboardControls>
         </Suspense>
     )

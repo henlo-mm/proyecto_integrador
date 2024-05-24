@@ -13,7 +13,7 @@ export default function CajaIzquierda({position, offset, onCollision }) {
     const {nodes, materials} = useGLTF("/assets/models/caja/caja.glb");
 
     const amplitude = 25;
-    const speed = 20; // velocidad del movimiento
+    const speed = 18; // velocidad del movimiento
     const initialPositionX = position[0];
     const limitPositionX = 13; // Límite izquierdo
     const resetPositionX = -16; // Posición de reinicio en x

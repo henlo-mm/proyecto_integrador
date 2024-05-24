@@ -15,7 +15,7 @@ const LoadingScreen = () => {
                     <ul>
                         {movements.map((move) => (
                             <li key={move.name}>
-                                <strong>{translateAction(move.name)}:</strong> {move.keys.join(' o ')}
+                                <strong>{translateAction(move.name)}:</strong> {move.teclas}
                             </li>
                         ))}
                         <li key="shooting">
