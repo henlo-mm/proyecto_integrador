@@ -167,7 +167,7 @@ export default function Level2() {
                         {!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel2)}/>
                         )}
-                        {/* <Juggernaut onCollision={handleCollisionWithJuggernaut}/>*/}
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
 
                         <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 0]}
                                     level="2"/>

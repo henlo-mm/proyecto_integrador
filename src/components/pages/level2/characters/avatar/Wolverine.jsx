@@ -3,48 +3,124 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
 import Ecctrl, { EcctrlAnimation } from "ecctrl";
 import { useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import { Raycaster, Vector3, ArrowHelper, LoopOnce, Euler, BufferGeometry, LineBasicMaterial, Line } from "three";
 
-export default function Wolverine({ position}) {
+export default function Wolverine({ position }) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
     const { avatar, setAvatar } = useAvatar();
 
     const { nodes, materials, animations } = useGLTF("assets/models/avatar/WolverineAvatar.glb");
-    const { gl } = useThree();
+    const { gl, scene, camera } = useThree();
 
-    const { actions } = useAnimations(animations, avatarRef)
+    const { actions } = useAnimations(animations, avatarRef);
     const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));
 
-    /*const onMouseClick = useCallback(() => {
-        if (actions.Shooting) {
-            setAvatar({
-                ...avatar,
-                animation: "Shooting"
-            });
-            actions.Shooting.reset().fadeIn(0.05).setLoop(THREE.LoopOnce).play();
+    const raycasterRef = useRef(new Raycaster());
+    const helperRef = useRef(null);
+    const lineRef = useRef(null);
 
-            shootSound.currentTime = 0;
-            shootSound.play();
+    const onKeyDown = useCallback((event) => {
+        if (event.key === 'f' || event.key === 'F') {
+            if (actions.Shooting) {
+                setAvatar({
+                    ...avatar,
+                    animation: "Shooting"
+                });
+                actions.Shooting.reset().fadeIn(0.05).setLoop(LoopOnce).play();
+
+                shootSound.currentTime = 0;
+                shootSound.play();
+
+                const raycaster = raycasterRef.current;
+                const wolverine = avatarRef.current;
+                const origin = new Vector3();
+                wolverine.getWorldPosition(origin);
+
+                const enemy = scene.getObjectByName("Juggernaut");
+                if (!enemy) {
+                    console.log('Enemy not found');
+                    return;
+                }
+
+                const enemyPosition = new Vector3();
+                enemy.getWorldPosition(enemyPosition);
+
+                const direction = enemyPosition.clone().sub(origin).normalize();
+                const rotation = new Euler(0, Math.atan2(direction.x, direction.z), 0);
+                wolverine.rotation.copy(rotation);
+
+                origin.y += 1.5; 
+
+                raycaster.set(origin, direction);
+                const intersects = raycaster.intersectObjects(scene.children, true);
+
+                let rayLength = 50;
+                if (intersects.length > 0) {
+                    let hitObject = intersects[0].object;
+
+                    rayLength = intersects[0].distance;
+
+                    while (hitObject && !hitObject.userData.name) {
+                        hitObject = hitObject.parent;
+                    }
+
+                    if (hitObject && hitObject.userData.name === "Juggernaut") {
+                        console.log('Hit Juggernaut');
+                        const enemyRigidBody = hitObject.userData.rigidBody;
+                        if (enemyRigidBody) {
+                            hitObject.userData.setIsDead(true);
+                        }
+                    }
+                }
+
+                if (helperRef.current) {
+                    scene.remove(helperRef.current);
+                }
+
+                if (lineRef.current) {
+                    scene.remove(lineRef.current);
+                }
+
+                const points = [origin, origin.clone().add(direction.multiplyScalar(rayLength))];
+                const geometry = new BufferGeometry().setFromPoints(points);
+                const material = new LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+                const line = new Line(geometry, material);
+
+                scene.add(line);
+                lineRef.current = line;
+
+                const helper = new ArrowHelper(direction, origin, rayLength, 0xff0000);
+                scene.add(helper);
+                helperRef.current = helper;
+
+                setTimeout(() => {
+                    if (helperRef.current) {
+                        scene.remove(helperRef.current);
+                        helperRef.current = null;
+                    }
+                    if (lineRef.current) {
+                        scene.remove(lineRef.current);
+                        lineRef.current = null;
+                    }
+                }, 500);
+            }
         }
-
-
-    }, [actions, avatar, setAvatar]);*/
-
-    /*useEffect(() => {
-        gl.domElement.addEventListener('click', onMouseClick);
-        return () => {
-            gl.domElement.removeEventListener('click', onMouseClick);
-        };
-    }, [gl.domElement, onMouseClick]);*/
+    }, [actions, avatar, setAvatar, shootSound, camera, scene]);
 
     useEffect(() => {
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [onKeyDown]);
 
+    useEffect(() => {
         actions[avatar.animation]?.reset().fadeIn(0.5).play();
         return () => {
             if (actions[avatar.animation])
                 actions[avatar.animation].fadeOut(0.5);
-        }
+        };
     }, [actions, avatar.animation]);
 
     useEffect(() => {
@@ -52,8 +128,8 @@ export default function Wolverine({ position}) {
             ...avatar,
             avatarRef: avatarRef,
             rigidBodyAvatarRef: rigidBodyAvatarRef?.current
-        })
-    }, [avatarRef?.current, rigidBodyAvatarRef?.current])
+        });
+    }, [avatarRef?.current, rigidBodyAvatarRef?.current]);
 
     return (
         <Ecctrl
@@ -69,7 +145,6 @@ export default function Wolverine({ position}) {
             userData={{ name: "wolverine" }} 
             name="wolverine"
         >
-
             <group ref={avatarRef} position-y={-0.5} name="Wolverine" >
                 <group name="Scene">
                     <group name="Armature">
@@ -139,7 +214,6 @@ export default function Wolverine({ position}) {
                     </group>
                 </group>
             </group>
-
         </Ecctrl>
-    )
+    );
 }

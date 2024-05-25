@@ -22,9 +22,6 @@ export default function Juggernaut({ onCollision }, props) {
 
     let initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000;
-
-    
-
      
     useEffect(() => {
         if (actions.Swiping) {
@@ -125,7 +122,7 @@ export default function Juggernaut({ onCollision }, props) {
 
     
     return (
-        <RigidBody ref={rigidBodyRef} userData={{ name: "Juggernaut" }} position={initialPosition} type="dynamic" onClick={handleRightClick} colliders={false}>
+        <RigidBody ref={rigidBodyRef} userData={{ name: "Juggernaut", rigidBody: rigidBodyRef, setIsDead  }} position={initialPosition} type="dynamic" onClick={handleRightClick} colliders={false}>
             
 
             <group ref={avatarRef} name="Juggernaut">
