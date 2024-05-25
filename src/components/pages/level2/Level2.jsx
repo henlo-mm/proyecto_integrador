@@ -25,6 +25,8 @@ import {LevelCompletedMessage} from "../../html/LevelCompleteMessage";
 import mainSong from '../../sounds/wolverine_game_sound.mp3';
 import Music from "../../music/Music";
 import MusicControls from "../../music/MusicControls";
+import CameraController from "../../camera/Camera";
+import ControlsCard from "../../html/ControlsCard";
 
 export default function Level2() {
 
@@ -156,13 +158,14 @@ export default function Level2() {
                     shadows={true}
                 >
                     {/*<Perf position="top-center"/>*/}
-                    <OrbitControls
+                   {/*  <OrbitControls
                         enableZoom={true}
                         enablePan={true}
-                    />
+                    /> */}
+
                     <Lights/>
                     <Environments/>
-                    <Physics debug={true}>
+                    <Physics debug={false}>
                         <World handleCollisionWithObject={handleCollision}/>
                         {!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel2)}/>
@@ -215,25 +218,7 @@ export default function Level2() {
                     />
                 }
                 {showLevelCompleted && <LevelCompletedMessage/>}
-
-                {/* Aquí puedes mostrar las instrucciones de movimiento */}
-                <div className="mute-button" style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    padding: '10px',
-                    color: 'white',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-                }}>
-                    <h2 style={{textAlign: 'center'}}>Controles</h2>
-                    <ul>
-                        {map.map((movement, index) => (
-                            <li key={index}>{movement.description}</li>
-                        ))}
-                    </ul>
-                </div>
+                <ControlsCard movements={map} />
 
             </KeyboardControls>
         </Suspense>

@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
-import Ecctrl, { EcctrlAnimation } from "ecctrl";
+import Ecctrl from "ecctrl";
 import { useThree } from "@react-three/fiber";
 import { Raycaster, Vector3, ArrowHelper, LoopOnce, Euler, BufferGeometry, LineBasicMaterial, Line } from "three";
 
@@ -11,7 +11,7 @@ export default function Wolverine({ position }) {
     const { avatar, setAvatar } = useAvatar();
 
     const { nodes, materials, animations } = useGLTF("assets/models/avatar/WolverineAvatar.glb");
-    const { gl, scene, camera } = useThree();
+    const { scene, camera } = useThree();
 
     const { actions } = useAnimations(animations, avatarRef);
     const [shootSound] = useState(new Audio("/assets/sounds/shoot.mp3"));

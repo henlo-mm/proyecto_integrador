@@ -1,18 +1,19 @@
-import { useThree, useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from "@react-three/fiber";
+import { useAvatar } from "../context/AvatarContext";
 
+function CameraController() {
+  const { camera } = useThree();
+  const { avatar } = useAvatar();
 
-const Camera = () => {
-    const { camera } = useThree();
+  useFrame(() => {
+    if (avatar.avatarRef?.current) {
+      const { x, y, z } = avatar.avatarRef.current.position;
+      camera.position.set(x, y + 5, z + 10);
+      camera.lookAt(x, y, z);
+    }
+  });
 
-    useFrame(() => {
-      /*   if (playerRef.current) {
-            const { x, y, z } = playerRef.current.position;
-            camera.position.set(x, y + 2, z - 5);
-            camera.lookAt(x, y, z);
-        } */
-    });
+  return null;
+}
 
-    return null;
-};
-
-export default Camera;
+export default CameraController;

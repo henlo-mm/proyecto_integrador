@@ -1,0 +1,43 @@
+.instructions-card {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 200px; 
+}
+
+.instructions-card h2 {
+    margin: 0 0 8px 0;
+    font-size: 16px; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 4px;
+}
+
+.instructions-card ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.instructions-card li {
+    margin: 6px 0; 
+    display: flex;
+    align-items: center;
+    font-size: 14px; 
+}
+
+.instructions-card li strong {
+    margin-right: 6px;
+}
+
+.instructions-card li::before {
+    content: '•';
+    color: #ffcc00;
+    font-size: 16px; 
+    margin-right: 6px;
+}
