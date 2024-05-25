@@ -1,10 +1,9 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useAvatar } from "../../../../context/AvatarContext";
-import Ecctrl from "ecctrl";
 import { useThree } from "@react-three/fiber";
+import Ecctrl from "ecctrl";
 import { Raycaster, Vector3, ArrowHelper, LoopOnce, Euler, BufferGeometry, LineBasicMaterial, Line } from "three";
-
 export default function Wolverine({ position }) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
@@ -20,9 +19,12 @@ export default function Wolverine({ position }) {
     const helperRef = useRef(null);
     const lineRef = useRef(null);
 
+    const [isShooting, setIsShooting] = useState(false);
+
     const onKeyDown = useCallback((event) => {
         if (event.key === 'f' || event.key === 'F') {
-            if (actions.Shooting) {
+            if (!isShooting && actions.Shooting) {
+                setIsShooting(true);
                 setAvatar({
                     ...avatar,
                     animation: "Shooting"
@@ -40,6 +42,7 @@ export default function Wolverine({ position }) {
                 const enemy = scene.getObjectByName("Juggernaut");
                 if (!enemy) {
                     console.log('Enemy not found');
+                    setIsShooting(false);
                     return;
                 }
 
@@ -47,9 +50,6 @@ export default function Wolverine({ position }) {
                 enemy.getWorldPosition(enemyPosition);
 
                 const direction = enemyPosition.clone().sub(origin).normalize();
-                const rotation = new Euler(0, Math.atan2(direction.x, direction.z), 0);
-                wolverine.rotation.copy(rotation);
-
                 origin.y += 1.5; 
 
                 raycaster.set(origin, direction);
@@ -103,10 +103,12 @@ export default function Wolverine({ position }) {
                         scene.remove(lineRef.current);
                         lineRef.current = null;
                     }
+                    setIsShooting(false);
                 }, 500);
             }
         }
-    }, [actions, avatar, setAvatar, shootSound, camera, scene]);
+    }, [actions, avatar, setAvatar, shootSound, camera, scene, isShooting]);
+
 
     useEffect(() => {
         window.addEventListener('keydown', onKeyDown);
@@ -122,14 +124,6 @@ export default function Wolverine({ position }) {
                 actions[avatar.animation].fadeOut(0.5);
         };
     }, [actions, avatar.animation]);
-
-    useEffect(() => {
-        setAvatar({
-            ...avatar,
-            avatarRef: avatarRef,
-            rigidBodyAvatarRef: rigidBodyAvatarRef?.current
-        });
-    }, [avatarRef?.current, rigidBodyAvatarRef?.current]);
 
     return (
         <Ecctrl
