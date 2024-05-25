@@ -75,6 +75,10 @@ export default function Juggernaut({ onCollision }, props) {
                     rigidBodyRef.current.setLinvel({x: 0.0, y: 0.0, z:0.0}, true)
                 }
 
+                // Adjust rotation to look at Deadpool
+                let lookAtPosition = new Vector3(deadpoolPosition.x, juggernautPosition.y, deadpoolPosition.z);
+                avatarRef.current.lookAt(lookAtPosition);
+
             }
 
         }
