@@ -12,7 +12,7 @@ const ControlsCard = ({ movements }) => {
                     </li>
                 ))}
                 <li key="shooting">
-                    <strong>{translateAction("shooting")}:</strong> Click izquierdo
+                    <strong>{translateAction("shooting")}:</strong> F
                 </li>
             </ul>
         </div>
