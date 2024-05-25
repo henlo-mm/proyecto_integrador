@@ -33,6 +33,7 @@ export default function Juggernaut({ onCollision }, props) {
     }, [actions]);
 
     useFrame(({ scene }) => {
+
         if (rigidBodyRef.current && !inCollision && !isDead) {
             const translation = rigidBodyRef.current.translation();
             let juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
@@ -49,38 +50,39 @@ export default function Juggernaut({ onCollision }, props) {
                     setTimeout(() => setInCollision(false), resetCollisionTimeout);
                 }
 
-                if (distance <= 5) {
+                if (distance < 5 ) {
+
                     if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z) ){
                         rigidBodyRef.current.setLinvel(
-                            { x: 0.5, y: 0, z: 0.5 },true
+                            { x: 0.7, y: 0, z: 0.7 },true
                           )                       
                     }
                     else if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: 0.5, y: 0, z: -0.5 },true
+                        { x: 0.7, y: 0, z: -0.7 },true
                           )
                     }
                     else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: -0.5, y: 0, z: -0.5 },true
+                        { x: -0.7, y: 0, z: -0.7 },true
                           )
                     }
                     else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: -0.5, y: 0, z: 0.5 },true
+                        { x: -0.7, y: 0, z: 0.7 },true
                           )
                     }
-                    
-                    console.log(distance)
+
 
                 }
                 else {
                     rigidBodyRef.current.setLinvel({x: 0.0, y: 0.0, z:0.0}, true)
-                }
 
+                }
             }
 
-        }
+        }        
+
     });
 
     // const movementDistance = 2;

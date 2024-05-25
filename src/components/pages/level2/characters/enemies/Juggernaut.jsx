@@ -46,29 +46,29 @@ export default function Juggernaut({ onCollision }, props) {
                     setTimeout(() => setInCollision(false), resetCollisionTimeout);
                 }
 
-                if (distance <= 5) {
+                if (deadpoolPosition.z >= 10 && deadpoolPosition.z <= 30) {
                     if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z) ){
                         rigidBodyRef.current.setLinvel(
-                            { x: 0.5, y: 0, z: 0.5 },true
+                            { x: 2, y: 0, z: 2 },true
                           )                       
                     }
                     else if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: 0.5, y: 0, z: -0.5 },true
+                        { x: 2, y: 0, z: -2 },true
                           )
                     }
                     else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: -0.5, y: 0, z: -0.5 },true
+                        { x: -2, y: 0, z: -2 },true
                           )
                     }
                     else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)){
                         rigidBodyRef.current.setLinvel(
-                        { x: -0.5, y: 0, z: 0.5 },true
+                        { x: -2, y: 0, z: 2 },true
                           )
                     }
                     
-                    console.log(distance)
+                    console.log(deadpoolPosition.z)
 
                 }
                 else {
