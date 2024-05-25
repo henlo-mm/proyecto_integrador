@@ -10,8 +10,8 @@ export default function Environments() {
             background={false}
             ground={{
                 height: 20,
-                scale: 75,
-                radius: 500
+                scale: 100,
+                radius: 1000
             }}
         />
     </>

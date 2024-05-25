@@ -12,9 +12,9 @@ import Controls from "./controls/Controls";
 import LoadingScreen from "../../loading/LoadingScreen";
 import Juggernaut from "./characters/enemies/Juggernaut";
 import Health from "./objects/Health";
-import {HealthHUD} from "./hud/HealthHUD";
+import {HealthHUD} from "../../html/hud/HealthHUD";
 import {useLives} from "../../context/LivesContext";
-import {RewardHUD} from "./hud/RewardHUD";
+import {RewardHUD} from "../../html/hud/RewardHUD";
 import Logout from "../../logout/Logout";
 import CheckPoint from "../../checkpoint/CheckPoint";
 import { CheckpointMessage } from "../../html/CheckpointMessage";
@@ -128,7 +128,7 @@ export default function Level1() {
             <KeyboardControls map={map}>
                 <Logout/>
                 <Canvas shadows={true}>
-                   {/*  <Perf position="top-center"/> */}
+                    <Perf position="top-center"/>
                     <Lights/>
                     <Environments/>
                     <Physics debug={false}>
@@ -139,8 +139,8 @@ export default function Level1() {
 
                         
                         <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
-                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[-4, -0.9, 25]} />
-                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[-4, -0.9, -49]} />
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[-4, -0.9, 25]} level="1" />
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[-4, -0.9, -49]} level="1" />
                         {activeHealths.map((isActive, index) => isActive && (
                             <Health
                                 key={index}
