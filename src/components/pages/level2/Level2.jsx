@@ -87,23 +87,21 @@ export default function Level2() {
             }, 3000);
         } else if (checkpointId === 2) {
 
-            if (healthCount >= 4) {
-                setColisiono(true);
+          
+            setColisiono(true);
+            setTimeout(() => {
+                setColisiono(false);
+            }, 2000);
+
+            userData.level3 = true;
+
+            updateUser(userData.email, userData).then(() => {
                 setTimeout(() => {
-                    setColisiono(false);
-                }, 2000);
+                    setShowLevelCompleted(true);
+                }, 3000);
 
-                userData.level3 = true;
-
-                updateUser(userData.email, userData).then(() => {
-                    setTimeout(() => {
-                        setShowLevelCompleted(true);
-                    }, 3000);
-
-                }).catch((error) => console.error(error));
-            } else {
-                setShowLevelIncomplete(true);
-            }
+            }).catch((error) => console.error(error));
+         
         }
     };
 
