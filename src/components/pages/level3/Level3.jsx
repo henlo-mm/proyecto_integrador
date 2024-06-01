@@ -69,8 +69,8 @@ export default function Level3() {
 
     const getPositionForIndex = (index) => {
         const positions = [
-            [5, 0,5, 15],
-            [-14.5, 0,5, 20],
+            [5, 0.5, 15],
+            [-14.5, 0.5, 20],
             [-5, 0.5, 10],
             [-2, 0.5, 5],
         ];
