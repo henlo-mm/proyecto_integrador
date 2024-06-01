@@ -47,19 +47,6 @@ export default function Profile() {
 
             setValuesUser({
                     displayName: displayName, email: email, level1: true,
-                   // level2: false,
-                    level3: false,
-                    level4: false,
-                    checkPoint1: false,
-                    checkPoint2: false,
-                    checkPoint3: false,
-                    checkPoint4: false,
-                    positionLevel1: [2, 10, 48],
-                    positionLevel2: [0, 10, -65],
-                    positionLevel3: [2, 10, 48],
-                    positionLevel4: [2, 10, 48],
-                    vidas: 3,
-                    coleccion: 0
                 }
             );
 
