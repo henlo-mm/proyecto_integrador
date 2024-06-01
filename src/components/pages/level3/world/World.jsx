@@ -1,98 +1,77 @@
-import { Plane, useGLTF, useTexture} from '@react-three/drei';
-import {RepeatWrapping} from "three";
-import {CuboidCollider, RigidBody} from "@react-three/rapier"
+import React, { useMemo } from 'react';
+import { Plane, useGLTF } from '@react-three/drei';
+import { MeshStandardMaterial, CylinderGeometry } from "three";
+import { RigidBody } from "@react-three/rapier";
+import Carro from "../Carro/Carro";
+import Laser from "../Laser/Laser";
+import Hacha from "../Hacha/Hacha";
 
 const World = (props) => {
 
-    const {nodes, materials} = useGLTF("/assets/models/floor/floorlevel3.glb");
+    const { nodes } = useGLTF("/assets/models/floor/floorlevel3.glb");
 
-    const PATH = "/assets/textures/floor/level2/";
-    const propsTexture = useTexture({
-        map: PATH + "concrete_layers_02_diff_1k.jpg",
-        normalMap: PATH + "concrete_layers_02_nor_gl_1k.jpg",
-        roughnessMap: PATH + "concrete_layers_02_rough_1k.jpg",
-        displacementMap: PATH + "concrete_layers_02_disp_1k.png",
+    const floorMaterial = new MeshStandardMaterial({
+        color: "#222222", // Un gris oscuro
+        roughness: 0.8,  // Aumenta la rugosidad para menos reflejos, más textura de fábrica
+        metalness: 0.5   // Ligera metalicidad para simular superficies desgastadas
     });
 
-    propsTexture.map.repeat.set(4, 64);
-    propsTexture.map.wrapS = propsTexture.map.wrapT = RepeatWrapping;
-
-    propsTexture.normalMap.repeat.set(4, 64);
-    propsTexture.normalMap.wrapS = propsTexture.normalMap.wrapT = RepeatWrapping;
-
-    propsTexture.roughnessMap.repeat.set(4, 64);
-    propsTexture.roughnessMap.wrapS = propsTexture.roughnessMap.wrapT = RepeatWrapping;
-
-    propsTexture.displacementMap.repeat.set(4, 64);
-    propsTexture.displacementMap.wrapS = propsTexture.displacementMap.wrapT = RepeatWrapping;
-
-
-    const PATH_ESTANTE = "/assets/textures/estantes/";
-    const propsTextureEstante = useTexture({
-        map: PATH_ESTANTE + "rusty_metal_02_diff_1k.jpg",
-        normalMap: PATH_ESTANTE + "rusty_metal_02_nor_gl_1k.jpg",
-        roughnessMap: PATH_ESTANTE + "rusty_metal_02_rough_1k.jpg",
-        // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
+    const concreteMaterial = new MeshStandardMaterial({
+        color: "#656464", // Gris de concreto
+        roughness: 0.9,   // Alta rugosidad para parecer concreto
+        metalness: 0.1    // Muy poca metalicidad
     });
 
-    const PATH_MESA = "/assets/textures/mesas/";
-    const propsTextureMesa = useTexture({
-        map: PATH_MESA + "fabric_pattern_07_col_1_1k.png",
-        normalMap: PATH_MESA + "fabric_pattern_07_nor_gl_1k.jpg",
-        roughnessMap: PATH_MESA + "fabric_pattern_07_rough_1k.jpg",
-        // alphaMap: PATH_ESTANTE + "celandine_01_alpha_1k.png",
-    });
-
+    const cylinderGeometry = useMemo(() => new CylinderGeometry(1, 1, 15, 32), []);
 
     return (
         <>
-            <group {...props} dispose={null} rotation={[0, Math.PI / 1.8, 0]}>
-                    {/* <meshStandardMaterial attach="material" {...propsTexture}  castShadow receiveShadow transparent={true} opacity={0} /> */}
-                    <group>
-                        <RigidBody type="fixed" colliders="trimesh">
-
-                            <mesh
-                                castShadow
-                                receiveShadow
-                                geometry={nodes.Floor.geometry}
-                                material={nodes.Floor.material}
-                                position={[0, 0.608, 0]}
-                            />
-
-                            
-                        </RigidBody>
-
-                        <RigidBody type="fixed" colliders="trimesh">
-                            <Plane args={[100, 10]} position={[-5, 1.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-                                <meshStandardMaterial attach="material" transparent={true} opacity={0} />
-                            </Plane>
-                            <Plane args={[100, 10]} position={[5, 1.5, 0]} rotation={[0, -Math.PI / 2, 0]}>
-                                <meshStandardMaterial attach="material" transparent={true} opacity={0} />
-                            </Plane>
-                        </RigidBody>
-
+            <group {...props} dispose={null}>
+                <group>
+                    <RigidBody type="fixed" colliders="trimesh">
                         <mesh
                             castShadow
                             receiveShadow
-                            geometry={nodes.Pilar.geometry}
-                            material={nodes.Pilar.material}
-                            position={[3.398, 1.112, -39.795]}
+                            geometry={nodes.Floor.geometry}
+                            material={floorMaterial}
                         />
+                    </RigidBody>
 
-                    <mesh
-                        castShadow
-                        receiveShadow
-                        geometry={nodes.Carro.geometry}
-                        material={nodes.Carro.material}
-                        position={[-3.693, 0.854, 35.604]}
-                        rotation={[-3.095, 0, -Math.PI]}
-                        scale={0.283}
-                    />
-                        
-                    </group>
+                    <RigidBody type="fixed" colliders="trimesh">
+                        <Plane args={[140, 22]} position={[-15, 10, 0]} rotation={[0, Math.PI / 2, 0]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */
+                                                  color="#413830"/>
+                        </Plane>
+                        <Plane args={[140, 22]} position={[15, 10, 0]} rotation={[0, -Math.PI / 2, 0]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */
+                                                  color="#413830"/>
+                        </Plane>
+                        <Plane args={[22, 30]} position={[0, 10, 70]} rotation={[Math.PI, 0, Math.PI / 2]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */
+                                                  color="#413830"/>
+                        </Plane>
+                        <Plane args={[22, 30]} position={[0, 10, -70]} rotation={[0, 0, Math.PI / 2]}>
+                            <meshStandardMaterial attach="material" /* transparent={true} opacity={0} */
+                                                  color="#413830"/>
+                        </Plane>
+                    </RigidBody>
+
+                    <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+
+                    <Laser position={[0, 2, -20]} rotation={[0, 0, 0]} castShadow/>
+
+                    <Hacha position={[0, 6, 30]} rotation={[-Math.PI / 2, 0, 0]} castShadow/>
+
+                    {/* Agregar cilindros como columnas de concreto */}
+                    <RigidBody type="fixed">
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, 0]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, 0]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, -20]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, -20]}/>
+                    </RigidBody>
+                </group>
             </group>
         </>
-
     )
 }
 
