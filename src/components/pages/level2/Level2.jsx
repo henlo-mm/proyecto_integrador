@@ -27,6 +27,8 @@ import Music from "../../music/Music";
 import MusicControls from "../../music/MusicControls";
 import CameraController from "../../camera/Camera";
 import ControlsCard from "../../html/ControlsCard";
+import { CollectHealthsMessage } from "../../html/CollectHealthsMessage";
+import { LevelIncompleteMessage } from "../../html/LevelIncompleteMessage";
 
 export default function Level2() {
 
@@ -35,6 +37,7 @@ export default function Level2() {
     const {increaseHealthCount, healthCount} = useRewards();
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
     const [showLevelCompleted, setShowLevelCompleted] = useState(false);
+    const [showLevelIncomplete, setShowLevelIncomplete] = useState(false); 
     const [colisiono, setColisiono] = useState(false);
 
     const {userData, isLoading} = useUser();
@@ -85,19 +88,23 @@ export default function Level2() {
             }, 3000);
         } else if (checkpointId === 2) {
 
-            setColisiono(true);
-            setTimeout(() => {
-                setColisiono(false);
-            }, 2000);
-
-            userData.level3 = true;
-
-            updateUser(userData.email, userData).then(() => {
+            if (healthCount >= 6) {
+                setColisiono(true);
                 setTimeout(() => {
-                    setShowLevelCompleted(true);
-                }, 3000);
+                    setColisiono(false);
+                }, 2000);
 
-            }).catch((error) => console.error(error));
+                userData.level3 = true;
+
+                updateUser(userData.email, userData).then(() => {
+                    setTimeout(() => {
+                        setShowLevelCompleted(true);
+                    }, 3000);
+
+                }).catch((error) => console.error(error));
+            } else {
+                setShowLevelIncomplete(true);
+            }
         }
     };
 
@@ -218,6 +225,8 @@ export default function Level2() {
                     />
                 }
                 {showLevelCompleted && <LevelCompletedMessage/>}
+                {showLevelIncomplete && <LevelIncompleteMessage onClose={() => setShowLevelIncomplete(false)}/>} 
+                <CollectHealthsMessage />
                 <ControlsCard movements={map} />
 
             </KeyboardControls>
