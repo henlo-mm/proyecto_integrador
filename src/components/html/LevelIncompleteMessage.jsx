@@ -5,9 +5,9 @@ export function LevelIncompleteMessage({ onClose }) {
     return (
         <div className="level-incomplete-message">
             <div className="message-content">
-                <h2>Level Incomplete</h2>
-                <p>You need to collect at least 6 healths to complete this level. Keep exploring and collecting healths!</p>
-                <button onClick={onClose}>Close</button>
+                <h2>Nivel incompleto</h2>
+                <p>Necesitas recoger al menos 4 vidas. ¡Sigue explorando y consigue las recompensas!</p>
+                <button onClick={onClose}>Cerrar</button>
             </div>
         </div>
     );

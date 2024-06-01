@@ -9,6 +9,7 @@ export const useRewards = () => useContext(RewardsContext);
 export const RewardsProvider = ({ children }) => {
     const [collectedRewards, setCollectedRewards] = useState(0);
     const [healthCount, setHealthCount] = useState(0);  
+    const [rewardCount, setRewardCount] = useState(0);  
 
     const { userData, isLoading } = useUser();
     const { gainLife } = useLives(); 
@@ -16,6 +17,7 @@ export const RewardsProvider = ({ children }) => {
     useEffect(() => {
         if (!isLoading && userData && userData.coleccion !== undefined) {
             setHealthCount(userData.coleccion);
+            setRewardCount(userData.coleccion); 
         }
     }, [userData, isLoading]);  
 
@@ -30,6 +32,8 @@ export const RewardsProvider = ({ children }) => {
             return newCount;
         });
 
+        setRewardCount(prev => prev + 1); 
+        setCollectedRewards(prev => prev + 1);
 
     };
 
@@ -42,6 +46,7 @@ export const RewardsProvider = ({ children }) => {
         <RewardsContext.Provider value={{
             collectedRewards,
             healthCount,
+            rewardCount,
             increaseHealthCount,
             resetHealthCount
         }}>

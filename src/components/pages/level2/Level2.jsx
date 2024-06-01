@@ -25,7 +25,6 @@ import {LevelCompletedMessage} from "../../html/LevelCompleteMessage";
 import mainSong from '../../sounds/wolverine_game_sound.mp3';
 import Music from "../../music/Music";
 import MusicControls from "../../music/MusicControls";
-import CameraController from "../../camera/Camera";
 import ControlsCard from "../../html/ControlsCard";
 import { CollectHealthsMessage } from "../../html/CollectHealthsMessage";
 import { LevelIncompleteMessage } from "../../html/LevelIncompleteMessage";
@@ -88,7 +87,7 @@ export default function Level2() {
             }, 3000);
         } else if (checkpointId === 2) {
 
-            if (healthCount >= 6) {
+            if (healthCount >= 4) {
                 setColisiono(true);
                 setTimeout(() => {
                     setColisiono(false);

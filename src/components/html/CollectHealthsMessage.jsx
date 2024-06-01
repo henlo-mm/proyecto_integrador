@@ -4,7 +4,7 @@ import '../styles/levelComplete.css';
 export function CollectHealthsMessage() {
     return (
         <div className="collect-healths-message">
-            <p>Collect at least 6 healths to complete the level!</p>
+            <p>¡Recolecta al menos 4 vidas para completar el nivel!</p>
         </div>
     );
 }
