@@ -24,7 +24,6 @@ const World = (props) => {
     return (
         <>
             <group {...props} dispose={null}>
-                {/* <meshStandardMaterial attach="material" {...propsTexture}  castShadow receiveShadow transparent={true} opacity={0} /> */}
                 <group>
                     <RigidBody type="fixed" colliders="trimesh">
                         <mesh
