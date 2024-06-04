@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import { Plane, useGLTF } from '@react-three/drei';
-import { MeshStandardMaterial, CylinderGeometry } from "three";
-import { RigidBody } from "@react-three/rapier";
+import React, {useMemo} from 'react';
+import {Plane, useGLTF} from '@react-three/drei';
+import {MeshStandardMaterial, CylinderGeometry} from "three";
+import {CuboidCollider, RigidBody} from "@react-three/rapier";
 import Carro from "../Carro/Carro";
 import Laser from "../Laser/Laser";
 import Hacha from "../Hacha/Hacha";
 
 const World = (props) => {
 
-    const { nodes } = useGLTF("/assets/models/floor/floorlevel3.glb");
+    const {nodes} = useGLTF("/assets/models/floor/floorlevel3.glb");
 
     const floorMaterial = new MeshStandardMaterial({
         color: "#222222", // Un gris oscuro
@@ -56,18 +56,51 @@ const World = (props) => {
                         </Plane>
                     </RigidBody>
 
-                    <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                    <>
+                        <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[3.7, 0.8, 1.5]} position={[9.5, 0, -50]}/>
+                        <CuboidCollider args={[1.5, 1.3, 1.5]} position={[9, 1, -50]}/>
 
-                    <Laser position={[0, 2, -20]} rotation={[0, 0, 0]} castShadow/>
+                        <Carro position={[0, -1, -45]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[3.7, 0.8, 1.5]} position={[0.5, 0, -45]}/>
+                        <CuboidCollider args={[1.5, 1.3, 1.5]} position={[0, 1, -45]}/>
 
-                    <Hacha position={[0, 6, 30]} rotation={[-Math.PI / 2, 0, 0]} castShadow/>
+                        <Carro position={[-9, -1, 15]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[3.7, 0.8, 1.5]} position={[-8.5, 0, 15]}/>
+                        <CuboidCollider args={[1.5, 1.3, 1.5]} position={[-9, 1, 15]}/>
 
-                    {/* Agregar cilindros como columnas de concreto */}
+                        <Carro position={[9, -1, 35]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[3.7, 0.8, 1.5]} position={[9.5, 0, 35]}/>
+                        <CuboidCollider args={[1.5, 1.3, 1.5]} position={[9, 1, 35]}/>
+
+                        <Carro position={[0, -1, 40]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[3.7, 0.8, 1.5]} position={[0.5, 0, 40]}/>
+                        <CuboidCollider args={[1.5, 1.3, 1.5]} position={[0, 1, 40]}/>
+                    </>
+
+                    <>
+                        <Laser position={[-15, 2, -25]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 2, -30]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 2, -35]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 2, -40]} rotation={[0, Math.PI, 0]} castShadow/>
+
+                        <Laser position={[15, 2, 40]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 2, 45]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 2, 50]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 2, 55]} rotation={[0, 0, 0]} castShadow/>
+                    </>
+
+                    <>
+                        <Hacha position={[0, 0, 10]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
+                        <Hacha position={[0, 0, 13]} rotation={[0, 0, -Math.PI / 2]} direction={-1} castShadow/>
+                        <Hacha position={[0, 0, 16]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
+                    </>
+
                     <RigidBody type="fixed">
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, 0]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, 0]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, -20]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, -20]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -15]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, -8]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -3]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, 5]}/>
                     </RigidBody>
                 </group>
             </group>

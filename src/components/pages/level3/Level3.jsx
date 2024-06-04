@@ -165,12 +165,12 @@ export default function Level3() {
                     <Environments/>
                     <Physics debug={true}>
                         <World/>
-                        {!isLoading && userData && (
+                        {/*{!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel3)}/>
                         )}
-                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>*/}
 
-                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 0]}
+                        <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 10]}
                                     level="3"/>
                         <CheckPoint onCollision={() => handleCollisionWithCheckPoint(2)} position={[14.5, -0.9, 65]}
                                     level="3"/>
