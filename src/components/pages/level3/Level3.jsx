@@ -12,30 +12,30 @@ import Wolverine from "./characters/avatar/Wolverine";
 import mainSong from '../../sounds/wolverine_game_sound.mp3';
 import LoadingScreen from "../../loading/LoadingScreen";
 import Juggernaut from "./characters/enemies/Juggernaut";
-import { useRewards } from "../../context/RewardsContext";
-import { useUser } from "../../context/UserContext";
-import { useLives } from "../../context/LivesContext";
-import { updateUser } from "../../../db/users-collection";
+import {useRewards} from "../../context/RewardsContext";
+import {useUser} from "../../context/UserContext";
+import {useLives} from "../../context/LivesContext";
+import {updateUser} from "../../../db/users-collection";
 import Health from "../level2/objects/Health";
 import CheckPoint from "../../checkpoint/CheckPoint";
 import Music from "../../music/Music";
 import MusicControls from "../../music/MusicControls";
-import { CheckpointMessage } from "../../html/CheckpointMessage";
-import { GameOverScreen } from "../../html/GameOverMessage";
-import { LevelCompletedMessage } from "../../html/LevelCompleteMessage";
-import { LevelIncompleteMessage } from "../../html/LevelIncompleteMessage";
+import {CheckpointMessage} from "../../html/CheckpointMessage";
+import {GameOverScreen} from "../../html/GameOverMessage";
+import {LevelCompletedMessage} from "../../html/LevelCompleteMessage";
+import {LevelIncompleteMessage} from "../../html/LevelIncompleteMessage";
 import ControlsCard from "../../html/ControlsCard";
-import { CollectHealthsMessage } from "../../html/CollectHealthsMessage";
-import { HealthHUD } from "../../html/hud/HealthHUD";
-import { RewardHUD } from "../../html/hud/RewardHUD";
+import {CollectHealthsMessage} from "../../html/CollectHealthsMessage";
+import {HealthHUD} from "../../html/hud/HealthHUD";
+import {RewardHUD} from "../../html/hud/RewardHUD";
 
 export default function Level3() {
 
     const defaultPosition = [0, 10, -65];
-    const { increaseHealthCount, healthCount, rewardCount } = useRewards();
+    const {increaseHealthCount, healthCount, rewardCount} = useRewards();
     const [showLoadingScreen, setShowLoadingScreen] = useState(true);
     const [showLevelCompleted, setShowLevelCompleted] = useState(false);
-    const [showLevelIncomplete, setShowLevelIncomplete] = useState(false); 
+    const [showLevelIncomplete, setShowLevelIncomplete] = useState(false);
     const [colisiono, setColisiono] = useState(false);
 
     const {userData, isLoading} = useUser();
@@ -150,6 +150,13 @@ export default function Level3() {
 
     const map = useMovements();
 
+    const [wolverinePosition, setWolverinePosition] = useState(getValidPosition(userData?.positionLevel3));
+
+    useEffect(() => {
+        // Actualizar la posición de Wolverine cuando userData cambie
+        setWolverinePosition(getValidPosition(userData?.positionLevel3));
+    }, [userData]);
+
     return (
         <Suspense fallback={<LoadingScreen/>}>
             <KeyboardControls map={map}>
@@ -164,11 +171,14 @@ export default function Level3() {
                     <Lights/>
                     <Environments/>
                     <Physics debug={true}>
-                        <World/>
-                        {/*{!isLoading && userData && (
+                        <World
+                            wolverinePosition={wolverinePosition}
+                            onWolverineMove={setWolverinePosition}
+                        />
+                        {!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel3)}/>
                         )}
-                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>*/}
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
 
                         <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 10]}
                                     level="3"/>
@@ -206,7 +216,7 @@ export default function Level3() {
                     isMuted={isMuted}
                     isPlaying={isPlaying}
                 />
-                 {colisiono &&
+                {colisiono &&
                     <CheckpointMessage/>
                 }
                 {collectedLives === 0 &&
@@ -216,9 +226,9 @@ export default function Level3() {
                     />
                 }
                 {showLevelCompleted && <LevelCompletedMessage/>}
-                {showLevelIncomplete && <LevelIncompleteMessage onClose={() => setShowLevelIncomplete(false)}/>} 
-                <CollectHealthsMessage />
-                <ControlsCard movements={map} />
+                {showLevelIncomplete && <LevelIncompleteMessage onClose={() => setShowLevelIncomplete(false)}/>}
+                <CollectHealthsMessage/>
+                <ControlsCard movements={map}/>
             </KeyboardControls>
         </Suspense>
     )

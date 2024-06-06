@@ -9,7 +9,7 @@ const Laser = (props) => {
     return (
         <>
             <group {...props} dispose={null}>
-                <group>
+                <group scale={0.5}>
                     <mesh
                         castShadow
                         receiveShadow
