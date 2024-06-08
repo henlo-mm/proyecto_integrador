@@ -4,17 +4,46 @@ import {RepeatWrapping} from 'three';
 import {CuboidCollider, RigidBody} from '@react-three/rapier'
 import {MeshStandardMaterial} from 'three';
 import { useFrame } from '@react-three/fiber';
+import {useLives} from "../../../context/LivesContext";
 
-const Projectile = ({ position, velocity }) => {
+
+const Projectile = ({ initialPosition, velocity, onCollision }) => {
+    const [position, setPosition] = useState([...initialPosition]);
+    
+    const handleCollision = () => {
+        console.log('Collision with object')
+        loseLife();
+    };
+
+    const {loseLife} = useLives();
+
+
+    const [isCooldown, setIsCooldown] = useState(false);
+    
+
+    const handleCollisionEnter = (event) => {
+        if (!isCooldown && event.rigidBody.userData.name === "wolverine") {
+            console.log("Colisión con el proyectil")
+            handleCollision();
+            setIsCooldown(true);
+            setTimeout(() => {
+                setIsCooldown(false);
+            }, 1000); 
+        }
+    };
+
     useFrame(() => {
-        position[2] += velocity[2];
+        setPosition((prev) => [prev[0] + (velocity[2] / 2), prev[1], prev[2] ]);
     });
 
     return (
-        <mesh position={position}>
-            <cylinderGeometry args={[0.1, 0.1, 2, 32]} />
-            <meshStandardMaterial color="red" />
-        </mesh>
+        <RigidBody  type="fixed"  onCollisionEnter={handleCollisionEnter}>
+            <mesh position={position} rotation={[0, 0, Math.PI / 2]}>
+                <cylinderGeometry args={[0.1, 0.1, 2, 32]} />
+                <meshStandardMaterial color="red" />
+            </mesh>
+        </RigidBody>
+
     );
 };
 
@@ -23,17 +52,20 @@ const Laser = (props) => {
     const {nodes, materials} = useGLTF("/assets/models/laser/laser.glb");
 
     const [projectiles, setProjectiles] = useState([]);
+    const [counter, setCounter] = useState(0);
+
 
     useEffect(() => {
         const interval = setInterval(() => {
             setProjectiles((prev) => [
                 ...prev,
-                { id: Date.now(), position: [...props.position], velocity: [0, 0, -1] },
+                { id: counter, position: [...props.position], velocity: [0, 0, -1] },
             ]);
-        }, 100); 
+            setCounter(counter + 1);
+        }, 2000); 
 
         return () => clearInterval(interval);
-    }, [props.position]);
+    }, [props.position, counter]);
 
     return (
         <>
@@ -49,7 +81,7 @@ const Laser = (props) => {
             </group>
 
             {projectiles.map((proj) => (
-                <Projectile key={proj.id} position={proj.position} velocity={proj.velocity} />
+                <Projectile key={proj.id} initialPosition={proj.position} velocity={proj.velocity} onCollision={props.onCollision} />
             ))}
         </>
     )

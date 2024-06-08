@@ -170,7 +170,7 @@ export default function Level3() {
                     />
                     <Lights/>
                     <Environments/>
-                    <Physics debug={false}>
+                    <Physics debug={true}>
                         <World
                           /*   wolverinePosition={wolverinePosition}
                             onWolverineMove={setWolverinePosition} */

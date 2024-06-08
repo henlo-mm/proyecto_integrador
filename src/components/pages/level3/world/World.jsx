@@ -96,6 +96,7 @@ const World = ({ handleCollisionWithObject }) => {
                         </Plane>
                     </RigidBody>
 
+
                     <>
                         <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
                         <CuboidCollider args={[2.2, 0.5, 1]} position={[9.3, -0.4, -50]}/>
@@ -119,15 +120,15 @@ const World = ({ handleCollisionWithObject }) => {
                     </>
 
                     <>
-                        <Laser position={[-15, 0.5, -25]} rotation={[0, 0, 0]} castShadow/>
-                        <Laser position={[15, 0.5, -30]} rotation={[0, Math.PI, 0]} castShadow/>
-                        <Laser position={[-15, 0.5, -35]} rotation={[0, 0, 0]} castShadow/>
-                        <Laser position={[15, 0.5, -40]} rotation={[0, Math.PI, 0]} castShadow/>
+                      {/*   <Laser position={[-15, 0.5, -25]} rotation={[0, 0, 0]} onCollision={handleCollisionWithObject} castShadow/> */}
+                        <Laser position={[15, 0.5, -30]} rotation={[0, Math.PI, 0]} onCollision={handleCollisionWithObject} castShadow/>
+                     {/*    <Laser position={[-15, 0.5, -35]} rotation={[0, 0, 0]} onCollision={handleCollisionWithObject} castShadow/> */}
+                        <Laser position={[15, 0.5, -40]} rotation={[0, Math.PI, 0]} onCollision={handleCollisionWithObject} castShadow/>
 
-                        <Laser position={[15, 0.5, 40]} rotation={[0, Math.PI, 0]} castShadow/>
-                        <Laser position={[-15, 0.5, 45]} rotation={[0, 0, 0]} castShadow/>
-                        <Laser position={[15, 0.5, 50]} rotation={[0, Math.PI, 0]} castShadow/>
-                        <Laser position={[-15, 0.5, 55]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 0.5, 40]} rotation={[0, Math.PI, 0]} onCollision={handleCollisionWithObject} castShadow/>
+                      {/*   <Laser position={[-15, 0.5, 45]} rotation={[0, 0, 0]} onCollision={handleCollisionWithObject} castShadow/> */}
+                        <Laser position={[15, 0.5, 50]} rotation={[0, Math.PI, 0]} onCollision={handleCollisionWithObject} castShadow/>
+                     {/*    <Laser position={[-15, 0.5, 55]} rotation={[0, 0, 0]} onCollision={handleCollisionWithObject} castShadow/> */}
                     </>
 
                     <>
