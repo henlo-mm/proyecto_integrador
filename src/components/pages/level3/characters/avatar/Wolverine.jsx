@@ -4,6 +4,7 @@ import { useAvatar } from "../../../../context/AvatarContext";
 import { useThree } from "@react-three/fiber";
 import Ecctrl from "ecctrl";
 import { Raycaster, Vector3, ArrowHelper, LoopOnce, Euler, BufferGeometry, LineBasicMaterial, Line } from "three";
+
 export default function Wolverine({ position }) {
     const avatarRef = useRef();
     const rigidBodyAvatarRef = useRef();
@@ -20,6 +21,48 @@ export default function Wolverine({ position }) {
     const lineRef = useRef(null);
 
     const [isShooting, setIsShooting] = useState(false);
+
+    const [isAttacking, setIsAttacking] = useState(false);
+    const onKeyAattack = useCallback((event) => {
+        if (event.key === 'x' || event.key === 'X') {
+            if (!isAttacking && actions.Punch) {
+                setIsAttacking(true);
+                setAvatar({
+                    ...avatar,
+                    animation: "Punch"
+                });
+
+                actions.Punch.reset().fadeIn(0.05).setLoop(LoopOnce).play();
+    
+                const wolverine = avatarRef.current;
+                const origin = new Vector3();
+                wolverine.getWorldPosition(origin);
+    
+                const enemy = scene.getObjectByName("Juggernaut");
+                if (!enemy) {
+                    console.log('Enemy not found');
+                    setIsAttacking(false);
+                    return;
+                }
+    
+                const enemyPosition = new Vector3();
+                enemy.getWorldPosition(enemyPosition);
+    
+                const direction = enemyPosition.clone().sub(origin).normalize();
+                origin.y += 1.5;
+    
+                const distance = origin.distanceTo(enemyPosition);
+                if (distance < 2) { 
+                    console.log('Hit Juggernaut');
+                    enemy.parent.userData.handleImpact();
+                }
+    
+                setTimeout(() => {
+                    setIsAttacking(false);
+                }, 500); 
+            }
+        }
+    }, [actions.Punch, avatarRef, scene, isAttacking]);
 
     const onKeyDown = useCallback((event) => {
         if (event.key === 'f' || event.key === 'F') {
@@ -116,6 +159,13 @@ export default function Wolverine({ position }) {
             window.removeEventListener('keydown', onKeyDown);
         };
     }, [onKeyDown]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', onKeyAattack);
+        return () => {
+            window.removeEventListener('keydown', onKeyAattack);
+        };
+    }, [onKeyAattack]);
 
     useEffect(() => {
         actions[avatar.animation]?.reset().fadeIn(0.5).play();

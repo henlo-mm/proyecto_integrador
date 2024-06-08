@@ -45,7 +45,7 @@ export default function Level3() {
     const [activeHealths, setActiveHealths] = useState(() => {
 
         const savedHealths = localStorage.getItem('activeHealthsLevel3');
-        return savedHealths ? JSON.parse(savedHealths) : [true, true, true, true,/*  true, true */];
+        return savedHealths ? JSON.parse(savedHealths) : [true, true, true, true, true, /* true */];
     });
 
     const onHealthCollectedLevel = (index) => {
@@ -69,10 +69,11 @@ export default function Level3() {
 
     const getPositionForIndex = (index) => {
         const positions = [
-            [5, 0.5, 15],
-            [-14.5, 0.5, 20],
-            [-5, 0.5, 10],
-            [-2, 0.5, 5],
+            [9, 2, -50],
+            [4.4, 2, -47],
+            [-9, 2, 15],
+            [9, 2, 35],
+            [4, 2, 38],
         ];
         return positions[index] || [0, 0, 0];
     }
@@ -152,10 +153,6 @@ export default function Level3() {
 
     const [wolverinePosition, setWolverinePosition] = useState(getValidPosition(userData?.positionLevel3));
 
-    useEffect(() => {
-        // Actualizar la posición de Wolverine cuando userData cambie
-        setWolverinePosition(getValidPosition(userData?.positionLevel3));
-    }, [userData]);
 
     return (
         <Suspense fallback={<LoadingScreen/>}>
@@ -172,8 +169,9 @@ export default function Level3() {
                     <Environments/>
                     <Physics debug={true}>
                         <World
-                            wolverinePosition={wolverinePosition}
-                            onWolverineMove={setWolverinePosition}
+                          /*   wolverinePosition={wolverinePosition}
+                            onWolverineMove={setWolverinePosition} */
+                            handleCollisionWithObject={handleCollision}
                         />
                         {!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel3)}/>
