@@ -149,7 +149,10 @@ export default function Juggernaut({ onCollision }, props) {
             if (newCount >= 3) {
                 setIsDead(true);
                 if (actions.Dying) {
+                    rigidBodyRef.current.setLinvel({ x: 0.0, y: 0.0, z: 0.0 }, true)
                     actions.Swiping.stop();
+                    actions.Idle.stop();
+                    actions.Walking.stop();
                     actions.Dying.reset().play();
                 }
             }
