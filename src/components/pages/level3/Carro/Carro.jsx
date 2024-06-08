@@ -9,7 +9,7 @@ const Carro = (props) => {
     return (
         <>
             <group {...props} dispose={null}>
-                <group scale={2}>
+                <group scale={1.2}>
                     <mesh
                         castShadow
                         receiveShadow

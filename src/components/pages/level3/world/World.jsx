@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import { Plane, useGLTF } from '@react-three/drei';
-import { MeshStandardMaterial, CylinderGeometry } from "three";
-import { RigidBody } from "@react-three/rapier";
+import React, {useMemo, useEffect, useRef, useState} from 'react';
+import {Plane, useGLTF} from '@react-three/drei';
+import {MeshStandardMaterial, CylinderGeometry} from "three";
+import {RigidBody, CuboidCollider} from "@react-three/rapier";
 import Carro from "../Carro/Carro";
 import Laser from "../Laser/Laser";
 import Hacha from "../Hacha/Hacha";
 
-const World = (props) => {
+const World = ({ wolverinePosition, onWolverineMove }) => {
 
-    const { nodes } = useGLTF("/assets/models/floor/floorlevel3.glb");
+    const {nodes} = useGLTF("/assets/models/floor/floorlevel3.glb");
 
     const floorMaterial = new MeshStandardMaterial({
         color: "#222222", // Un gris oscuro
@@ -24,9 +24,41 @@ const World = (props) => {
 
     const cylinderGeometry = useMemo(() => new CylinderGeometry(1, 1, 15, 32), []);
 
+    const columnRefs = [useRef(), useRef(), useRef(), useRef()];
+
+    const columns = [
+        { position: [14, 6.5, -15], ref: columnRefs[0] },
+        { position: [-14, 6.5, -8], ref: columnRefs[1] },
+        { position: [14, 6.5, -3], ref: columnRefs[2] },
+        { position: [-14, 6.5, 5], ref: columnRefs[3] }
+    ];
+
+    const checkProximity = () => {
+        columns.forEach(column => {
+            const [cx, cy, cz] = column.position;
+            const [wx, wy, wz] = wolverinePosition;
+            const distance = Math.sqrt((cx - wx) ** 2 + (cy - wy) ** 2 + (cz - wz) ** 2);
+            console.log('distancia: ', distance)
+            // Si Wolverine está lo suficientemente cerca de la columna y la columna aún no se ha caído
+            if (distance < 100 && !column.fallen && column.ref.current) {
+                console.log(`Applying impulse to column at position: ${column.position}`);
+                column.ref.current.applyImpulse({ x: 0, y: -5, z: 0 }, true); // Aplica una fuerza hacia abajo para que la columna caiga
+                column.fallen = true; // Marca la columna como caída para evitar aplicar la fuerza repetidamente
+            }
+        });
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkProximity(wolverinePosition);
+        }, 100);
+        return () => clearInterval(interval);
+    }, [wolverinePosition]);
+
+
     return (
         <>
-            <group {...props} dispose={null}>
+            <group dispose={null}>
                 <group>
                     <RigidBody type="fixed" colliders="trimesh">
                         <mesh
@@ -56,19 +88,57 @@ const World = (props) => {
                         </Plane>
                     </RigidBody>
 
-                    <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                    <>
+                        <Carro position={[9, -1, -50]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[2.2, 0.5, 1]} position={[9.3, -0.4, -50]}/>
+                        <CuboidCollider args={[0.8, 1, 1]} position={[9, 0, -50]}/>
 
-                    <Laser position={[0, 2, -20]} rotation={[0, 0, 0]} castShadow/>
+                        <Carro position={[4, -1, -47]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[2.2, 0.5, 1]} position={[4.5, -0.4, -47]}/>
+                        <CuboidCollider args={[0.8, 1, 1]} position={[4, 0, -47]}/>
 
-                    <Hacha position={[0, 6, 30]} rotation={[-Math.PI / 2, 0, 0]} castShadow/>
+                        <Carro position={[-9, -1, 15]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[2.2, 0.5, 1]} position={[-8.7, -0.4, 15]}/>
+                        <CuboidCollider args={[0.8, 1, 1]} position={[-9, 0, 15]}/>
 
-                    {/* Agregar cilindros como columnas de concreto */}
-                    <RigidBody type="fixed">
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, 0]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, 0]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[10, 6.5, -20]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-10, 6.5, -20]}/>
-                    </RigidBody>
+                        <Carro position={[9, -1, 35]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[2.2, 0.5, 1]} position={[9.3, -0.4, 35]}/>
+                        <CuboidCollider args={[0.8, 1, 1]} position={[9, 0, 35]}/>
+
+                        <Carro position={[4, -1, 38]} rotation={[0, Math.PI / 2, 0]} castShadow/>
+                        <CuboidCollider args={[2.2, 0.5, 1]} position={[4.3, -0.4, 38]}/>
+                        <CuboidCollider args={[0.8, 1, 1]} position={[4, 0, 38]}/>
+                    </>
+
+                    <>
+                        <Laser position={[-15, 0.5, -25]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 0.5, -30]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 0.5, -35]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 0.5, -40]} rotation={[0, Math.PI, 0]} castShadow/>
+
+                        <Laser position={[15, 0.5, 40]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 0.5, 45]} rotation={[0, 0, 0]} castShadow/>
+                        <Laser position={[15, 0.5, 50]} rotation={[0, Math.PI, 0]} castShadow/>
+                        <Laser position={[-15, 0.5, 55]} rotation={[0, 0, 0]} castShadow/>
+                    </>
+
+                    <>
+                        <Hacha position={[0, 0, 10]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
+                        <Hacha position={[0, 0, 13]} rotation={[0, 0, -Math.PI / 2]} direction={-1} castShadow/>
+                        <Hacha position={[0, 0, 16]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
+                    </>
+
+                    {/*<RigidBody type="fixed">
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -15]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, -8]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -3]}/>
+                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, 5]}/>
+                    </RigidBody>*/}
+                    {columns.map((column, index) => (
+                        <RigidBody key={index} type="dynamic" ref={column.ref}>
+                            <mesh geometry={cylinderGeometry} material={concreteMaterial} position={column.position}/>
+                        </RigidBody>
+                    ))}
                 </group>
             </group>
         </>
