@@ -21,7 +21,7 @@ export default function useMovements() {
             {name: MOVEMENTS.jump, keys: ["Space"], description: "SALTAR >>>>>> ESPACIO", teclas: "ESPACIO"},
             {name: MOVEMENTS.exit, keys: ["Escape"], description: "SALIR >>>>>>> ESC", teclas: "ESC"},
             {name: MOVEMENTS.run, keys: ["KeyZ"], description: "CORRER >>>>> Z", teclas: "Z"},
-            {name: MOVEMENTS.attack, keys: ["KeyV"], description: "ATACAR >>>>> V", teclas: "V"},
+            {name: MOVEMENTS.attack, keys: ["KeyV"], description: "ATACAR >>>>> V", teclas: "X"},
         ];
     }, []);
 

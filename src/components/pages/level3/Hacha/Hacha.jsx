@@ -7,6 +7,7 @@ export default function Hacha({position, rotation, onCollision, direction}) {
     const hachaRef = useRef(null);
     const hachaBodyRef = useRef(null);
 
+    const [isCooldown, setIsCooldown] = useState(false);
     const {nodes, materials} = useGLTF("/assets/models/hacha/hacha.glb");
 
     useFrame(({clock}) => {
@@ -27,8 +28,19 @@ export default function Hacha({position, rotation, onCollision, direction}) {
         }
     });
 
+    const handleCollisionEnter = (event) => {
+        if (!isCooldown && event.rigidBody.userData.name === "wolverine") {
+            console.log("Colisión con las hachas");
+            onCollision();
+            setIsCooldown(true);
+            setTimeout(() => {
+                setIsCooldown(false);
+            }, 1000); 
+        }
+    };
+  
     return (
-        <RigidBody ref={hachaBodyRef} type="fixed" position={position}>
+        <RigidBody ref={hachaBodyRef} type="fixed" position={position}  onCollisionEnter={handleCollisionEnter}>
             <group ref={hachaRef} dispose={null} scale={5} position={position} rotation={rotation}>
                 <group name="Scene">
                     <group name="Rigid">

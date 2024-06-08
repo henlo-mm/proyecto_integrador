@@ -116,6 +116,7 @@ export default function Level3() {
     };
 
     const handleCollision = () => {
+        console.log('Collision with object')
         loseLife();
     };
 
@@ -155,8 +156,6 @@ export default function Level3() {
 
     const map = useMovements();
 
-    const [wolverinePosition, setWolverinePosition] = useState(getValidPosition(userData?.positionLevel3));
-
 
     return (
         <Suspense fallback={<LoadingScreen/>}>
@@ -171,7 +170,7 @@ export default function Level3() {
                     />
                     <Lights/>
                     <Environments/>
-                    <Physics debug={true}>
+                    <Physics debug={false}>
                         <World
                           /*   wolverinePosition={wolverinePosition}
                             onWolverineMove={setWolverinePosition} */
