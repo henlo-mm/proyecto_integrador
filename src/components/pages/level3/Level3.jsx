@@ -111,6 +111,10 @@ export default function Level3() {
         loseLife();
     };
 
+    const handleCollisionWithJuggernaut2 = () => {
+        loseLife();
+    };
+
     const handleCollision = () => {
         loseLife();
     };
@@ -176,7 +180,10 @@ export default function Level3() {
                         {!isLoading && userData && (
                             <Wolverine position={getValidPosition(userData.positionLevel3)}/>
                         )}
-                        <Juggernaut onCollision={handleCollisionWithJuggernaut}/>
+                        <Juggernaut onCollision={handleCollisionWithJuggernaut} position={[2, -0.8, 30]}/>
+
+                  {/*       <Juggernaut onCollision={handleCollisionWithJuggernaut2} position={[2, -0.8, -10]}/> */}
+
 
                         <CheckPoint onCollision={() => handleCollisionWithCheckPoint(1)} position={[14, -0.9, 10]}
                                     level="3"/>
