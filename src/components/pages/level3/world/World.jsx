@@ -5,8 +5,9 @@ import {RigidBody, CuboidCollider} from "@react-three/rapier";
 import Carro from "../Carro/Carro";
 import Laser from "../Laser/Laser";
 import Hacha from "../Hacha/Hacha";
+import { useFrame } from '@react-three/fiber';
 
-const World = ({ wolverinePosition, onWolverineMove }) => {
+const World = ({ handleCollisionWithObject }) => {
 
     const {nodes} = useGLTF("/assets/models/floor/floorlevel3.glb");
 
@@ -25,35 +26,42 @@ const World = ({ wolverinePosition, onWolverineMove }) => {
     const cylinderGeometry = useMemo(() => new CylinderGeometry(1, 1, 15, 32), []);
 
     const columnRefs = [useRef(), useRef(), useRef(), useRef()];
+    const [fallenColumns, setFallenColumns] = useState([false, false, false, false]);
 
     const columns = [
-        { position: [14, 6.5, -15], ref: columnRefs[0] },
-        { position: [-14, 6.5, -8], ref: columnRefs[1] },
-        { position: [14, 6.5, -3], ref: columnRefs[2] },
-        { position: [-14, 6.5, 5], ref: columnRefs[3] }
+        { position: [14, 6.5, -15], ref: columnRefs[0], index: 0},
+        { position: [-14, 6.5, -8], ref: columnRefs[1], index: 1},
+        { position: [14, 6.5, -3], ref: columnRefs[2], index: 2},
+        { position: [-14, 6.5, 5], ref: columnRefs[3], index: 3}
     ];
 
-    const checkProximity = () => {
-        columns.forEach(column => {
-            const [cx, cy, cz] = column.position;
-            const [wx, wy, wz] = wolverinePosition;
-            const distance = Math.sqrt((cx - wx) ** 2 + (cy - wy) ** 2 + (cz - wz) ** 2);
-            console.log('distancia: ', distance)
-            // Si Wolverine está lo suficientemente cerca de la columna y la columna aún no se ha caído
-            if (distance < 100 && !column.fallen && column.ref.current) {
-                console.log(`Applying impulse to column at position: ${column.position}`);
-                column.ref.current.applyImpulse({ x: 0, y: -5, z: 0 }, true); // Aplica una fuerza hacia abajo para que la columna caiga
-                column.fallen = true; // Marca la columna como caída para evitar aplicar la fuerza repetidamente
-            }
-        });
-    };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            checkProximity(wolverinePosition);
-        }, 100);
-        return () => clearInterval(interval);
-    }, [wolverinePosition]);
+    useFrame(({scene}) => {
+        const wolverine = scene.getObjectByName("Wolverine");
+        if (wolverine) {
+            const wolverinePosition = wolverine.position;
+
+            columns.forEach(column => {
+                const [cx, cy, cz] = column.position;
+                const [wx, wy, wz] = [wolverinePosition.x, wolverinePosition.y, wolverinePosition.z];
+                const distance = Math.sqrt((cx - wx) ** 2 + (cy - wy) ** 2 + (cz - wz) ** 2);
+
+                if (distance < 20 && !fallenColumns[column.index]) {
+                    setTimeout(() => {
+                        if (column.ref.current) {
+                            column.ref.current.applyImpulse({ x: 0, y: 0, z: 0 }, true); // Fuerza ajustada
+                        }
+                        setFallenColumns(prev => {
+                            const newFallenColumns = [...prev];
+                            newFallenColumns[column.index] = true;
+                            return newFallenColumns;
+                        });
+                    }, Math.random() * 2000 + 1000); // Tiempo aleatorio entre 1 y 3 segundos
+                }
+            });
+        }
+    });
+    
 
 
     return (
@@ -123,20 +131,14 @@ const World = ({ wolverinePosition, onWolverineMove }) => {
                     </>
 
                     <>
-                        <Hacha position={[0, 0, 10]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
-                        <Hacha position={[0, 0, 13]} rotation={[0, 0, -Math.PI / 2]} direction={-1} castShadow/>
-                        <Hacha position={[0, 0, 16]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow/>
+                        <Hacha position={[0, 0, 10]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow  onCollision={handleCollisionWithObject} />
+                        <Hacha position={[0, 0, 13]} rotation={[0, 0, -Math.PI / 2]} direction={-1} castShadow  onCollision={handleCollisionWithObject} />
+                        <Hacha position={[0, 0, 16]} rotation={[0, 0, -Math.PI / 2]} direction={1} castShadow  onCollision={handleCollisionWithObject} />
                     </>
 
-                    {/*<RigidBody type="fixed">
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -15]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, -8]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[14, 6.5, -3]}/>
-                        <mesh geometry={cylinderGeometry} material={concreteMaterial} position={[-14, 6.5, 5]}/>
-                    </RigidBody>*/}
                     {columns.map((column, index) => (
-                        <RigidBody key={index} type="dynamic" ref={column.ref}>
-                            <mesh geometry={cylinderGeometry} material={concreteMaterial} position={column.position}/>
+                        <RigidBody key={index} type="dynamic" ref={column.ref} /* colliders="ball"   */angularFactor={[0, 0, 0]} >
+                            <mesh geometry={cylinderGeometry} material={concreteMaterial} position={column.position}  onCollision={handleCollisionWithObject}/>
                         </RigidBody>
                     ))}
                 </group>

@@ -5,21 +5,20 @@ import { Vector3, LoopOnce } from "three";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { useAvatar } from "../../../../context/AvatarContext";
 
-
-export default function Juggernaut({ onCollision }, props) {
-    const avatarRef = useRef();
+export default function Juggernaut({ onCollision, position }) {
+    const juggerRef = useRef();
+    const rigidBodyRef = useRef();
     const { setAnimation } = useAvatar();
+    const { avatar } = useAvatar();
 
     const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
-    const { actions } = useAnimations(animations, avatarRef)
+    const { actions } = useAnimations(animations, juggerRef);
 
     const [isDead, setIsDead] = useState(false);
     const [clickCount, setClickCount] = useState(0);
-
-    const rigidBodyRef = useRef();
+    const [impactCount, setImpactCount] = useState(0);
     const [inCollision, setInCollision] = useState(false);
 
-    let initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000;
 
     useEffect(() => {
@@ -33,105 +32,66 @@ export default function Juggernaut({ onCollision }, props) {
             const translation = rigidBodyRef.current.translation();
             let juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
 
-
             const deadpool = scene.getObjectByName("Wolverine");
             if (deadpool) {
                 let deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
                 const distance = juggernautPosition.distanceTo(deadpoolPosition);
 
-
                 if (distance < 1) {
                     setInCollision(true);
-                    onCollision();
+                    if (avatar.animation !== "Punch") {
+                        onCollision();
+                    }
                     setTimeout(() => setInCollision(false), resetCollisionTimeout);
                 }
 
                 if (deadpoolPosition.z >= 10 && deadpoolPosition.z <= 30) {
-
-                    if (actions.Idle) {
-                        actions.Idle.stop();
-                        actions.Walking.play();
-                    }
+                    actions.Idle.stop();
+                    actions.Walking.play();
 
                     if (distance > 1.5) {
-
-                        actions.Idle.stop();
-                        actions.Walking.play();
-
-                        if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: 2, y: 0, z: 2 }, true
-                            )
-
-
-                        }
-                        else if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: 2, y: 0, z: -2 }, true
-                            )
-
-                        }
-                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: -2, y: 0, z: -2 }, true
-                            )
-
-                        }
-                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: -2, y: 0, z: 2 }, true
-                            )
-
-                        }
-                    }
-                    else{
+                        const direction = new Vector3()
+                            .subVectors(deadpoolPosition, juggernautPosition)
+                            .normalize();
+                        rigidBodyRef.current.setLinvel(
+                            { x: direction.x * 2, y: 0, z: direction.z * 2 },
+                            true
+                        );
+                    } else {
                         actions.Walking.stop();
                         actions.Swiping.play();
-
-                        if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: 2, y: 0, z: 2 }, true
-                            )
-
-
-                        }
-                        else if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: 2, y: 0, z: -2 }, true
-                            )
-
-                        }
-                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: -2, y: 0, z: -2 }, true
-                            )
-
-                        }
-                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
-                            rigidBodyRef.current.setLinvel(
-                                { x: -2, y: 0, z: 2 }, true
-                            )
-
-                        }
+                        const direction = new Vector3()
+                            .subVectors(deadpoolPosition, juggernautPosition)
+                            .normalize();
+                        rigidBodyRef.current.setLinvel(
+                            { x: direction.x * 2, y: 0, z: direction.z * 2 },
+                            true
+                        );
                     }
-
-                }
-                else {
-                    rigidBodyRef.current.setLinvel({ x: 0.0, y: 0.0, z: 0.0 }, true)
+                } else {
+                    rigidBodyRef.current.setLinvel({ x: 0.0, y: 0.0, z: 0.0 }, true);
                     actions.Walking.stop();
                     actions.Swiping.stop();
                     actions.Idle.play();
-                    
                 }
 
-                // Adjust rotation to look at Deadpool
                 let lookAtPosition = new Vector3(deadpoolPosition.x, juggernautPosition.y, deadpoolPosition.z);
-                avatarRef.current.lookAt(lookAtPosition);
-
+                juggerRef.current.lookAt(lookAtPosition);
             }
-
         }
     });
+
+    const handleImpact = () => {
+        if (!isDead) {
+            setImpactCount(prevCount => {
+                const newCount = prevCount + 1;
+                if (newCount >= 4) {
+                    setIsDead(true);
+                }
+                return newCount;
+            });
+        }
+    };
 
     useEffect(() => {
         if (isDead && actions.Dying) {
@@ -159,12 +119,16 @@ export default function Juggernaut({ onCollision }, props) {
         }
     };
 
-
     return (
-        <RigidBody ref={rigidBodyRef} userData={{ name: "Juggernaut", rigidBody: rigidBodyRef, setIsDead }} position={initialPosition} type="dynamic" onClick={handleRightClick} colliders={false}>
-
-
-            <group ref={avatarRef} name="Juggernaut">
+        <RigidBody
+            ref={rigidBodyRef}
+            userData={{ name: "Juggernaut", rigidBody: rigidBodyRef, setIsDead, handleImpact }}
+            position={position}
+            type="dynamic"
+            onClick={handleRightClick}
+            colliders={false}
+        >
+            <group ref={juggerRef} name="Juggernaut">
                 <group name="Armature">
                     <skinnedMesh
                         name="EyeLeft"
@@ -212,6 +176,5 @@ export default function Juggernaut({ onCollision }, props) {
                 </group>
             </group>
         </RigidBody>
-
-    )
+    );
 }
