@@ -13,7 +13,6 @@ export default function Juggernaut({ onCollision }, props) {
 
     const { avatar } = useAvatar(); 
 
-
     const { nodes, materials, animations } = useGLTF("assets/models/enemies/JuggernautEnemy.glb");
     const { actions } = useAnimations(animations, avatarRef)
 
@@ -27,10 +26,10 @@ export default function Juggernaut({ onCollision }, props) {
 
     let initialPosition = [2, -0.8, 30];
     const resetCollisionTimeout = 2000;
-     
+
     useEffect(() => {
-        if (actions.Swiping) {
-            actions.Swiping.reset().fadeIn(0.2).play();
+        if (actions.Idle) {
+            actions.Idle.reset().fadeIn(0.2).play();
         }
     }, [actions]);
 
@@ -39,7 +38,6 @@ export default function Juggernaut({ onCollision }, props) {
             const translation = rigidBodyRef.current.translation();
             let juggernautPosition = new Vector3(translation.x, translation.y, translation.z);
 
-            
             const deadpool = scene.getObjectByName("Wolverine");
             if (deadpool) {
                 let deadpoolPosition = new Vector3().setFromMatrixPosition(deadpool.matrixWorld);
@@ -56,32 +54,81 @@ export default function Juggernaut({ onCollision }, props) {
                 }
 
                 if (deadpoolPosition.z >= 10 && deadpoolPosition.z <= 30) {
-                    if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z) ){
-                        rigidBodyRef.current.setLinvel(
-                            { x: 2, y: 0, z: 2 },true
-                          )                       
+
+                    if (actions.Idle) {
+                        actions.Idle.stop();
+                        actions.Walking.play();
                     }
-                    else if((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
-                        rigidBodyRef.current.setLinvel(
-                        { x: 2, y: 0, z: -2 },true
-                          )
+
+                    if (distance > 1.5) {
+
+                        actions.Idle.stop();
+                        actions.Walking.play();
+
+                        if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: 2, y: 0, z: 2 }, true
+                            )
+
+
+                        }
+                        else if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: 2, y: 0, z: -2 }, true
+                            )
+
+                        }
+                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: -2, y: 0, z: -2 }, true
+                            )
+
+                        }
+                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: -2, y: 0, z: 2 }, true
+                            )
+
+                        }
                     }
-                    else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)){
-                        rigidBodyRef.current.setLinvel(
-                        { x: -2, y: 0, z: -2 },true
-                          )
+                    else{
+                        actions.Walking.stop();
+                        actions.Swiping.play();
+
+                        if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: 2, y: 0, z: 2 }, true
+                            )
+
+
+                        }
+                        else if ((juggernautPosition.x < deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: 2, y: 0, z: -2 }, true
+                            )
+
+                        }
+                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z > deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: -2, y: 0, z: -2 }, true
+                            )
+
+                        }
+                        else if ((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)) {
+                            rigidBodyRef.current.setLinvel(
+                                { x: -2, y: 0, z: 2 }, true
+                            )
+
+                        }
                     }
-                    else if((juggernautPosition.x > deadpoolPosition.x) && (juggernautPosition.z < deadpoolPosition.z)){
-                        rigidBodyRef.current.setLinvel(
-                        { x: -2, y: 0, z: 2 },true
-                          )
-                    }
-                    
-                    console.log(deadpoolPosition.z)
 
                 }
                 else {
-                    rigidBodyRef.current.setLinvel({x: 0.0, y: 0.0, z:0.0}, true)
+                    rigidBodyRef.current.setLinvel({ x: 0.0, y: 0.0, z: 0.0 }, true)
+                    actions.Walking.stop();
+                    actions.Swiping.stop();
+                    actions.Idle.play();
+                    
                 }
 
                 // Adjust rotation to look at Deadpool
